@@ -266,6 +266,8 @@ const sendTextResToQuizByMentor = async(responseId, mentorId, text) => {
 const sendAudioResToQuizByMentor = async(responseId, mentorId, audioDetails) => {
 
     let quizResponse = await QuizResponse.findOne({ "responses._id": responseId });
+    if(!quizResponse) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
+    
     
     const audioFile = {
         filename: audioDetails.filename,

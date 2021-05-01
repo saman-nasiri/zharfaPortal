@@ -15,4 +15,22 @@ router
     .route('/create-sub/:mainTutorial')
         .post(tutorialCategoryController.createTutorialSubCategory)
 
+router
+    .route('/showMain')
+        .get(tutorialCategoryController.getMainTutorial)
+
+router
+    .route('/showSub/:mainSlug')
+        .get(tutorialCategoryController.getSubMainTutorial)
+
+router
+    .route('/showSingle/:slug')
+        .get(tutorialCategoryController.getTutorialBySlug)
+
+router
+    .route('/delete/:slug')
+        .delete(tutorialCategoryController.deleteTutorialBySlug)
+
+
+
 module.exports = router;

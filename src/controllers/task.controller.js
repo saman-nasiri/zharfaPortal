@@ -96,6 +96,8 @@ const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
 const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
     const internId = "6087b87b104caa2307e68566";
     const taskId = req.params.taskId;
+    const task = await taskService.getTaskById(taskId);
+    if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TaskNotFound'); };
     await upload.uploadSingleAudio(req, res);
     const audioDetails = req.file;
     const result = await taskService.sendAudioResToQuizByIntern(taskId, internId, audioDetails)

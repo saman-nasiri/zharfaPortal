@@ -32,8 +32,8 @@ router
         .post(taskController.sendAudioResToQuizByIntern);
 
 router
-    .route('/quiz/audio-res/mentor/:responseId')
-        .post(taskController.sendAudioResToQuizByMentor);
+    .route('/quiz/text-res/mentor/:responseId')
+        .post(taskController.sendTextResToQuizByMentor);
 
 router
     .route('/quiz/audio-res/mentor/:responseId')
