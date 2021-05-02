@@ -11,7 +11,23 @@ router
         .post(courseController.createHeadCourse)
 
 router
-    .route('/create-subhead/:headCourse')
+    .route('/create-sub/:headSlug')
         .post(courseController.createSubsetHeadCourse)
+
+router
+    .route('/showHead')
+        .get(courseController.getHeadCourse)
+
+router
+    .route('/showSub/:headSlug')
+        .get(courseController.getSubCourse)
+
+router
+    .route('/showOne/:slug')
+        .get(courseController.getCourseBySlug)
+
+router
+    .route('/delete/:slug')
+        .delete(courseController.deleteCourseBySlug)
 
 module.exports = router;

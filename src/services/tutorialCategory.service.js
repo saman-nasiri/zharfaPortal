@@ -37,6 +37,7 @@ const getSubMainTutorial = async(mainSlug) => {
 
 const getTutorialBySlug = async(tutorialSlug) => {
     const tutorial = await TutorialCategory.findOne({ slug: tutorialSlug });
+    if(!tutorial) { throw new ApiError(httpStatus.NOT_FOUND, 'TutorialNotFound') };
     return tutorial;
 };
 
@@ -55,5 +56,4 @@ module.exports = {
     getSubMainTutorial,
     getTutorialBySlug,
     deleteTutorialBySlug,
-
 };

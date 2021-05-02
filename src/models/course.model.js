@@ -1,5 +1,7 @@
+const httpStatus = require('http-status');
 const mongoose = require('mongoose');
 const validator = require('validator');
+const ApiError = require('../utils/ApiError');
 const { toJSON, paginate } = require('./plugins');
 
 const courseSchema = mongoose.Schema({
@@ -28,15 +30,6 @@ const courseSchema = mongoose.Schema({
         type: String
     }
 });
-
-// add plugin that converts mongoose to json
-courseSchema.plugin(toJSON);
-courseSchema.plugin(paginate);
-
-courseSchema.statics.isCategorySlugTaken = async function (slug) {
-    const category = await this.findOne({ slug });
-    return !!category;
-};
 
 
 const Course = mongoose.model('Course', courseSchema);

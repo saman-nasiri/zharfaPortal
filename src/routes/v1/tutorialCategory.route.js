@@ -24,7 +24,7 @@ router
         .get(tutorialCategoryController.getSubMainTutorial)
 
 router
-    .route('/showSingle/:slug')
+    .route('/showOne/:slug')
         .get(tutorialCategoryController.getTutorialBySlug)
 
 router
