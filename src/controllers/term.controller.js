@@ -16,20 +16,38 @@ const createTerm = catchAsync(async(req, res) => {
 const addInternsToTheTerm = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const internsList = req.body.internsList;
-
-    const term = await termService.getTerm(termId);
+    const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
     const result = await termService.addInternsToTheTerm(term, internsList);
     res.status(httpStatus.OK).send(term);
 });
 
+const removeInternsFromTheTerm = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const internsList = req.body.internsList;
+    const term = await termService.getTermById(termId);
+    if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
+    const result = await termService.removeInternsFromTheTerm(term, internsList);
+    res.status(httpStatus.OK).send(result);
+});
+
+
 const addMentorsToTheTerm = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const mentorsList = req.body.mentorsList;
-
-    const term = await termService.getTerm(termId);
+    const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
     const result = await termService.addMentorToTheTerm(term, mentorsList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const removeMentorsFromTheTerm = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const mentorsList = req.body.mentorsList;
+    const term = await termService.getTermById(termId);
+    if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
+    console.log(term);
+    const result = await termService.removeMentorsFromTheTerm(term, mentorsList);
     res.status(httpStatus.OK).send(result);
 });
 
@@ -37,15 +55,38 @@ const updateTerm = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const updateBody = req.body;
 
-    const term = await termService.getTerm(termId);
+    const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
     const result = await termService.updateTerm(term, updateBody);
     res.status(httpStatus.OK).send(result);
 });
 
+const getTerms = catchAsync(async(req, res) => {
+    const terms = await termService.getTerms();
+    res.status(httpStatus.OK).send(result);
+});
+
+const getTermById = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const result = await termService.getTermById(termId);
+    res.status(httpStatus.OK).send(result);
+});
+
+const deleteTermById = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const result = await termService.deleteTermById(termId);
+    res.status(httpStatus.OK).send(result);
+});
+
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
+    removeInternsFromTheTerm,
     addMentorsToTheTerm,
-    updateTerm
+    removeMentorsFromTheTerm,
+    updateTerm,
+    getTerms,
+    getTermById,
+    deleteTermById,
 };

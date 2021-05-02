@@ -19,9 +19,27 @@ router
         .post(termController.addInternsToTheTerm)
 
 router
+    .route('/remove-interns/:termId')
+        .post(termController.removeInternsFromTheTerm)
+
+router
     .route('/add-mentors/:termId')
         .post(termController.addMentorsToTheTerm)
 
+router
+    .route('/remove-mentors/:termId')
+        .post(termController.removeMentorsFromTheTerm)
 
+router
+    .route('/')
+        .get(termController.getTerms)
+
+router
+    .route('/:termId')
+        .get(termController.getTermById)
+
+router
+    .route('/delete/:termId')
+        .get(termController.deleteTermById)
 
 module.exports = router;

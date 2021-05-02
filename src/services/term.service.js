@@ -17,48 +17,42 @@ const createTerm = async(termBody, tutorialCategory) => {
 
 
 const addInternsToTheTerm = async(term, internsList) => {
-    
-    // const updateTerm = await Term.updateOne({ _id: term._id }, {"$addToSet": {
-    //     "internsList": internsList,
-    // }}, { "new": true, "upsert": true },
-    // function(err) {
-    //     if(!err) {console.log('Update');}
-    //     if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    // }); 
-    
     const interns = await Intern.updateMany({ _id: internsList }, { "$addToSet": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
-    }}, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });
+        termsId: term._id
+    }}, { "new": true, "upsert": true });
 
+    return "updateIntern";
+};
+
+const removeInternsFromTheTerm = async(term, internsList) => {
+    const interns = await Intern.updateMany({ _id: internsList }, { "$pull": {
+        tutorialCategory: term.tutorialCategory,
+        termCode: term.termCode,
+        termsId: term._id
+    }}, { "new": true, "upsert": true })
+};
+
+const addMentorToTheTerm = async(term, mentorsList) => {
+    const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$addToSet": {
+        tutorialCategory: term.tutorialCategory,
+        termCode: term.termCode,
+        termsId: term._id
+    }}, { "new": true, "upsert": true });
+    
     const updateTerm = await Term.findById(term._id);
     return updateTerm;
 };
 
-const addMentorToTheTerm = async(term, mentorsList) => {
-    
-    // const updateTerm = await Term.updateOne({ _id: term._id }, {"$addToSet": {
-    //     "mentorsList": mentorsList,
-    // }}, { "new": true, "upsert": true },
-    // function(err) {
-    //     if(!err) {console.log('Update');}
-    //     if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    // }); 
-    
-    const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$set": {
+const removeMentorsFromTheTerm = async(term, mentorsList) => {
+    const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$pull": {
         tutorialCategory: term.tutorialCategory,
-    }}, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });
+        termCode: term.termCode,
+        termsId: term._id
+    }}, { "new": true, "upsert": true });
     
-    const updateTerm = await Term.findById(term._id);
-    return updateTerm;
+    return "updateMentor";
 };
 
 const addWeekToTheTerm = async(term, weeksList) => {
@@ -82,12 +76,6 @@ const addWeekToTheTerm = async(term, weeksList) => {
     return updateTerm;
 };
 
-
-const getTerm = async(termId) => {
-    const term = await Term.findById(termId);
-    return term;
-};
-
 const updateTerm = async(term, updateBody) => {
     const result  = await Term.updateOne({ _id: term._id }, { "$set": updateBody }, { "new": true, "upsert": true },
     function(err) {
@@ -98,11 +86,32 @@ const updateTerm = async(term, updateBody) => {
     return result;
 };
 
+const getTerms = async() => {
+    const terms = await Term.find();
+    if(!terms) { throw new ApiError(httpStatus.NOT_FOUND, 'TermsIsNotFound')};
+    return terms;
+};
+
+const getTermById = async(termId) => {
+    const term = await Term.findOne({ _id: termId });
+    if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermsIsNotFound')};
+    return term;
+};
+
+const deleteTermById = async(termId) => {
+    const result = await Term.deleteOne({ _id: termId})
+    return result;
+};
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
+    removeInternsFromTheTerm,
     addMentorToTheTerm,
+    removeMentorsFromTheTerm,
     addWeekToTheTerm,
-    getTerm,
-    updateTerm
+    updateTerm,
+    getTerms,
+    getTermById,
+    deleteTermById
 };

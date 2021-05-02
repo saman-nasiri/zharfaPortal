@@ -10,7 +10,7 @@ const mentorSchema = mongoose.Schema({
     lastName: String,
     biography: String,
     avatar: String,
-    tutorialCategory: String,
+    tutorialCategory: Array,
     termCode: Array,
     termsId:   [ mongoose.SchemaTypes.ObjectId ],
 
