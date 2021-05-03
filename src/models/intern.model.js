@@ -20,7 +20,7 @@ const internSchema = mongoose.Schema({
     favoriteMovies: String,
     tutorialCategory: Array,
     termCode: Array,
-    termsId : [ mongoose.SchemaTypes.ObjectId ],
+    termsId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 
     sex: {
         type: String,

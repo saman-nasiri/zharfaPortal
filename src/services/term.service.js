@@ -67,11 +67,7 @@ const addWeekToTheTerm = async(term, weeksList) => {
     
     const weeks = await Week.updateOne({ _id: weeksList }, { "$set": {
         "tutorialCategory": term.tutorialCategory,
-    }}, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });
+    }}, { "new": true, "upsert": true });
 
     return updateTerm;
 };
@@ -111,6 +107,14 @@ const getWeeksOfTheTermById = async(termId) => {
     return weeks.weeksList;
 }; 
 
+const removeWeekFromTerm = async(termId, weekId) => {
+    const updateTerm = await Term.updateOne({ _id: termId }, { "$pull": {
+        "weeksList": weekId
+    }}, { "new": true, "upsert": true })
+
+    return updateTerm;
+};
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
@@ -122,5 +126,6 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
-    getWeeksOfTheTermById
+    getWeeksOfTheTermById,
+    removeWeekFromTerm
 };

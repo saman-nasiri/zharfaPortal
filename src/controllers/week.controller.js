@@ -53,6 +53,12 @@ const getWeekById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(week);
 });
 
+const getTaskOfTheWeekByWeekId = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const tasks = await weekService.getTaskOfTheWeekByWeekId(weekId);
+    res.status(httpStatus.OK).send(tasks);
+});
+
 const deleteWeekById = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const week = await weekService.getWeekById(weekId);
@@ -69,5 +75,6 @@ module.exports = {
     weekProgressbar,
     getWeeks,
     getWeekById,
-    deleteWeekById
+    deleteWeekById,
+    getTaskOfTheWeekByWeekId
 };

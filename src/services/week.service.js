@@ -109,6 +109,12 @@ const getWeekById = async(weekId) => {
     return week;
 };
 
+const getTaskOfTheWeekByWeekId = async(weekId) => {
+    const tasks = await Task.find({ weekId: weekId });
+    return tasks;
+};
+
+
 const deleteWeekById = async(weekId) => {
     await Task.deleteMany({ weekId: weekId });
     const result = await Week.deleteOne({ _id: weekId });
@@ -124,5 +130,6 @@ module.exports = {
     weekProgressbar,
     getWeeks,
     getWeekById,
+    getTaskOfTheWeekByWeekId,
     deleteWeekById
 };

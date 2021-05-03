@@ -31,6 +31,10 @@ router
         .get(weekController.getWeekById)
 
 router
+    .route('/tasks/:weekId')
+        .get(weekController.getTaskOfTheWeekByWeekId)
+
+router
     .route('/delete/:weekId')
         .delete(weekController.deleteWeekById)
 

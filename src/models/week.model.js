@@ -6,7 +6,7 @@ const weekSchema = mongoose.Schema({
     title: String,
     tutorialCategory: String,
     duration: Number,
-    score: { type: Number, default: 0 },
+    score:     { type: Number, default: 0 },
     viewCount: { type: Number, default: 0 },
     description: String,
     // taskList: Array,

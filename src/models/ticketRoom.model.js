@@ -10,14 +10,14 @@ const ticketRoomSchema = new mongoose.Schema({
     },
     internId: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "Student"
+        ref: "Intern"
     },
     tickets: [{
-        senderId: mongoose.SchemaTypes.ObjectId,
-        replayTo: mongoose.SchemaTypes.ObjectId,
-        text: String,
+        senderId: { type: mongoose.SchemaTypes.ObjectId },
+        replayTo: { type: mongoose.SchemaTypes.ObjectId },
+        text:  String,
         audio: Object,
-        date: Date
+        date:  Date
     }]
 });
 

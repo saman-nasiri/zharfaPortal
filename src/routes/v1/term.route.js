@@ -39,6 +39,10 @@ router
         .get(termController.getTermById)
 
 router
+    .route('/remove-week/:termId/:weekId')
+        .post(termController.removeWeekFromTerm)
+
+router
     .route('/delete/:termId')
         .get(termController.deleteTermById)
 

@@ -4,16 +4,16 @@ const { toJSON, paginate } = require('./plugins');
 
 
 const quizResponseSchema = mongoose.Schema({
-    taskId: mongoose.SchemaTypes.ObjectId,
-    internId: mongoose.SchemaTypes.ObjectId,
-    score: { type: Number, default: 0 },
+    taskId:   { type: mongoose.SchemaTypes.ObjectId, ref: 'Task' },
+    internId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Intern' },
+    score:    { type: Number, default: 0 },
     responses: [{
-        senderId: mongoose.SchemaTypes.ObjectId,
-        replayTo: mongoose.SchemaTypes.ObjectId,
-        text: String,
+        senderId: { type: mongoose.SchemaTypes.ObjectId },
+        replayTo: { type: mongoose.SchemaTypes.ObjectId },
+        text:  String,
         audio: Object,
-        pdf: Object,
-        date: Date
+        pdf:   Object,
+        date:  Date
     }]
 });
 

@@ -4,9 +4,9 @@ const { toJSON, paginate } = require('./plugins');
 
 
 const internTaskActionSchema = mongoose.Schema({
-    internId: mongoose.SchemaTypes.ObjectId,
-    taskId: mongoose.SchemaTypes.ObjectId,
-    done: { type: Boolean, default: false }
+    internId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Intern' },
+    taskId:   { type: mongoose.SchemaTypes.ObjectId, ref: 'Task' },
+    done:     { type: Boolean, default: false }
 });
 
 

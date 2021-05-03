@@ -6,7 +6,7 @@ const { toJSON, paginate } = require('./plugins');
 const taskSchema = mongoose.Schema({
     title: String,
     order: Number,
-    weekId: mongoose.SchemaTypes.ObjectId,
+    weekId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' },
     content: String,
     duration: Number,
     doneCount: { type: Number, default: 0 },

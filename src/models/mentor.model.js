@@ -12,7 +12,7 @@ const mentorSchema = mongoose.Schema({
     avatar: String,
     tutorialCategory: Array,
     termCode: Array,
-    termsId:   [ mongoose.SchemaTypes.ObjectId ],
+    termsId:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 
 
     password: {
