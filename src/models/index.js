@@ -11,7 +11,7 @@ module.exports.TicketRoom = require('./ticketRoom.model');
 module.exports.TutorialCategory = require('./tutorialCategory.model');
 module.exports.InternWeekAction = require('./internWeekActions.model');
 module.exports.InternTaskAction = require('./internTaskActions.model');
-module.exports.QuizResponse = require('./quizResponse.model');
+module.exports.QuizResponseRoom = require('./quizResponseRoom.model');
 
 
 

@@ -12,12 +12,27 @@ router
 
 router
     .route('/:taskId')
-        .get(taskController.getTask)
-        .post(taskController.uploadImageForTask)
+        .get(taskController.getTaskById)
 
 router
     .route('/done/:taskId')
         .post(taskController.doneTaskAction)
+
+router
+    .route('/upload/images/:taskId')
+        .post(taskController.uploadImageForTask)
+
+router
+    .route('/upload/videos/:taskId')
+        .post(taskController.uploadVideoForTask)
+
+router
+    .route('/upload/audios/:taskId')
+        .post(taskController.uploadAudioForTask)
+
+router
+    .route('/upload/pdfs/:taskId')
+        .post(taskController.uploadPdfFileForTask)
 
 router
     .route('/quiz/create/:taskId')
@@ -32,40 +47,28 @@ router
         .post(taskController.sendAudioResToQuizByIntern);
 
 router
-    .route('/quiz/text-res/mentor/:responseId')
+    .route('/quiz/text-res/mentor/:quizResponseRoomId')
         .post(taskController.sendTextResToQuizByMentor);
 
 router
-    .route('/quiz/audio-res/mentor/:responseId')
+    .route('/quiz/audio-res/mentor/:quizResponseRoomId')
         .post(taskController.sendAudioResToQuizByMentor);
 
 router
-    .route('/text-ticket/intern-add/:taskId')
+    .route('/ticket/text/intern/:taskId')
         .post(taskController.addTextTicketForTaskByIntern);
 
 router
-    .route('/audio-ticket/intern-add/:taskId')
+    .route('/ticket/audio/intern/:taskId')
         .post(taskController.addAudioTicketForTaskByIntern);
 
 router
-    .route('/text-ticket/mentor-res/:ticketId')
+    .route('/ticket/text/mentor/:ticketId')
         .post(taskController.addTextTicketForTaskByMentor);
 
 router
-    .route('/audio-ticket/mentor-res/:ticketId')
+    .route('/ticket/audio/mentor/:ticketId')
         .post(taskController.addAudioTicketForTaskByMentor);
-
-router
-    .route('/upload/videos/:taskId')
-        .post(taskController.uploadVideoForTask)
-
-router
-    .route('/upload/audios/:taskId')
-        .post(taskController.uploadAudioForTask)
-
-router
-    .route('/upload/pdfs/:taskId')
-        .post(taskController.uploadPdfFileForTask)
 
 module.exports = router;
 

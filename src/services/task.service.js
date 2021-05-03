@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponse } = require('../models');
+const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponseRoom } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 
@@ -61,10 +61,7 @@ const uploadImageForTask = async(taskId, imageBody, imageDetails) => {
 
 const uploadVideoForTask = async(taskId, videoBody, videoDetails) => {
     try {
-
-
         const videoModel = videoDetails.map((videoDetail) => {
-
             const video = {
                 title: videoBody.title,
                 description: videoBody.description,
@@ -75,28 +72,16 @@ const uploadVideoForTask = async(taskId, videoBody, videoDetails) => {
 
             return video;
         });
-
-    //    const result =  await Video.insertMany(videoModel);
-    //    console.log("result: ", result);
-
-       const videosId = result.map(videoId => videoId._id)
-        
         
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
             "videos": { "$each": videoModel }
-        }}, { "new": true, "upsert": true },
-        function(err) {
-            if(!err) {console.log('Update');}
-            if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-        });  
+        }}, { "new": true, "upsert": true });  
         
-    return updatedTask;
+        return updatedTask;
     }
     catch(err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
-      };
+        console.log(err);
+    };
 };
 
 
@@ -114,13 +99,7 @@ const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
             };
 
             return audio;
-        });
-
-        console.log(audioModel);
-    //    const result =  await Audio.insertMany(audioModel);
-
-    //    const audiosId = result.map(audioId => audioId._id)
-        
+        });        
         
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
             "audios": { "$each": audioModel }
@@ -142,8 +121,6 @@ const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
 
 const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
     try {
-
-
         const pdfModel = pdfDetails.map((pdfDetail) => {
 
             const pdf = {
@@ -152,12 +129,12 @@ const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
                 filename: pdfDetail.filename,
                 mimetype: pdfDetail.mimetype,
                 size: pdfDetail.size
-            };
+            }; 
 
             return pdf;
         });
 
-        
+
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
             "pdf": { "$each": pdfModel }
         }}, { "new": true, "upsert": true },
@@ -166,7 +143,7 @@ const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
             if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
         });  
         
-    return updatedTask;
+        return updatedTask;
     }
     catch(err) {
         const error = new Error(err);
@@ -211,24 +188,33 @@ const createQuizForTask = async(taskId, questions) => {
 
 const sendTextResToQuizByIntern = async(taskId, internId, text) => {
 
-    let quizResponse = await QuizResponse.findOne({ taskId: taskId, internId: internId });
-    if(!quizResponse) { quizResponse = await QuizResponse.create({ taskId: taskId, internId: internId, score: 35 }); }
+    let quizResponseRoom = await QuizResponseRoom.findOne({ taskId: taskId, internId: internId });
+    if(!quizResponseRoom) { quizResponseRoom = await QuizResponseRoom.create({ taskId: taskId, internId: internId }); }
     const response = {
         senderId: internId,
         replayTo: taskId,
         text: text,
         date: new Date().toString()
     };
-    const addTicket = await QuizResponse.updateOne({_id: quizResponse._id}, {"$addToSet": {
+    const addResponse = await QuizResponseRoom.updateOne({_id: quizResponseRoom._id}, {"$addToSet": {
         "responses": response,
     }}, { "new": true, "upsert": true }); 
+
+    //internResponse is property for that menor know intrn send him a new response to quiz
+    //mentorResponse is property for intern that know mentor send a new response
+    await QuizResponseRoom.updateOne({_id: quizResponseRoom._id}, {"$set": {
+        "internResponse": true,
+        "mentorResponse": false,
+    }}, { "new": true, "upsert": true });
+
+    return addResponse;
 
 };
 
 const sendAudioResToQuizByIntern = async(taskId, internId, audioDetails) => {
 
-    let quizResponse = await QuizResponse.findOne({ taskId: taskId, internId: internId });
-    if(!quizResponse) { quizResponse = await QuizResponse.create({ taskId: taskId, internId: internId, score: 35 }); }
+    let quizResponseRoom = await QuizResponseRoom.findOne({ taskId: taskId, internId: internId });
+    if(!quizResponseRoom) { quizResponseRoom = await QuizResponseRoom.create({ taskId: taskId, internId: internId }); }
     const audioFile = {
         filename: audioDetails.filename,
         mimetype: audioDetails.mimetype,
@@ -241,32 +227,47 @@ const sendAudioResToQuizByIntern = async(taskId, internId, audioDetails) => {
         date: new Date().toString()
     };
 
-    const addTicket = await QuizResponse.updateOne({_id: quizResponse._id}, {"$addToSet": {
+    const addResponse = await QuizResponseRoom.updateOne({_id: quizResponseRoom._id}, {"$addToSet": {
         "responses": response,
-    }}, { "new": true, "upsert": true });  
+    }}, { "new": true, "upsert": true });
+    
+    //internResponse is property for that menor know intrn send him a new response to quiz
+    //mentorResponse is property for intern that know mentor send a new response
+    await QuizResponseRoom.updateOne({_id: quizResponseRoom._id}, {"$set": {
+        "internResponse": true,
+        "mentorResponse": false,
+    }}, { "new": true, "upsert": true });
+
+    return addResponse;
 };
 
-const sendTextResToQuizByMentor = async(responseId, mentorId, text) => {
+const sendTextResToQuizByMentor = async(quizResponseRoomId, mentorId, text) => {
 
-    const quizResponse = await QuizResponse.findOne({ "responses._id": responseId });
+    const quizResponseRoom = await QuizResponseRoom.findOne({ _id: quizResponseRoomId });
+    if(!quizResponseRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
     
     const response = {
         senderId: mentorId,
-        replayTo: responseId,
+        replayTo: quizResponseRoomId,
         text: text,
         date: new Date().toString()
     };
-    const sendTextRes = await QuizResponse.updateOne({_id: quizResponse._id}, {"$addToSet": {
+    const addResponse = await QuizResponseRoom.updateOne({ _id: quizResponseRoomId }, {"$addToSet": {
         "responses": response,
     }}, { "new": true, "upsert": true }); 
 
-    return sendTextRes;
+    await QuizResponseRoom.updateOne({ _id: quizResponseRoomId }, {"$set": {
+        "internResponse": false,
+        "mentorResponse": true,
+    }}, { "new": true, "upsert": true });
+
+    return addResponse;
 };
 
-const sendAudioResToQuizByMentor = async(responseId, mentorId, audioDetails) => {
+const sendAudioResToQuizByMentor = async(quizResponseRoomId, mentorId, audioDetails) => {
 
-    let quizResponse = await QuizResponse.findOne({ "responses._id": responseId });
-    if(!quizResponse) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
+    let quizResponseRoom = await QuizResponseRoom.findOne({ _id: quizResponseRoomId });
+    if(!quizResponseRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
     
     
     const audioFile = {
@@ -276,14 +277,21 @@ const sendAudioResToQuizByMentor = async(responseId, mentorId, audioDetails) => 
     };
     const response = {
         senderId: mentorId,
-        replayTo: responseId,
+        replayTo: quizResponseRoomId,
         audio: audioFile,
         date: new Date().toString()
     };
 
-    const addTicket = await QuizResponse.updateOne({_id: quizResponse._id}, {"$addToSet": {
+    const addResponse = await QuizResponseRoom.updateOne({ _id: quizResponseRoomId }, {"$addToSet": {
         "responses": response,
     }}, { "new": true, "upsert": true });  
+
+    await QuizResponseRoom.updateOne({ _id: quizResponseRoomId }, {"$set": {
+        "internResponse": false,
+        "mentorResponse": true,
+    }}, { "new": true, "upsert": true });
+
+    return addResponse;
 };
 
 const addTextTicketForTaskByIntern = async(taskId, ticketBody) => {

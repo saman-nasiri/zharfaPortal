@@ -30,14 +30,12 @@ const uploadImageForTask = catchAsync(async(req, res) => {
 
 const uploadVideoForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    await taskService.getTask(taskId)
-
-    
+    await taskService.getTaskById(taskId)
 
     await upload.uploadVideo(req, res);
     const videoDetails = req.files;
     const videoBody = req.body;
-    
+    console.log(videoBody);
     const result = await taskService.uploadVideoForTask(taskId, videoBody, videoDetails);
 
     res.send(result)
@@ -61,9 +59,7 @@ const uploadAudioForTask = catchAsync(async(req, res) => {
 
 const uploadPdfFileForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    await taskService.getTask(taskId)
-
-    
+    await taskService.getTaskById(taskId)
 
     await upload.uploadPdf(req, res);
     const pdfDetails = req.files;
@@ -89,6 +85,7 @@ const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
     const internId = "6087b87b104caa2307e68566";
     const taskId = req.params.taskId;
     const text = req.body.text;
+    await taskService.getTaskById(taskId);
     const result = await taskService.sendTextResToQuizByIntern(taskId, internId, text)
     res.status(httpStatus.OK).send(result);
 });
@@ -106,18 +103,18 @@ const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
 
 const sendTextResToQuizByMentor = catchAsync(async(req, res) => {
     const mentorId = "6087b8ac104caa2307e68567";
-    const responseId = req.params.responseId;
+    const quizResponseRoomId = req.params.quizResponseRoomId;
     const text = req.body.text;
-    const result = await taskService.sendTextResToQuizByMentor(responseId, mentorId, text)
+    const result = await taskService.sendTextResToQuizByMentor(quizResponseRoomId, mentorId, text)
     res.status(httpStatus.OK).send(result);
 });
 
 const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
     const mentorId = "6087b8ac104caa2307e68567";
-    const responseId = req.params.responseId;
+    const quizResponseRoomId = req.params.quizResponseRoomId;
     await upload.uploadSingleAudio(req, res);
     const audioDetails = req.file;
-    const result = await taskService.sendAudioResToQuizByMentor(responseId, mentorId, audioDetails)
+    const result = await taskService.sendAudioResToQuizByMentor(quizResponseRoomId, mentorId, audioDetails)
     res.status(httpStatus.OK).send(result);
 });
 
@@ -182,7 +179,7 @@ const doneTaskAction = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send('success');
 });
 
-const getTask = catchAsync(async(req, res) => {
+const getTaskById = catchAsync(async(req, res) => {
     const task = await taskService.getTaskById(req.params.taskId)
     res.status(httpStatus.OK).send(task);
 });
@@ -204,5 +201,5 @@ module.exports = {
     addTextTicketForTaskByMentor,
     addAudioTicketForTaskByMentor,
     doneTaskAction,
-    getTask,
+    getTaskById,
 };
