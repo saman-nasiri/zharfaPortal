@@ -16,11 +16,23 @@ router
 
 router
     .route('/action/score/:weekId')
-        .get(weekController.recordWeekScore)
+        .post(weekController.recordWeekScore)
 
 router
     .route('/action/viewCount/:weekId')
-        .get(weekController.recordWeekViewCount)
+        .post(weekController.recordWeekViewCount)
+
+router
+    .route('/')
+        .get(weekController.getWeeks)
+
+router
+    .route('/:weekId')
+        .get(weekController.getWeekById)
+
+router
+    .route('/delete/:weekId')
+        .delete(weekController.deleteWeekById)
 
         
 module.exports = router;

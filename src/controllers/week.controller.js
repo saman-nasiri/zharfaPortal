@@ -8,7 +8,7 @@ const upload = require('../middlewares/uploadFile');
 const createWeek = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const weekBody = req.body;
-    const term = await termService.getTerm(termId);
+    const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
     const week = await weekService.createWeek(weekBody);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotCreated'); };
@@ -35,16 +35,39 @@ const recordWeekScore = catchAsync(async(req, res) => {
  const weekProgressbar = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const internId = "6087b87b104caa2307e68566" // req.user._id
-    const week = await weekService.getWeek(weekId);
+    const week = await weekService.getWeekById(weekId);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound'); };
     const progressbar = await weekService.weekProgressbar(week, internId);
     res.status(httpStatus.OK).send(progressbar);
  });
+
+const getWeeks = catchAsync(async(req, res) => {
+    const weeks = await weekService.getWeeks();
+    if(!weeks) { throw new ApiError(httpStatus.NOT_FOUND, 'WeeksNotFound') };
+    res.status(httpStatus.OK).send(weeks);
+});
+
+const getWeekById = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const week = await weekService.getWeekById(weekId);
+    res.status(httpStatus.OK).send(week);
+});
+
+const deleteWeekById = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const week = await weekService.getWeekById(weekId);
+    if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound') };
+    const result = await weekService.deleteWeekById(weekId);
+    res.status(httpStatus.OK).send(result);
+});
 
 
 module.exports = {
     createWeek,
     recordWeekScore,
     recordWeekViewCount,
-    weekProgressbar
+    weekProgressbar,
+    getWeeks,
+    getWeekById,
+    deleteWeekById
 };

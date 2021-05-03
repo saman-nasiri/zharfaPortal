@@ -10,7 +10,7 @@ const termSchema = mongoose.Schema({
     description: String,
     startAt: Date,
     duration: Number,
-    weeksList:   [ mongoose.SchemaTypes.ObjectId ]
+    weeksList:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' } ]
 });
 
 

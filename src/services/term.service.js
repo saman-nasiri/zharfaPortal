@@ -103,6 +103,14 @@ const deleteTermById = async(termId) => {
     return result;
 };
 
+const getWeeksOfTheTermById = async(termId) => {
+    const weeks = await Term.findOne({ _id: termId })
+    .populate('weeksList')
+    .select('weekList -_id')
+
+    return weeks.weeksList;
+}; 
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
@@ -113,5 +121,6 @@ module.exports = {
     updateTerm,
     getTerms,
     getTermById,
-    deleteTermById
+    deleteTermById,
+    getWeeksOfTheTermById
 };

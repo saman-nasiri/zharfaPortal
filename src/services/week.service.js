@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Week, InternWeekAction } = require('../models');
+const { Week, InternWeekAction, Task} = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createWeek = async(weekBody, term) => {
@@ -83,16 +83,36 @@ const updateWeekDuration = async(weekId, task) => {
 
 const weekProgressbar = async(week, internId) => {
 
-    const weekAction = await InternWeekAction.findOne({ weekId: week._id, internId: internId }).lean();
-    const progressbar = Math.ceil(parseInt(weekAction.doneTaskDuration) / parseInt(week.duration) * 100)
-    const result = { progressbar : progressbar };
+    const weekAction = await InternWeekAction.findOne({ weekId: week._id, internId: internId });
+    if(!weekAction) {
+        const result = { progressbar : 0 };
 
-    return result;
+        return result;
+    }
+    else {
+        const progressbar = Math.ceil(parseInt(weekAction.doneTaskDuration) / parseInt(week.duration) * 100)
+        const result = { progressbar : progressbar };
+
+        return result;
+    }
 };
 
-const getWeek = async(weekId) => {
+
+const getWeeks = async() => {
+    const weeks = await Week.find();
+    return weeks;
+};
+
+const getWeekById = async(weekId) => {
     const week = await Week.findById(weekId);
+    if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound') };
     return week;
+};
+
+const deleteWeekById = async(weekId) => {
+    await Task.deleteMany({ weekId: weekId });
+    const result = await Week.deleteOne({ _id: weekId });
+    return result;
 };
 
 module.exports = {
@@ -102,5 +122,7 @@ module.exports = {
     recordWeekViewCount,
     updateWeekDuration,
     weekProgressbar,
-    getWeek
+    getWeeks,
+    getWeekById,
+    deleteWeekById
 };

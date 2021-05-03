@@ -79,6 +79,12 @@ const deleteTermById = catchAsync(async(req, res) => {
 });
 
 
+const getWeeksOfTheTermById = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const weeks = await termService.getWeeksOfTheTermById(termId);
+    res.status(httpStatus.OK).send(weeks);
+});
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
@@ -89,4 +95,5 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
+    getWeeksOfTheTermById
 };

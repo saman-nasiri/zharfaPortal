@@ -42,4 +42,8 @@ router
     .route('/delete/:termId')
         .get(termController.deleteTermById)
 
+router
+    .route('/weeks/:termId')
+        .get(termController.getWeeksOfTheTermById)
+
 module.exports = router;
