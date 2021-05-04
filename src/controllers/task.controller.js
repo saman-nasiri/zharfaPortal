@@ -119,53 +119,39 @@ const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
 });
 
 const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
-    try {
+        const internId = "6087b87b104caa2307e68566";
         const taskId = req.params.taskId;
         await taskService.getTaskById(taskId)
         const ticketBody = req.body;
-        const result = await taskService.addTextTicketForTaskByIntern(taskId, ticketBody);
-        res.send(result);
-    } catch (error) {
-        console.log(error);
-    }
+        const result = await taskService.addTextTicketForTaskByIntern(taskId, internId, ticketBody);
+        res.status(httpStatus.OK).send(result);
 });
 
 const addAudioTicketForTaskByIntern = catchAsync(async(req, res) => {
-    try {
+        const internId = "6087b87b104caa2307e68566";
         const taskId = req.params.taskId;
         await taskService.getTaskById(taskId)
         await upload.uploadSingleAudio(req, res);
         const audioDetails = req.file;
-        const result = await taskService.addAudioTicketForTaskByIntern(taskId, audioDetails);
-        res.send(result);
-    } catch (error) {
-        console.log(error);
-    }
+        const result = await taskService.addAudioTicketForTaskByIntern(taskId, internId, audioDetails);
+        res.status(httpStatus.OK).send(result);
 });
 
 const addTextTicketForTaskByMentor = catchAsync(async(req, res) => {
-    try {
         const mentorId = "6087b8ac104caa2307e68567";
-        const ticketId = req.params.ticketId;
+        const ticketRoomId = req.params.ticketRoomId;
         const ticketBody = req.body;
-        const result = await taskService.addTextTicketForTaskByMentor(ticketId, mentorId, ticketBody);
-        res.send(result);
-    } catch (error) {
-        console.log(error);
-    }
+        const result = await taskService.addTextTicketForTaskByMentor(ticketRoomId, mentorId, ticketBody);
+        res.status(httpStatus.OK).send(result);
 });
 
 const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
-    try {
         const mentorId = "6087b8ac104caa2307e68567";
-        const ticketId = req.params.ticketId;
+        const ticketRoomId = req.params.ticketRoomId;
         await upload.uploadSingleAudio(req, res);
         const audioDetails = req.file;
-        const result = await taskService.addAudioTicketForTaskByMentor(ticketId, mentorId, audioDetails);
-        res.send(result);
-    } catch (error) {
-        console.log(error);
-    }
+        const result = await taskService.addAudioTicketForTaskByMentor(ticketRoomId, mentorId, audioDetails);
+        res.status(httpStatus.OK).send(result);
 });
 
 
@@ -173,14 +159,14 @@ const doneTaskAction = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     const internId = "6087b87b104caa2307e68566"; // req.user._id
     const task = await taskService.getTaskById(taskId);
-    console.log(task);
     const action = await taskService.getInternTaskAction(taskId, internId);
     const doneTaskAction = await taskService.doneTaskAction(action, task);
-    res.status(httpStatus.OK).send('success');
+    res.status(httpStatus.OK).send({ message: 'Done Success'});
 });
 
 const getTaskById = catchAsync(async(req, res) => {
-    const task = await taskService.getTaskById(req.params.taskId)
+    const internId = "6087b87b104caa2307e68566"; // req.user._id
+    const task = await taskService.getTaskById(req.params.taskId, internId)
     res.status(httpStatus.OK).send(task);
 });
 

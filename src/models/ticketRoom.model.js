@@ -12,6 +12,8 @@ const ticketRoomSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Intern"
     },
+    internResponse:{ type: Boolean, default: false },
+    mentorResponse:{ type: Boolean, default: false },
     tickets: [{
         senderId: { type: mongoose.SchemaTypes.ObjectId },
         replayTo: { type: mongoose.SchemaTypes.ObjectId },

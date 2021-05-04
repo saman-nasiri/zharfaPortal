@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Term, Intern, Mentor, Week } = require('../models');
+const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
 
 const createTerm = async(termBody, tutorialCategory) => {
@@ -99,12 +100,22 @@ const deleteTermById = async(termId) => {
     return result;
 };
 
-const getWeeksOfTheTermById = async(termId) => {
-    const weeks = await Term.findOne({ _id: termId })
+const getWeeksOfTheTermById = async(termId, internId) => {
+    const weeks = await Term.findOne({ _id: termId }).lean()
     .populate('weeksList')
     .select('weekList -_id')
 
-    return weeks.weeksList;
+    let weeksList = weeks.weeksList;
+
+    const weeksModel = await Promise.all(
+        weeksList.map(async(week) => {
+            const progressbar = await weekProgressbar(week, internId);
+            week["progressbar"] = progressbar.progressbar;
+            return week;
+        })
+    )
+
+    return weeksModel;
 }; 
 
 const removeWeekFromTerm = async(termId, weekId) => {

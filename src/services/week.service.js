@@ -103,6 +103,7 @@ const getWeeks = async() => {
     return weeks;
 };
 
+
 const getWeekById = async(weekId) => {
     const week = await Week.findById(weekId);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound') };
@@ -110,7 +111,8 @@ const getWeekById = async(weekId) => {
 };
 
 const getTaskOfTheWeekByWeekId = async(weekId) => {
-    const tasks = await Task.find({ weekId: weekId });
+    const tasks = await Task.find({ weekId: weekId })
+    .select('_id title');
     return tasks;
 };
 

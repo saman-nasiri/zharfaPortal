@@ -63,12 +63,15 @@ router
         .post(taskController.addAudioTicketForTaskByIntern);
 
 router
-    .route('/ticket/text/mentor/:ticketId')
+    .route('/ticket/text/mentor/:ticketRoomId')
         .post(taskController.addTextTicketForTaskByMentor);
 
 router
-    .route('/ticket/audio/mentor/:ticketId')
+    .route('/ticket/audio/mentor/:ticketRoomId')
         .post(taskController.addAudioTicketForTaskByMentor);
+
+
+
 
 module.exports = router;
 

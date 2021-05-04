@@ -294,140 +294,110 @@ const sendAudioResToQuizByMentor = async(quizResponseRoomId, mentorId, audioDeta
     return addResponse;
 };
 
-const addTextTicketForTaskByIntern = async(taskId, ticketBody) => {
-    try {
-        const internId = "6087b87b104caa2307e68566";
-        const taskCreater = "6087b8ac104caa2307e68567" //task creator id
+const addTextTicketForTaskByIntern = async(taskId, internId, ticketBody) => {
 
-        const ticketRoom = await TicketRoom.findOne({taskId: taskId, internId: internId});
-
-        
-        if(!ticketRoom) {
-            const ticketModel = {
-                taskId: taskId,
-                internId: internId,
-                tickets: {
-                    senderId: internId,
-                    replayTo: taskId,
-                    text: ticketBody.text,
-                    date: new Date().toString()
-                }
-            };
-            const ticketRoom = await TicketRoom.create(ticketModel);
-            console.log('ticketRoom: ', ticketRoom);
-    
-            return ticketRoom;
-        }
-        else {
-            const ticket = {
-                senderId: internId,
-                replayTo: taskCreater,
-                text: ticketBody.text,
-                date: new Date().toString()
-            };
-
-            console.log("ticket", ticket);
-            const addTicket = await TicketRoom.updateOne({taskId: taskId, internId: internId}, {"$addToSet": {
-                "tickets": ticket,
-            }}, { "new": true, "upsert": true });  
-
-            return addTicket;
-        }
-        
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-
-const addAudioTicketForTaskByIntern = async(taskId, audioDetails) => {
-    try {
-        const internId = "6087b87b104caa2307e68566";
-        const taskCreater = "6087b8ac104caa2307e68567" //task creator id
-
-        const ticketRoom = await TicketRoom.find({taskId: taskId, internId: internId});
-
-        const audioFile = {
-            filename: audioDetails.filename,
-            mimetype: audioDetails.mimetype,
-            size: audioDetails.size
-        };
-        
-        console.log("audioDetails", audioFile);
-        if(!ticketRoom) {
-            const ticketModel = {
-                taskId: taskId,
-                internId: internId,
-                tickets: {
-                    senderId: internId,
-                    replayTo: taskId,
-                    audio: audioFile,
-                    date: new Date().toString()
-                }
-            };
-            const ticketRoom = await TicketRoom.create(ticketModel);
-            console.log('ticketRoom: ', ticketRoom);
-    
-            return ticketRoom;
-        }
-        else {
-            const ticket = {
-                senderId: internId,
-                replayTo: taskId,
-                audio: audioFile,
-                date: new Date().toString()
-            };
-
-            console.log("ticket", ticket);
-            const addTicket = await TicketRoom.updateOne({taskId: taskId, internId: internId}, {"$addToSet": {
-                "tickets": ticket,
-            }}, { "new": true, "upsert": true });  
-
-            return addTicket;
-        }
-        
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-const addTextTicketForTaskByMentor = async(ticketId, mentorId, ticketBody) => {
-        const ticketRoom = await TicketRoom.findOne({"tickets._id": { $in: ticketId }})
+        let ticketRoom = await TicketRoom.findOne({taskId: taskId, internId: internId});
+        if(!ticketRoom) { ticketRoom = await TicketRoom.create({taskId: taskId, internId: internId})};
         const ticket = {
-            senderId: mentorId,
-            replayTo: ticketId,
+            senderId: internId,
+            replayTo: taskId,
             text: ticketBody.text,
             date: new Date().toString()
         };
 
-        const addTicket = await TicketRoom.updateOne({_id: ticketRoom._id}, {"$addToSet": {
+        const addTicket = await TicketRoom.updateOne({taskId: taskId, internId: internId}, {"$addToSet": {
             "tickets": ticket,
-        }}, { "new": true, "upsert": true });  
+        }}, { "new": true, "upsert": true }); 
+
+        await TicketRoom.updateOne({ _id: ticketRoom._id }, {"$set": {
+            "internResponse": true,
+            "mentorResponse": false,
+        }}, { "new": true, "upsert": true }); 
 
         return addTicket;
 };
 
 
-const addAudioTicketForTaskByMentor = async(ticketId, mentorId, audioDetails) => {
-    const ticketRoom = await TicketRoom.findOne({"tickets._id": { $in: ticketId }})
-    const audioFile = {
-        filename: audioDetails.filename,
-        mimetype: audioDetails.mimetype,
-        size: audioDetails.size
-    };
+const addAudioTicketForTaskByIntern = async(taskId, internId, audioDetails) => {
 
-    const ticket = {
-        senderId: mentorId,
-        replayTo: ticketId,
-        audio: audioFile,
-        date: new Date().toString()
-    };
+        let ticketRoom = await TicketRoom.findOne({taskId: taskId, internId: internId});
+        if(!ticketRoom) { ticketRoom = await TicketRoom.create({taskId: taskId, internId: internId})};
+    
+        const audioFile = {
+            filename: audioDetails.filename,
+            mimetype: audioDetails.mimetype,
+            size: audioDetails.size
+        };
 
-    const addTicket = await TicketRoom.updateOne({_id: ticketRoom._id}, {"$addToSet": {
-        "tickets": ticket,
-    }}, { "new": true, "upsert": true });  
+        const ticket = {
+            senderId: internId,
+            replayTo: taskId,
+            audio: audioFile,
+            date: new Date().toString()
+        };
+        
+        const addTicket = await TicketRoom.updateOne({ _id: ticketRoom._id }, {"$addToSet": {
+            "tickets": ticket,
+        }}, { "new": true, "upsert": true }); 
+        
+        await TicketRoom.updateOne({ _id: ticketRoom._id }, {"$set": {
+            "internResponse": true,
+            "mentorResponse": false,
+        }}, { "new": true, "upsert": true });
 
-    return addTicket;
+        return addTicket;
+};
+
+const addTextTicketForTaskByMentor = async(ticketRoomId, mentorId, ticketBody) => {
+        let ticketRoom = await TicketRoom.findOne({ _id: ticketRoomId });
+        if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound'); };
+        const ticket = {
+            senderId: mentorId,
+            replayTo: ticketRoomId,
+            text: ticketBody.text,
+            date: new Date().toString()
+        };
+
+        const addTicket = await TicketRoom.updateOne({_id: ticketRoomId}, {"$addToSet": {
+            "tickets": ticket,
+        }}, { "new": true, "upsert": true });  
+
+        await TicketRoom.updateOne({_id: ticketRoomId}, {"$set": {
+            "internResponse": false,
+            "mentorResponse": true,
+        }}, { "new": true, "upsert": true });
+
+        return addTicket;
+};
+
+
+const addAudioTicketForTaskByMentor = async(ticketRoomId, mentorId, audioDetails) => {
+        let ticketRoom = await TicketRoom.findOne({ _id: ticketRoomId });
+        if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound'); };
+        
+        const audioFile = {
+            filename: audioDetails.filename,
+            mimetype: audioDetails.mimetype,
+            size: audioDetails.size
+        };
+
+        const ticket = {
+            senderId: mentorId,
+            replayTo: ticketRoomId,
+            audio: audioFile,
+            date: new Date().toString()
+        };
+
+        const addTicket = await TicketRoom.updateOne({_id: ticketRoomId}, {"$addToSet": {
+            "tickets": ticket,
+        }}, { "new": true, "upsert": true });
+
+        await TicketRoom.updateOne({_id: ticketRoomId}, {"$set": {
+            "internResponse": false,
+            "mentorResponse": true,
+        }}, { "new": true, "upsert": true });
+
+        return addTicket;
 };
 
 
@@ -478,17 +448,21 @@ const doneTaskAction = async(action, task) => {
 };
 
 
-const getTaskById = async(taskId) => {
-    const task = await Task.findById(taskId);
+const getTaskById = async(taskId, internId) => {
+    let task = await Task.findById(taskId).lean();
     if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TaskNotFound'); };
+
+    const taskAction = await InternTaskAction.findOne({ taskId: task._id, internId: internId })
+    if(taskAction) { task["done"] = taskAction.done };
+
 
     // const audio = await Audio.find({_id: {"$in": task.audios }});
     // const ticket = await TicketRoom.find({"tickets._id": {$in: "607d1fdac8d8ab1b8c72605c"}})
     // return ticket;
 
     return task;
-    
 };
+
 
 const getTicketRoom = async(ticketRoomId) => {
     const ticketRoom = await TicketRoom.findById(ticketRoomId);

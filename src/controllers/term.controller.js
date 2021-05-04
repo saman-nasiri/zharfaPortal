@@ -81,7 +81,8 @@ const deleteTermById = catchAsync(async(req, res) => {
 
 const getWeeksOfTheTermById = catchAsync(async(req, res) => {
     const termId = req.params.termId;
-    const weeks = await termService.getWeeksOfTheTermById(termId);
+    const internId = '6087b87b104caa2307e68566';
+    const weeks = await termService.getWeeksOfTheTermById(termId, internId);
     res.status(httpStatus.OK).send(weeks);
 });
 
