@@ -1,11 +1,21 @@
 const multer = require('multer');
 const path = require('path');
 const util = require('util');
+const fse = require('fs-extra')
+
+
+
+function setFilePath(dirPath) {
+  const filePath = fse.ensureDirSync(dirPath);
+  if(!filePath) { return dirPath; }
+  else { return filePath };
+};
+
 
 const storage = multer.diskStorage({
 
     destination: function (req, res, cb) {
-        cb(null, './public/image');
+        cb(null, setFilePath('./public/image'));
     },
     filename: function (req, res, cb) {
         cb(null, `saman$${new Date}`)
@@ -28,10 +38,9 @@ const upload = multer({
 const file = upload.single('multi-files');
 
 
-
 var storageImages = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, `./public/image`);
+      callback(null, setFilePath(`./public/image`));
     },
     filename: (req, file, callback) => {
       const match = ["image/png", "image/jpeg",  "image/jpg"];
@@ -56,7 +65,7 @@ var storageImages = multer.diskStorage({
 // Upload video files
 var storageVideo = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, `./public/video`);
+      callback(null, setFilePath(`./public/video`));
     },
     filename: (req, file, callback) => {
       const match = ["video/mp4", "video/mkv"];
@@ -78,7 +87,7 @@ var storageVideo = multer.diskStorage({
   // Upload audio files
 var storageAudio = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, `./public/audio`);
+      callback(null, setFilePath(`./public/audio`));
     },
     filename: (req, file, callback) => {
       const match = ["audio/mp3", "audio/mpeg"];
@@ -123,7 +132,7 @@ var storagePdf = multer.diskStorage({
    // Upload audio files
 var storageSingleAudio = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, `./public/audio`);
+    callback(null, setFilePath(`./public/audio`));
   },
   filename: (req, file, callback) => {
     const match = ["audio/mp3", "audio/mpeg"];

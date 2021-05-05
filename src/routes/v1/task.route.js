@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
+const taskValidation = require('../../validations/task.validation');
 const taskController = require('../../controllers/task.controller');
 
 const router = express.Router();
@@ -70,9 +71,27 @@ router
     .route('/ticket/audio/mentor/:ticketRoomId')
         .post(taskController.addAudioTicketForTaskByMentor);
 
+router
+    .route('/update/:taskId')
+        .put(validate(taskValidation.updateTaskById), taskController.updateTaskById)
 
+router
+    .route('/remove-image/:taskId')
+        .delete(taskController.removeTaskImagesByName)
 
+router
+    .route('/update-image/:imageId')
+        .put(taskController.updateTaskImagesById)
 
+router
+    .route('/remove-video/:taskId')
+        .delete(taskController.removeTaskVideosByName)
+
+router
+    .route('/update-video/:videoId')
+        .put(taskController.updateTaskVideosById)
+
+        
 module.exports = router;
 
 

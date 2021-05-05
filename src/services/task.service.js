@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const fse = require('fs-extra');
 const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponseRoom } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -471,6 +472,53 @@ const getTicketRoom = async(ticketRoomId) => {
     return ticketRoom;
 };
 
+const updateTaskById = async(taskId, taskBody) => {
+    const updateTask = await Task.updateOne({ _id: taskId }, { "$set":  taskBody }, { "new": true, "upsert": true });
+    return updateTask;
+};
+
+const removeTaskImagesByName = async(taskId, removeList) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+        "images": { filename: removeList },
+    }}, { "new": true, "upsert": true });
+
+    removeList.forEach((file) => {
+        fse.unlinkSync(`./public/image/${file}`)    
+    });
+
+    return result;
+};
+
+const updateTaskImagesById = async(imageId, imageBody) => {
+    const result = await Task.updateOne({ "images._id": imageId }, { "$set": {
+        "images.$.title": imageBody.title,
+        "images.$.description": imageBody.description,
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+const removeTaskVideosByName = async(taskId, removeList) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+        "videos": { filename: removeList },
+    }}, { "new": true, "upsert": true });
+
+    removeList.forEach((file) => {
+        fse.unlinkSync(`./public/video/${file}`)    
+    });
+
+    return result;
+};
+
+const updateTaskVideosById = async(videoId, videoBody) => {
+    const result = await Task.updateOne({ "videos._id": videoId }, { "$set": {
+        "videos.$.title": videoBody.title,
+        "videos.$.description": videoBody.description,
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
 module.exports = {
     createTask,
     uploadImageForTask,
@@ -489,5 +537,10 @@ module.exports = {
     getInternTaskAction,
     doneTaskAction,
     getTaskById,
-    getTicketRoom
+    getTicketRoom,
+    updateTaskById,
+    removeTaskImagesByName,
+    updateTaskImagesById,
+    removeTaskVideosByName,
+    updateTaskVideosById
 };

@@ -170,6 +170,41 @@ const getTaskById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(task);
 });
 
+const updateTaskById = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const taskBody = req.body;
+    console.log(taskBody);
+    const updateTask = await taskService.updateTaskById(taskId, taskBody);
+    res.status(httpStatus.OK).send(updateTask);
+});
+
+const removeTaskImagesByName = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    removeList = req.body.removeList;
+    const result = await taskService.removeTaskImagesByName(taskId, removeList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const updateTaskImagesById = catchAsync(async(req, res) => {
+    const imageId = req.params.imageId;
+    const imageBody = req.body;
+    const result = await taskService.updateTaskImagesById(imageId, imageBody);
+    res.status(httpStatus.OK).send(result);
+});
+
+const removeTaskVideosByName = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    removeList = req.body.removeList;
+    const result = await taskService.removeTaskVideosByName(taskId, removeList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const updateTaskVideosById = catchAsync(async(req, res) => {
+    const videoId = req.params.videoId;
+    const videoBody = req.body;
+    const result = await taskService.updateTaskVideosById(videoId, videoBody);
+    res.status(httpStatus.OK).send(result);
+});
 
 module.exports = {
     creatTask,
@@ -188,4 +223,10 @@ module.exports = {
     addAudioTicketForTaskByMentor,
     doneTaskAction,
     getTaskById,
+    updateTaskById,
+    removeTaskImagesByName,
+    updateTaskImagesById,
+    removeTaskVideosByName,
+    updateTaskVideosById
+
 };
