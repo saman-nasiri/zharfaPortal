@@ -115,6 +115,18 @@ router
     .route('/update-quiz/:quizId')
         .put(taskController.updateTaskQuizesById)
 
+router
+    .route('/download-pdf/:filename')
+        .get(taskController.getPdfFile);
+
+router
+    .route('/play-video/:filename')
+        .get(taskController.getVideofile);
+
+router
+    .route('/play-audio/:filename')
+        .get(taskController.getAudiofile);
+
 
         
 module.exports = router;

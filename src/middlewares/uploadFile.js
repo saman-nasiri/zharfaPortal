@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const util = require('util');
 const fse = require('fs-extra')
-
+const { v4: uuidv4 } = require('uuid');
 
 
 function setFilePath(dirPath) {
@@ -54,7 +54,8 @@ var storageImages = multer.diskStorage({
     // if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
     //     return callback(new Error('Only videos are allowed'))
     // }
-      var filename = `${Date.now()}-bezkoder-${file.originalname}`;
+      const fileExt = path.extname(file.originalname);
+      const filename = uuidv4() + fileExt;
       callback(null, filename);
     }
   });
@@ -75,7 +76,8 @@ var storageVideo = multer.diskStorage({
         return callback(message, null);
       }
     
-      var filename = `${Date.now()}-bezkoder-${file.originalname}`;
+      const fileExt = path.extname(file.originalname);
+      const filename = uuidv4() + fileExt;
       callback(null, filename);
     }
   });
@@ -97,7 +99,8 @@ var storageAudio = multer.diskStorage({
         return callback(message, null);
       }
     
-      var filename = `${Date.now()}-bezkoder-${file.originalname}`;
+      const fileExt = path.extname(file.originalname);
+      const filename = uuidv4() + fileExt;
       callback(null, filename);
     }
   });
@@ -119,7 +122,8 @@ var storagePdf = multer.diskStorage({
         return callback(message, null);
       }
     
-      var filename = `${Date.now()}-bezkoder-${file.originalname}`;
+      const fileExt = path.extname(file.originalname);
+      const filename = uuidv4() + fileExt;
       callback(null, filename);
     }
   });
@@ -142,7 +146,8 @@ var storageSingleAudio = multer.diskStorage({
       return callback(message, null);
     }
   
-    var filename = `${Date.now()}-bezkoder-${file.originalname}`;
+    const fileExt = path.extname(file.originalname);
+    const filename = uuidv4() + fileExt;
     callback(null, filename);
   }
 });

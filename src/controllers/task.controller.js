@@ -248,6 +248,27 @@ const updateTaskQuizesById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+const getPdfFile = catchAsync(async(req, res) => {
+    const filename = req.params.filename;
+    const pdfFile = await taskService.getPdfFile(filename);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.status(httpStatus.OK).send(pdfFile);
+});
+
+const getVideofile = catchAsync(async(req, res) => {
+    const filename = req.params.filename;
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Content-Disposition', 'inline; filename=' + filename)
+    const videoFile = await taskService.getVideofile(filename, req, res);
+});
+
+const getAudiofile = catchAsync(async(req, res) => {
+    const filename = req.params.filename;
+    res.setHeader('Content-Type', 'audio/mp3');
+    res.setHeader('Content-Disposition', 'inline; filename=' + filename)
+    const videoFile = await taskService.getAudiofile(filename, req, res);
+});
+
 module.exports = {
     creatTask,
     uploadImageForTask,
@@ -275,6 +296,9 @@ module.exports = {
     removeTaskPdfsByName,
     updateTaskPdfsById,
     removeTaskQuizesById,
-    updateTaskQuizesById
+    updateTaskQuizesById,
+    getPdfFile,
+    getVideofile,
+    getAudiofile
 
 };

@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const fse = require('fs-extra');
+const path = require('path');
 const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponseRoom } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { data } = require('../config/logger');
 
 
 /**
@@ -578,6 +580,87 @@ const updateTaskQuizesById = async(quizId, quizBody) => {
     return result;
 };
 
+const getPdfFile = async(filename) => {
+    const filePath = path.join('public', 'pdf', filename);
+    const file = await fse.readFile(filePath, data) 
+    return file;
+};
+
+const getVideofile = async(filename, req, res) => {
+    const range = req.headers.range;
+    if (!range) {
+        res.status(400).send("Requires Range header");
+    }
+    const videoPath = path.join('public', 'video', filename);
+    const videoSize = fse.statSync(videoPath).size;
+
+
+    // Parse Range
+    // Example: "bytes=32324-"
+    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+    // Create headers
+    const contentLength = end - start + 1;
+    const headers = {
+        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": contentLength,
+        "Content-Type": "video/mp4",
+    };
+
+    // HTTP Status 206 for Partial Content
+    res.writeHead(206, headers);
+
+
+    // create video read stream for this particular chunk
+    const videoStream = fse.createReadStream(videoPath, { start, end });
+
+    // Stream the video chunk to the client
+    videoStream.pipe(res);
+};
+
+
+
+const getAudiofile = async(filename, req, res) => {
+    // const filePath = path.join('public', 'audio', filename);
+    // const file = await fse.createReadStream(filePath);
+    // file.pipe(res)
+
+    const range = req.headers.range;
+    if (!range) {
+        res.status(400).send("Requires Range header");
+    }
+    const videoPath = path.join('public', 'audio', filename);
+    const videoSize = fse.statSync(videoPath).size;
+
+
+    // Parse Range
+    // Example: "bytes=32324-"
+    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+    // Create headers
+    const contentLength = end - start + 1;
+    const headers = {
+        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": contentLength,
+        "Content-Type": "audio/mp3",
+    };
+
+    // HTTP Status 206 for Partial Content
+    res.writeHead(206, headers);
+
+
+    // create video read stream for this particular chunk
+    const videoStream = fse.createReadStream(videoPath, { start, end });
+
+    // Stream the video chunk to the client
+    videoStream.pipe(res);
+};
 
 module.exports = {
     createTask,
@@ -608,5 +691,8 @@ module.exports = {
     removeTaskPdfsByName,
     updateTaskPdfsById,
     removeTaskQuizesById,
-    updateTaskQuizesById
+    updateTaskQuizesById,
+    getPdfFile,
+    getVideofile,
+    getAudiofile
 };
