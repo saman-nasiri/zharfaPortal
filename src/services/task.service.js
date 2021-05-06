@@ -121,7 +121,6 @@ const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
 
 
 const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
-    try {
         const pdfModel = pdfDetails.map((pdfDetail) => {
 
             const pdf = {
@@ -137,7 +136,7 @@ const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
 
 
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "pdf": { "$each": pdfModel }
+            "pdfs": { "$each": pdfModel }
         }}, { "new": true, "upsert": true },
         function(err) {
             if(!err) {console.log('Update');}
@@ -145,12 +144,6 @@ const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
         });  
         
         return updatedTask;
-    }
-    catch(err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
-      };
 };
 
 
@@ -170,7 +163,7 @@ const createQuizForTask = async(taskId, questions) => {
         
         
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "quiz": { "$each": questionModel }
+            "quizes": { "$each": questionModel }
         }}, { "new": true, "upsert": true },
         function(err) {
             if(!err) {console.log('Update');}
@@ -519,6 +512,73 @@ const updateTaskVideosById = async(videoId, videoBody) => {
     return result;
 };
 
+const removeTaskAudiosByName = async(taskId, removeList) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+        "audios": { filename: removeList },
+    }}, { "new": true, "upsert": true });
+
+    removeList.forEach((file) => {
+        fse.unlinkSync(`./public/audio/${file}`)    
+    });
+
+    return result;
+};
+
+const updateTaskAudiosById = async(audioId, audioBody) => {
+    const audioFile = await Task.findOne({ "audios._id": audioId });
+    if(!audioFile) { throw new ApiError(httpStatus.NOT_FOUND, "AudioFileNotFound") };
+    const result = await Task.updateOne({ "audios._id": audioId }, { "$set": {
+        "audios.$.title": audioBody.title,
+        "audios.$.description": audioBody.description,
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+const removeTaskPdfsByName = async(taskId, removeList) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+        "pdfs": { filename: removeList },
+    }}, { "new": true, "upsert": true });
+
+    removeList.forEach((file) => {
+        fse.unlinkSync(`./public/pdf/${file}`)    
+    });
+
+    return result;
+};
+
+const updateTaskPdfsById = async(pdfId, pdfBody) => {
+    const pdfFile = await Task.findOne({ "pdfs._id": pdfId });
+    if(!pdfFile) { throw new ApiError(httpStatus.NOT_FOUND, "PdfFileNotFound") };
+    const result = await Task.updateOne({ "pdfs._id": pdfId }, { "$set": {
+        "pdfs.$.title": pdfBody.title,
+        "pdfs.$.description": pdfBody.description,
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+
+const removeTaskQuizesById = async(taskId, removeList) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+        "quizes": { _id: removeList },
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+const updateTaskQuizesById = async(quizId, quizBody) => {
+    const pdfFile = await Task.findOne({ "quizes._id": quizId });
+    if(!pdfFile) { throw new ApiError(httpStatus.NOT_FOUND, "QuizNotFound") };
+    const result = await Task.updateOne({ "quizes._id": quizId }, { "$set": {
+        "quizes.$.description": quizBody.description,
+        "quizes.$.alternatives": quizBody.alternatives
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+
 module.exports = {
     createTask,
     uploadImageForTask,
@@ -527,7 +587,7 @@ module.exports = {
     uploadPdfFileForTask,
     createQuizForTask,
     sendTextResToQuizByIntern,
-    sendAudioResToQuizByIntern,
+    sendAudioResToQuizByIntern, 
     sendTextResToQuizByMentor,
     sendAudioResToQuizByMentor,
     addTextTicketForTaskByIntern,
@@ -542,5 +602,11 @@ module.exports = {
     removeTaskImagesByName,
     updateTaskImagesById,
     removeTaskVideosByName,
-    updateTaskVideosById
+    updateTaskVideosById,
+    removeTaskAudiosByName,
+    updateTaskAudiosById,
+    removeTaskPdfsByName,
+    updateTaskPdfsById,
+    removeTaskQuizesById,
+    updateTaskQuizesById
 };

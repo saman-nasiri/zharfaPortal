@@ -206,6 +206,48 @@ const updateTaskVideosById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+const removeTaskAudiosByName = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    removeList = req.body.removeList;
+    const result = await taskService.removeTaskAudiosByName(taskId, removeList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const updateTaskAudiosById = catchAsync(async(req, res) => {
+    const videoId = req.params.audioId;
+    const audioBody = req.body;
+    const result = await taskService.updateTaskAudiosById(videoId, audioBody);
+    res.status(httpStatus.OK).send(result);
+});
+
+const removeTaskPdfsByName = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    removeList = req.body.removeList;
+    const result = await taskService.removeTaskPdfsByName(taskId, removeList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const updateTaskPdfsById = catchAsync(async(req, res) => {
+    const pdfId = req.params.pdfId;
+    const pdfBody = req.body;
+    const result = await taskService.updateTaskPdfsById(pdfId, pdfBody);
+    res.status(httpStatus.OK).send(result);
+});
+
+const removeTaskQuizesById = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    removeList = req.body.removeList;
+    const result = await taskService.removeTaskQuizesById(taskId, removeList);
+    res.status(httpStatus.OK).send(result);
+});
+
+const updateTaskQuizesById = catchAsync(async(req, res) => {
+    const quizId = req.params.quizId;
+    const quizBody = req.body;
+    const result = await taskService.updateTaskQuizesById(quizId, quizBody);
+    res.status(httpStatus.OK).send(result);
+});
+
 module.exports = {
     creatTask,
     uploadImageForTask,
@@ -227,6 +269,12 @@ module.exports = {
     removeTaskImagesByName,
     updateTaskImagesById,
     removeTaskVideosByName,
-    updateTaskVideosById
+    updateTaskVideosById,
+    removeTaskAudiosByName,
+    updateTaskAudiosById,
+    removeTaskPdfsByName,
+    updateTaskPdfsById,
+    removeTaskQuizesById,
+    updateTaskQuizesById
 
 };

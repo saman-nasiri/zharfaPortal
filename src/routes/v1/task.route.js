@@ -91,6 +91,31 @@ router
     .route('/update-video/:videoId')
         .put(taskController.updateTaskVideosById)
 
+router
+    .route('/remove-audio/:taskId')
+        .delete(taskController.removeTaskAudiosByName)
+
+router
+    .route('/update-audio/:audioId')
+        .put(taskController.updateTaskAudiosById)
+
+router
+    .route('/remove-pdf/:taskId')
+        .delete(taskController.removeTaskPdfsByName)
+
+router
+    .route('/update-pdf/:pdfId')
+        .put(taskController.updateTaskPdfsById)
+
+router
+    .route('/remove-quiz/:taskId')
+        .delete(taskController.removeTaskQuizesById)
+
+router
+    .route('/update-quiz/:quizId')
+        .put(taskController.updateTaskQuizesById)
+
+
         
 module.exports = router;
 

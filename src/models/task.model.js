@@ -38,14 +38,14 @@ const taskSchema = mongoose.Schema({
         mimetype: String,
         size: String
     }],
-    pdf: [{
+    pdfs: [{
         title: String,
         description: String,
         filename: String,
         mimetype: String,
         size: String
     }],
-    quiz: [{
+    quizes: [{
                 description: String,
                 alternatives: [{
                     text: {
