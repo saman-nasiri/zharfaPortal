@@ -156,6 +156,29 @@ var uploadSingleAudioFiles = multer({ storage: storageSingleAudio, limits: { fil
 var uploadSingleAudio =  util.promisify(uploadSingleAudioFiles);
 
 
+
+  // Upload Single image files
+  // Upload image files
+   var storageSingleImage = multer.diskStorage({
+    destination: (req, file, callback) => {
+      callback(null, setFilePath(`./public/image`));
+    },
+    filename: (req, file, callback) => {
+      const match = ["image/png", "image/jpeg",  "image/jpg"];
+  
+      if (match.indexOf(file.mimetype) === -1) {
+        var message = `${file.originalname} is invalid. Only accept jpg.`;
+        return callback(message, null);
+      }
+    
+      const fileExt = path.extname(file.originalname);
+      const filename = uuidv4() + fileExt;
+      callback(null, filename);
+    }
+  });
+  
+  var uploadSingleImageFiles = multer({ storage: storageSingleImage, limits: { fileSize: 1024 * 1024 * 100 }}).single("single-file");
+  var uploadSingleImage =  util.promisify(uploadSingleImageFiles);
   
   
 module.exports = {
@@ -164,5 +187,6 @@ module.exports = {
     uploadAudio,
     uploadPdf,
     uploadSingleAudio,
+    uploadSingleImage,
     file
 };

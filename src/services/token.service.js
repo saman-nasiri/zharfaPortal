@@ -80,6 +80,11 @@ const generateAuthTokens = async (user) => {
       expires: refreshTokenExpires.toDate(),
     },
   };
+
+  // return {
+  //   token: accessToken,
+  //   refreshToken: refreshToken
+  // }
 };
 
 /**
@@ -98,10 +103,20 @@ const generateResetPasswordToken = async (email) => {
   return resetPasswordToken;
 };
 
+const loginParameter = async(user, token, refreshToken) => {
+
+  user["token"] = token;
+  user["refreshToken"] = refreshToken;
+  console.log(user);
+
+  return user;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
+  loginParameter
 };

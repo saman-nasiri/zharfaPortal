@@ -8,20 +8,38 @@ const upload = require('../middlewares/uploadFile');
 const createAdmin = catchAsync(async(req, res) => {
     const adminBody = req.body;
     const result = await adminService.createAdmin(adminBody);
-     res.status(httpStatus.CREATED).send(result);
+    res.status(httpStatus.CREATED).send(result);
 });
 
 
-const updateIntern = catchAsync(async(req, res) => {
-    const internId = req.params.internId;
+const updateAdmin = catchAsync(async(req, res) => {
+    const adminId = req.params.adminId;
     const updateBody = req.body;
-    const intern = await internService.getIntern(internId)
-    if(!intern) { throw new ApiError(httpStatus.NOT_FOUND, 'InternNotFound'); };
+    const admin = await adminService.getAdmin(adminId)
+    if(!admin) { throw new ApiError(httpStatus.NOT_FOUND, 'AdminNotFound'); };
 
-    const result = await internService.updateIntern(intern, updateBody);
+    const result = await adminService.updateAdmin(admin, updateBody);
+    res.status(httpStatus.OK).send(result);
+});
+
+const deleteAdmin = catchAsync(async(req, res) => {
+    const adminId = req.params.adminId;
+    const result = await adminService.deleteAdmin(adminId);
+    res.status(httpStatus.OK).send(result);
+});
+
+const uploadAvatar = catchAsync(async(req, res) => {
+    const adminId = req.params.adminId;
+    await adminService.getAdmin(adminId);
+    await upload.uploadSingleImage(req, res);
+    const imageDetails = req.file;
+    const result = await adminService.uploadAvatar(adminId, imageDetails);
     res.status(httpStatus.OK).send(result);
 });
 
 module.exports = {
-    createAdmin
+    createAdmin,
+    updateAdmin,
+    deleteAdmin,
+    uploadAvatar
 };

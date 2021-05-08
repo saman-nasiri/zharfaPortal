@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService } = require('../services');
+const { authService, userService, tokenService, emailService, adminService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -13,6 +13,14 @@ const login = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
+});
+
+const loginAdmin = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+  const admin = await authService.loginAdminWithEmailAndPassword(email, password);
+  const tokens = await tokenService.generateAuthTokens(admin);
+  // const result = await tokenService.loginParameter(admin, token, refreshToken);
+  res.status(httpStatus.OK).send({admin, tokens});
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -39,6 +47,7 @@ const resetPassword = catchAsync(async (req, res) => {
 module.exports = {
   register,
   login,
+  loginAdmin,
   logout,
   refreshTokens,
   forgotPassword,

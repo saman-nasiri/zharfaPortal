@@ -19,7 +19,7 @@ router.use('/term', termRoute);
 router.use('/task', taskRoute);
 router.use('/week', weekRoute);
 router.use('/users', userRoute);
-router.use('./admin', adminRoute);
+router.use('/admin', adminRoute);
 router.use('/intern', internRoute);
 router.use('/mentor', mentorRoute);
 router.use('/course', courseRoute);

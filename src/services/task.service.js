@@ -47,13 +47,9 @@ const uploadImageForTask = async(taskId, imageBody, imageDetails) => {
         
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
             "images": { "$each": imageModel }
-        }}, { "new": true, "upsert": true },
-        function(err) {
-            if(!err) {console.log('Update');}
-            if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-        });  
+        }}, { "new": true, "upsert": true });  
         
-    return updatedTask;
+        return updatedTask;
     }
     catch(err) {
         const error = new Error(err);
@@ -588,17 +584,17 @@ const getPdfFile = async(filename) => {
 
 const getVideofile = async(filename, req, res) => {
     const range = req.headers.range;
-    if (!range) {
-        res.status(400).send("Requires Range header");
-    }
+    // if (!range) {
+    //     return res.status(400).send("Requires Range header");
+    // }
     const videoPath = path.join('public', 'video', filename);
     const videoSize = fse.statSync(videoPath).size;
-
+    console.log('rang: ', range);
 
     // Parse Range
     // Example: "bytes=32324-"
     const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range.replace(/\D/g, ""));
+    const start = Number(range ? range.replace(/\D/g, "") : 0);
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
 
     // Create headers
@@ -629,9 +625,9 @@ const getAudiofile = async(filename, req, res) => {
     // file.pipe(res)
 
     const range = req.headers.range;
-    if (!range) {
-        res.status(400).send("Requires Range header");
-    }
+    // if (!range) {
+    //     res.status(400).send("Requires Range header");
+    // }
     const videoPath = path.join('public', 'audio', filename);
     const videoSize = fse.statSync(videoPath).size;
 
@@ -639,7 +635,7 @@ const getAudiofile = async(filename, req, res) => {
     // Parse Range
     // Example: "bytes=32324-"
     const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range.replace(/\D/g, ""));
+    const start = Number(range ? range.replace(/\D/g, "") : 0);
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
 
     // Create headers

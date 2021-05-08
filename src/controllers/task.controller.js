@@ -9,7 +9,7 @@ const upload = require('../middlewares/uploadFile');
 const creatTask = catchAsync(async(req, res) => {
     const taskBody = req.body;
     const weekId = req.params.weekId;
-    const task = await taskService.createTask(req.body, weekId);
+    const task = await taskService.createTask(taskBody, weekId);
     await weekService.updateWeekDuration(weekId, task);
     res.status(httpStatus.CREATED).send(task);
 });

@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
+const adminService = require('./admin.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 
@@ -16,6 +17,20 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
   return user;
+};
+
+/**
+ * Login with username and password
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Admin>}
+ */
+const loginAdminWithEmailAndPassword = async (email, password) => {
+    const admin = await adminService.getAdminByEmail(email);
+    if (!admin || !(await admin.isPasswordMatch(password))) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    }
+    return admin;
 };
 
 /**
@@ -72,6 +87,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 
 module.exports = {
   loginUserWithEmailAndPassword,
+  loginAdminWithEmailAndPassword,
   logout,
   refreshAuth,
   resetPassword,
