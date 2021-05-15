@@ -12,17 +12,43 @@ const createMentor = catchAsync(async(req, res) => {
 });
 
 
-const updateIntern = catchAsync(async(req, res) => {
-    const internId = req.params.internId;
+const updateMentor = catchAsync(async(req, res) => {
+    const mentorId = req.params.mentorId;
     const updateBody = req.body;
-    const intern = await internService.getIntern(internId)
-    if(!intern) { throw new ApiError(httpStatus.NOT_FOUND, 'InternNotFound'); };
+    const mentor = await mentorService.getMentorById(mentorId)
+    if(!mentor) { throw new ApiError(httpStatus.NOT_FOUND, 'MentorNotFound'); };
 
-    const result = await internService.updateIntern(intern, updateBody);
+    const result = await mentorService.updateMentor(mentor, updateBody);
     res.status(httpStatus.OK).send(result);
+});
+
+const deleteMentor = catchAsync(async(req, res) => {
+    const mentorId = req.params.mentorId;
+    const result = await mentorService.deleteMentor(mentorId);
+    res.status(httpStatus.OK).send(result);
+});
+
+const uploadAvatar = catchAsync(async(req, res) => {
+    const mentorId = req.params.mentorId;
+    await mentorService.getMentorById(mentorId);
+    await upload.uploadSingleImage(req, res);
+    const imageDetails = req.file;
+    const result = await mentorService.uploadAvatar(mentorId, imageDetails);
+    res.status(httpStatus.OK).send(result);
+});
+
+const changePassword = catchAsync(async(req, res) => {
+    const mentorId = "6097ac14fa81fe23ef1f2ddc" // req.user.id;
+    const passwordBody = req.body;
+    await mentorService.changePassword(mentorId, passwordBody);
+    res.status(httpStatus.OK).send();
 });
 
 module.exports = {
     createMentor,
+    updateMentor,
+    deleteMentor,
+    uploadAvatar,
+    changePassword,
     
 };

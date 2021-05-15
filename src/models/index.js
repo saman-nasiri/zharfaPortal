@@ -7,6 +7,7 @@ module.exports.Admin = require('./admin.model');
 module.exports.Course = require('./course.model');
 module.exports.Intern = require('./intern.model');
 module.exports.Mentor = require('./mentor.model');
+module.exports.Supervisor = require('./supervisor.model');
 module.exports.TicketRoom = require('./ticketRoom.model');
 module.exports.TutorialCategory = require('./tutorialCategory.model');
 module.exports.InternWeekAction = require('./internWeekActions.model');

@@ -46,12 +46,19 @@ const getCourseBySlug = async(courseSlug) => {
     return course;
 };
 
-const deleteCourseBySlug = async(slug) => {
-    const course = await Course.findOne({ slug: slug });
+
+const updateCourseById = async(courseId, updateBody) => {
+    const updateCourse = await Course.updateOne({ _id: courseId }, { "$set": updateBody }, { "new": true, "upsert": true });
+    return updateCourse;
+};
+
+const deleteCourseBySlug = async(courseId) => {
+    const course = await Course.findOne({ _id: courseId });
     if(!course) { throw new ApiError(httpStatus.NOT_FOUND, "CourseNotFound")}
     const deleteCourse = await Course.deleteMany({ category: { $in: [new RegExp('^' + course.category)] } });
     return deleteCourse;
 };
+
 
 const courseSlugIsExist = async(slug) => {
     if(await Course.findOne({ slug: slug })) {
@@ -65,6 +72,7 @@ module.exports = {
     getHeadCourse,
     getSubCourse,
     getCourseBySlug,
+    updateCourseById,
     deleteCourseBySlug,
     courseSlugIsExist
 };

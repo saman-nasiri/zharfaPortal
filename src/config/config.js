@@ -47,6 +47,8 @@ module.exports = {
     smtp: {
       host: envVars.SMTP_HOST,
       port: envVars.SMTP_PORT,
+      secure:  envVars.SMTP_SECURE,
+      service: envVars.SMTP_SERVICE,
       auth: {
         user: envVars.SMTP_USERNAME,
         pass: envVars.SMTP_PASSWORD,

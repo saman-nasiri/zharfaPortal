@@ -5,20 +5,19 @@ const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
 
-const adminSchema = mongoose.Schema({
+const supervisorSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
+    biography: String,
     avatar: String,
+    tutorialCategory: Array,
+    termCode: Array,
+    termsId:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
+
 
     password: {
         type: String,
         trim:true,
-        minlength: 3,
-        validate(value) {
-            if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-            throw new Error('Password must contain at least one letter and one number');
-            }
-        },
         private: true,// used by the toJSON plugin
     },
 
@@ -35,15 +34,15 @@ const adminSchema = mongoose.Schema({
 
     role: {
         type: String,
-        // enum: roles,
-        default: 'admin'
+        enum: roles,
+        default: 'supervisor'
     },
 });
 
 
 // add plugin that converts mongoose to json
-adminSchema.plugin(toJSON);
-adminSchema.plugin(paginate);
+supervisorSchema.plugin(toJSON);
+supervisorSchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -51,7 +50,7 @@ adminSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-adminSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
+supervisorSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
     const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
     return !!user;
   };
@@ -61,12 +60,12 @@ adminSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUse
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-adminSchema.methods.isPasswordMatch = async function (password) {
+supervisorSchema.methods.isPasswordMatch = async function (password) {
     const user = this;
     return bcrypt.compare(password, user.password);
 };
 
-adminSchema.pre('save', async function (next) {
+supervisorSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
       user.password = await bcrypt.hash(user.password, 8);
@@ -74,6 +73,6 @@ adminSchema.pre('save', async function (next) {
     next();
 });
 
-const Admin = mongoose.model('Admin', adminSchema);
+const Supervisor = mongoose.model('supervisor', supervisorSchema);
 
-module.exports = Admin;
+module.exports = Supervisor;

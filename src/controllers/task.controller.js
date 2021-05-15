@@ -81,6 +81,12 @@ const createQuizForTask = catchAsync(async(req, res) => {
     res.send(result)
 });
 
+const getQuizRoomById = catchAsync(async(req, res) => {
+    const roomId = req.params.roomId;
+    const quizRoom = await taskService.getQuizRoomById(roomId);
+    res.status(httpStatus.OK).send(quizRoom);
+});
+
 const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
     const internId = "6087b87b104caa2307e68566";
     const taskId = req.params.taskId;
@@ -116,6 +122,12 @@ const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
     const audioDetails = req.file;
     const result = await taskService.sendAudioResToQuizByMentor(quizResponseRoomId, mentorId, audioDetails)
     res.status(httpStatus.OK).send(result);
+});
+
+const getTicketRoomById = catchAsync(async(req, res) => {
+    const ticketRoomId = req.params.roomId;
+    const ticketRoom = await taskService.getTicketRoomById(ticketRoomId);
+    res.status(httpStatus.OK).send(ticketRoom);
 });
 
 const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
@@ -276,10 +288,12 @@ module.exports = {
     uploadAudioForTask,
     uploadPdfFileForTask,
     createQuizForTask,
+    getQuizRoomById,
     sendTextResToQuizByIntern,
     sendAudioResToQuizByIntern,
     sendTextResToQuizByMentor,
     sendAudioResToQuizByMentor,
+    getTicketRoomById,
     addTextTicketForTaskByIntern,
     addAudioTicketForTaskByIntern,
     addTextTicketForTaskByMentor,

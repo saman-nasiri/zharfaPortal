@@ -36,6 +36,10 @@ router
         .post(taskController.uploadPdfFileForTask)
 
 router
+    .route('/quiz/room/:roomId')
+        .get(taskController.getQuizRoomById);
+
+router
     .route('/quiz/create/:taskId')
         .post(taskController.createQuizForTask);
 
@@ -54,6 +58,10 @@ router
 router
     .route('/quiz/audio-res/mentor/:quizResponseRoomId')
         .post(taskController.sendAudioResToQuizByMentor);
+
+router
+    .route('/ticket/room/:roomId')
+        .get(taskController.getTicketRoomById);
 
 router
     .route('/ticket/text/intern/:taskId')

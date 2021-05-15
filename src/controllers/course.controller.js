@@ -19,7 +19,6 @@ const createSubsetHeadCourse = catchAsync(async(req, res) => {
     const headCourseSlug = req.params.headSlug;
     const courseBody = req.body;
     const headCourse = await courseService.getCourseBySlug(headCourseSlug);
-    console.log(headCourseSlug);
     await tutorialService.getTutorialBySlug(headCourse.tutorialCategory);
     await courseService.courseSlugIsExist(req.body.slug);
     const result = await courseService.createSubsetCourse(courseBody, headCourse);
@@ -44,9 +43,16 @@ const getCourseBySlug = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(course);
 });
 
+const updateCourseById = catchAsync(async(req, res) => {
+    const courseId = req.params.courseId;
+    const updateBody = req.body;
+    const result = await courseService.updateCourseById(courseId, updateBody);
+    res.status(httpStatus.OK).send(result);
+});
+
 const deleteCourseBySlug = catchAsync(async(req, res) => {
-    const slug = req.params.slug;
-    const deleteCourse = await courseService.deleteCourseBySlug(slug);
+    const courseId = req.params.courseId;
+    const deleteCourse = await courseService.deleteCourseBySlug(courseId);
     res.status(httpStatus.OK).send(deleteCourse);
 });
 
@@ -57,6 +63,7 @@ module.exports = {
     getHeadCourse,
     getSubCourse,
     getCourseBySlug,
+    updateCourseById,
     deleteCourseBySlug
 };
 

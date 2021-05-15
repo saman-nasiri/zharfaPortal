@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcryptjs');
 const { Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -33,12 +34,12 @@ const updateAdmin = async(admin, updateBody) => {
 };
 
 const deleteAdmin = async(adminId) => {
-    const result = await Admin.deleteOne(adminId);
+    const result = await Admin.deleteOne({_id: adminId});
     return result;
 };
 
 
-const getAdmin = async(adminId) => {
+const getAdminById = async(adminId) => {
     const admin = await Admin.findOne({ _id: adminId });
     if(!admin) { throw new ApiError(httpStatus.NOT_FOUND, 'AdminNotFound') };
     return admin;
@@ -58,11 +59,27 @@ const getAdminByEmail = async(email) => {
     return admin;
 };
 
+const changePassword = async(adminId, passwordBody) => {
+    const admin = await Admin.findOne({ _id: adminId });
+    const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
+
+    if (!(await admin.isPasswordMatch(passwordBody.currentPassword))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
+    };
+
+    const updatePassword = await Admin.updateOne({ _id: adminId }, { "$set": {
+        password: newPassword
+    }}, { "new": true, "upsert": true });
+
+    return updatePassword;
+};
+
 module.exports = {
     createAdmin,
     updateAdmin,
     deleteAdmin,
-    getAdmin,
+    getAdminById,
     uploadAvatar,
-    getAdminByEmail
+    getAdminByEmail,
+    changePassword
 };

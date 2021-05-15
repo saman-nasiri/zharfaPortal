@@ -27,7 +27,11 @@ router
         .get(courseController.getCourseBySlug)
 
 router
-    .route('/delete/:slug')
+    .route('/update/:courseId')
+        .put(courseController.updateCourseById)
+
+router
+    .route('/delete/:courseId')
         .delete(courseController.deleteCourseBySlug)
 
 module.exports = router;

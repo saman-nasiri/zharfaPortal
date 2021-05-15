@@ -3,7 +3,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
-const { Token } = require('../models');
+const { Token, Admin, Mentor, Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -13,9 +13,10 @@ const ApiError = require('../utils/ApiError');
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (userId, expires, secret = config.jwt.secret) => {
+const generateToken = (userId, userRole, expires, secret = config.jwt.secret) => {
   const payload = {
     sub: userId,
+    role: userRole,
     iat: moment().unix(),
     exp: expires.unix(),
   };
@@ -50,6 +51,7 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  */
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
+  console.log(payload);
   const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
   if (!tokenDoc) {
     throw new Error('Token not found');
@@ -64,10 +66,10 @@ const verifyToken = async (token, type) => {
  */
 const generateAuthTokens = async (user) => {
   const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
-  const accessToken = generateToken(user.id, accessTokenExpires);
+  const accessToken = generateToken(user.id, user.role, accessTokenExpires);
 
   const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
-  const refreshToken = generateToken(user.id, refreshTokenExpires);
+  const refreshToken = generateToken(user.id, user.role, refreshTokenExpires);
   await saveToken(refreshToken, user.id, refreshTokenExpires, 'refresh');
 
   return {
@@ -93,7 +95,7 @@ const generateAuthTokens = async (user) => {
  * @returns {Promise<string>}
  */
 const generateResetPasswordToken = async (email) => {
-  const user = await userService.getUserByEmail(email);
+  const user = await getUserTypeByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
   }
@@ -103,13 +105,13 @@ const generateResetPasswordToken = async (email) => {
   return resetPasswordToken;
 };
 
-const loginParameter = async(user, token, refreshToken) => {
-
-  user["token"] = token;
-  user["refreshToken"] = refreshToken;
-  console.log(user);
-
-  return user;
+const getUserTypeByEmail = async(email) => {
+  const admin  = await Admin.findOne({ email: email });
+  const intern = await Intern.findOne({ email: email });
+  const mentor = await Mentor.findOne({ email: email });
+  if(admin)   { return user = admin };
+  if(intern)  { return user = intern };
+  if(mentor)  { return user = mentor };
 };
 
 module.exports = {
@@ -118,5 +120,5 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  loginParameter
+  // loginParameter
 };

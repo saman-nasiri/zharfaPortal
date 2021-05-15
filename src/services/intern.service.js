@@ -32,14 +32,51 @@ const updateIntern = async(intern, updateBody) => {
     return result;
 };
 
+const deleteIntern = async(internId) => {
+    const result = await Intern.deleteOne({_id: internId});
+    return result;
+};
 
-const getIntern = async(internId) => {
+const getInternById = async(internId) => {
     const intern = await Intern.findById(internId);
     return intern;
 };
 
+
+const uploadAvatar = async(internId, imageDetails) => {
+    const result = await Intern.updateOne({ _id: internId }, { "$set": {
+        avatar: imageDetails.filename
+    }}, { "new": true, "upsert": true });
+
+    return result;
+};
+
+
+const getInternByEmail = async(email) => {
+    const intern = await Intern.findOne({ email: email });
+    return intern;
+};
+
+const changePassword = async(internId, passwordBody) => {
+    const intern = await Intern.findOne({ _id: internId });
+    const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
+
+    if (!(await Intern.isPasswordMatch(passwordBody.currentPassword))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
+    };
+
+    const updatePassword = await Intern.updateOne({ _id: internId }, { "$set": {
+        password: newPassword
+    }}, { "new": true, "upsert": true });
+
+    return updatePassword;
+};
 module.exports = {
     createIntern,
     updateIntern,
-    getIntern
+    deleteIntern,
+    getInternById,
+    uploadAvatar,
+    getInternByEmail,
+    changePassword
 };

@@ -9,6 +9,7 @@ const adminRoute = require('./admin.route');
 const internRoute = require('./intern.route');
 const mentorRoute = require('./mentor.route');
 const courseRoute = require('./course.route');
+const supervisor = require('./supervisor.route');
 const tutorialCategoryRoute = require('./tutorialCategory.route');
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.use('/admin', adminRoute);
 router.use('/intern', internRoute);
 router.use('/mentor', mentorRoute);
 router.use('/course', courseRoute);
+router.use('/supervisor', supervisor);
 router.use('/tutorial', tutorialCategoryRoute)
 
 

@@ -10,17 +10,10 @@ const register = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
-
-const loginAdmin = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  const admin = await authService.loginAdminWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(admin);
-  // const result = await tokenService.loginParameter(admin, token, refreshToken);
-  res.status(httpStatus.OK).send({admin, tokens});
+  const userRole = await authService.userRoleValidation(email);
+  console.log(userRole);
+  const userData = await authService.getUserData(userRole, email, password);
+  res.status(httpStatus.OK).send(userData);
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -47,7 +40,6 @@ const resetPassword = catchAsync(async (req, res) => {
 module.exports = {
   register,
   login,
-  loginAdmin,
   logout,
   refreshTokens,
   forgotPassword,

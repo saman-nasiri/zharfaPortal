@@ -178,6 +178,12 @@ const createQuizForTask = async(taskId, questions) => {
       };
 };
 
+const getQuizRoomById = async(roomId) => {
+    const quizRoom = await QuizResponseRoom.findOne({ _id: roomId });
+    if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizRoomNotFound')};
+    return quizRoom;
+};
+
 const sendTextResToQuizByIntern = async(taskId, internId, text) => {
 
     let quizResponseRoom = await QuizResponseRoom.findOne({ taskId: taskId, internId: internId });
@@ -309,6 +315,11 @@ const addTextTicketForTaskByIntern = async(taskId, internId, ticketBody) => {
         return addTicket;
 };
 
+const getTicketRoomById = async(roomId) => {
+    const ticketRoom = await TicketRoom.findOne({ _id: roomId });
+    if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound')};
+    return ticketRoom;
+};
 
 const addAudioTicketForTaskByIntern = async(taskId, internId, audioDetails) => {
 
@@ -453,14 +464,6 @@ const getTaskById = async(taskId, internId) => {
     // return ticket;
 
     return task;
-};
-
-
-const getTicketRoom = async(ticketRoomId) => {
-    const ticketRoom = await TicketRoom.findById(ticketRoomId);
-    if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound'); };
-
-    return ticketRoom;
 };
 
 const updateTaskById = async(taskId, taskBody) => {
@@ -665,10 +668,12 @@ module.exports = {
     uploadAudioForTask,
     uploadPdfFileForTask,
     createQuizForTask,
+    getQuizRoomById,
     sendTextResToQuizByIntern,
     sendAudioResToQuizByIntern, 
     sendTextResToQuizByMentor,
     sendAudioResToQuizByMentor,
+    getTicketRoomById,
     addTextTicketForTaskByIntern,
     addAudioTicketForTaskByIntern,
     addTextTicketForTaskByMentor,
@@ -676,7 +681,6 @@ module.exports = {
     getInternTaskAction,
     doneTaskAction,
     getTaskById,
-    getTicketRoom,
     updateTaskById,
     removeTaskImagesByName,
     updateTaskImagesById,
