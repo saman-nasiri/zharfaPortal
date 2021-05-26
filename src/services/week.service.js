@@ -98,8 +98,8 @@ const weekProgressbar = async(week, internId) => {
 };
 
 
-const getWeeks = async() => {
-    const weeks = await Week.find();
+const getWeeks = async(filter, options) => {
+    const weeks = await Week.paginate(filter, options);
     return weeks;
 };
 

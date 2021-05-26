@@ -4,7 +4,10 @@ const { Supervisor } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createSupervisor = async(supervisorBody) => {    
-   try {
+
+    if (await Supervisor.isEmailTaken(internBody.email)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
+    };
     const supervisor = await Supervisor.create({
         firstName: supervisorBody.firstName,
         lastName: supervisorBody.lastName,
@@ -13,10 +16,6 @@ const createSupervisor = async(supervisorBody) => {
     });
 
     return supervisor;
-
-   } catch (error) {
-       console.log(error);
-   }
 };
 
 
@@ -71,6 +70,11 @@ const changePassword = async(supervisorId, passwordBody) => {
     return updatePassword;
 };
 
+const getSupervisor = async(filter, options) => {
+    const supervisors = await Supervisor.paginate(filter, options);
+    return supervisors;
+};
+
 module.exports = {
     createSupervisor,
     updateSupervisor,
@@ -78,5 +82,6 @@ module.exports = {
     getSupervisorById,
     getSupervisorByEmail,
     changePassword,
-    uploadAvatar
+    uploadAvatar,
+    getSupervisor
 };

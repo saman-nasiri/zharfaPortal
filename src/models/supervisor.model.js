@@ -12,7 +12,7 @@ const supervisorSchema = mongoose.Schema({
     avatar: String,
     tutorialCategory: Array,
     termCode: Array,
-    termsId:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
+    termsList:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 
 
     password: {
@@ -29,7 +29,9 @@ const supervisorSchema = mongoose.Schema({
 
     email: {
         type: String,
+        unique: true,
         trim: true,
+        lowercase: true,
     },
 
     role: {
@@ -43,6 +45,17 @@ const supervisorSchema = mongoose.Schema({
 // add plugin that converts mongoose to json
 supervisorSchema.plugin(toJSON);
 supervisorSchema.plugin(paginate);
+
+/**
+ * Check if email is taken
+ * @param {string} email - The user's email
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+supervisorSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+    const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+    return !!user;
+  };
 
 /**
  * Check if email is taken

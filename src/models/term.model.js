@@ -13,6 +13,10 @@ const termSchema = mongoose.Schema({
     weeksList:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' } ]
 });
 
+// add plugin that converts mongoose to json
+termSchema.plugin(toJSON);
+termSchema.plugin(paginate);
+
 
 const Term = mongoose.model('Term', termSchema);
 

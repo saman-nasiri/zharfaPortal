@@ -15,6 +15,10 @@ const internWeekActionSchema = mongoose.Schema({
     }
 });
 
+// add plugin that converts mongoose to json
+internWeekActionSchema.plugin(toJSON);
+internWeekActionSchema.plugin(paginate);
+
 
 const InternWeekAction = mongoose.model('InternWeekAction', internWeekActionSchema);
 

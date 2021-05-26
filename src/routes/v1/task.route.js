@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const taskValidation = require('../../validations/task.validation');
 const taskController = require('../../controllers/task.controller');
@@ -9,131 +10,131 @@ const router = express.Router();
 
 router
     .route('/creat-task/:weekId')
-        .post(taskController.creatTask);
+        .post(auth(scope.CREATE_TERM), taskController.creatTask);
 
 router
     .route('/:taskId')
-        .get(taskController.getTaskById)
+        .get(auth(scope.READ_TASK_BY_ID), validate(taskValidation.getTaskById), taskController.getTaskById)
 
 router
     .route('/done/:taskId')
-        .post(taskController.doneTaskAction)
+        .post(auth(scope.DONE_TASK), validate(taskValidation.doneTaskAction), taskController.doneTaskAction)
 
 router
     .route('/upload/images/:taskId')
-        .post(taskController.uploadImageForTask)
+        .post(auth(scope.UPLOAD_TASK_IMAGE), validate(taskValidation.uploadImageForTasks), taskController.uploadImageForTask)
 
 router
     .route('/upload/videos/:taskId')
-        .post(taskController.uploadVideoForTask)
+        .post(auth(scope.UPLOAD_TASK_VIDEO), validate(taskValidation.uploadVideoForTask), taskController.uploadVideoForTask)
 
 router
     .route('/upload/audios/:taskId')
-        .post(taskController.uploadAudioForTask)
+        .post(auth(scope.UPLOAD_TASK_AUDIO), validate(taskValidation.uploadAudioForTask), taskController.uploadAudioForTask)
 
 router
     .route('/upload/pdfs/:taskId')
-        .post(taskController.uploadPdfFileForTask)
+        .post(auth(scope.UPLOAD_TASK_PDF), validate(taskValidation.uploadPdfForTask), taskController.uploadPdfFileForTask)
 
 router
     .route('/quiz/room/:roomId')
-        .get(taskController.getQuizRoomById);
+        .get(auth(scope.READ_QUIZ_ROOM), validate(taskValidation.getQuizRoomById), taskController.getQuizRoomById);
 
 router
     .route('/quiz/create/:taskId')
-        .post(taskController.createQuizForTask);
+        .post(auth(scope.CREATE_QUIZ), validate(taskValidation.createQuizForTask), taskController.createQuizForTask);
 
 router
     .route('/quiz/text-res/intern/:taskId')
-        .post(taskController.sendTextResToQuizByIntern);
+        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern), taskController.sendTextResToQuizByIntern);
 
 router
     .route('/quiz/audio-res/intern/:taskId')
-        .post(taskController.sendAudioResToQuizByIntern);
+        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern),  taskController.sendAudioResToQuizByIntern);
 
 router
     .route('/quiz/text-res/mentor/:quizResponseRoomId')
-        .post(taskController.sendTextResToQuizByMentor);
+        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendTextResToQuizByMentor);
 
 router
     .route('/quiz/audio-res/mentor/:quizResponseRoomId')
-        .post(taskController.sendAudioResToQuizByMentor);
+        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendAudioResToQuizByMentor);
 
 router
     .route('/ticket/room/:roomId')
-        .get(taskController.getTicketRoomById);
+        .get(auth(scope.READ_TICKET_ROOM), validate(taskValidation.getTaskById), taskController.getTicketRoomById);
 
 router
     .route('/ticket/text/intern/:taskId')
-        .post(taskController.addTextTicketForTaskByIntern);
+        .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByIntern), taskController.addTextTicketForTaskByIntern);
 
 router
     .route('/ticket/audio/intern/:taskId')
-        .post(taskController.addAudioTicketForTaskByIntern);
+        .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByIntern),  taskController.addAudioTicketForTaskByIntern);
 
 router
     .route('/ticket/text/mentor/:ticketRoomId')
-        .post(taskController.addTextTicketForTaskByMentor);
+        .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByMentor),  taskController.addTextTicketForTaskByMentor);
 
 router
     .route('/ticket/audio/mentor/:ticketRoomId')
-        .post(taskController.addAudioTicketForTaskByMentor);
+        .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByMentor),  taskController.addAudioTicketForTaskByMentor);
 
 router
     .route('/update/:taskId')
-        .put(validate(taskValidation.updateTaskById), taskController.updateTaskById)
+        .put(auth(scope.UPDATE_TASK), validate(taskValidation.updateTaskById), taskController.updateTaskById)
 
 router
     .route('/remove-image/:taskId')
-        .delete(taskController.removeTaskImagesByName)
+        .delete(auth(scope.DELETE_TASK_IMAGE), validate(taskValidation.removeTaskImagesByName), taskController.removeTaskImagesByName)
 
 router
     .route('/update-image/:imageId')
-        .put(taskController.updateTaskImagesById)
+        .put(auth(scope.UPDATE_TASK_IMAGE_PROPERTY), validate(taskValidation.updateTaskImagesById),  taskController.updateTaskImagesById)
 
 router
     .route('/remove-video/:taskId')
-        .delete(taskController.removeTaskVideosByName)
+        .delete(auth(scope.REMOVE_TASK_VIDEO), validate(taskValidation.removeTaskVideosByName),  taskController.removeTaskVideosByName)
 
 router
     .route('/update-video/:videoId')
-        .put(taskController.updateTaskVideosById)
+        .put(auth(scope.UPDATE_TASK_VIDEO_PROPERTY), validate(taskValidation.updateTaskVideosById),  taskController.updateTaskVideosById)
 
 router
     .route('/remove-audio/:taskId')
-        .delete(taskController.removeTaskAudiosByName)
+        .delete(auth(scope.REMOVE_TASK_AUDIO), validate(taskValidation.removeTaskAudiosByName), taskController.removeTaskAudiosByName)
 
 router
     .route('/update-audio/:audioId')
-        .put(taskController.updateTaskAudiosById)
+        .put(auth(scope.UPDATE_TASK_AUDIO_PROPERTY), validate(taskValidation.updateTaskAudiosById), taskController.updateTaskAudiosById)
 
 router
     .route('/remove-pdf/:taskId')
-        .delete(taskController.removeTaskPdfsByName)
+        .delete(auth(scope.REMOVE_TASK_PDF), validate(taskValidation.removeTaskPdfsByName), taskController.removeTaskPdfsByName)
 
 router
     .route('/update-pdf/:pdfId')
-        .put(taskController.updateTaskPdfsById)
+        .put(auth(scope.UPDATE_TASK_PDF_PROPERTY), validate(taskValidation.updateTaskPdfsById), taskController.updateTaskPdfsById)
 
 router
     .route('/remove-quiz/:taskId')
-        .delete(taskController.removeTaskQuizesById)
+        .delete(auth(scope.DELETE_QUIZ), validate(taskValidation.removeTaskQuizesById), taskController.removeTaskQuizesById)
 
 router
     .route('/update-quiz/:quizId')
-        .put(taskController.updateTaskQuizesById)
+        .put(auth(scope.UPDATE_QUIZ), validate(taskValidation.updateTaskQuizesById), taskController.updateTaskQuizesById)
 
 router
     .route('/download-pdf/:filename')
-        .get(taskController.getPdfFile);
+        .get(auth(scope.DOWNLOAD_FILE), validate(taskValidation.downloadFile),  taskController.getPdfFile);
 
 router
     .route('/play-video/:filename')
-        .get(taskController.getVideofile);
+        .get(auth(scope.PLAY_VIDEO), validate(taskValidation.playFile), taskController.getVideofile);
 
 router
     .route('/play-audio/:filename')
-        .get(taskController.getAudiofile);
+        .get(auth(scope.PLAY_AUDIO), validate(taskValidation.playFile), taskController.getAudiofile);
 
 
         

@@ -30,7 +30,9 @@ const adminSchema = mongoose.Schema({
 
     email: {
         type: String,
+        unique: true,
         trim: true,
+        lowercase: true,
     },
 
     role: {
@@ -47,12 +49,12 @@ adminSchema.plugin(paginate);
 
 /**
  * Check if email is taken
- * @param {string} phoneNumber - The user's mobile
+ * @param {string} email - The user's email
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-adminSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
-    const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
+adminSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+    const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
     return !!user;
   };
 

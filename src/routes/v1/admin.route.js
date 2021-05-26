@@ -9,15 +9,15 @@ const router = express.Router();
 
 router
     .route('/create')
-        .post(auth(scope.CREATE_ADMIN), adminController.createAdmin)
+        .post(auth(scope.CREATE_ADMIN), auth(scope.CREATE_ADMIN), adminController.createAdmin)
 
 router
     .route('/update/:adminId')
         .put(auth(scope.UPDATE_ADMIN), adminController.updateAdmin)
 
 router
-    .route('/remove/:adminId')
-        .delete(auth(scope.REMOVE_ADMIN), adminController.deleteAdmin)
+    .route('/delete/:adminId')
+        .delete(auth(scope.DELETE_ADMIN), adminController.deleteAdmin)
 
 router
     .route('/upload-avatar/:adminId')
@@ -25,6 +25,14 @@ router
 
 router
     .route('/change-password')
-        .put(auth(scope.READ_ADMIN_PROFILE), adminController.changePassword)
+        .put(auth(scope.CHANGE_PASSWORD_ADMIN), adminController.changePassword)
+
+router
+    .route('/')
+        .get(auth(scope.READ_ADMINS), adminController.getAdmins)
+
+router
+    .route('/:adminId')
+        .get(auth(scope.READ_ADMIN_DETAILS), adminController.getAdminById);
 
 module.exports = router;

@@ -26,4 +26,12 @@ router
     .route('/change-password')
         .put(auth(scope.CHANGE_PASSWORD_SUPERVISOR), supervisorController.changePassword)
 
+router
+    .route('/')
+        .get(auth(scope.READ_SUPERVISORS), supervisorController.getSupervisor)
+
+router
+    .route('/:supervisorId')
+        .get(auth(scope.READ_SUPERVISOR_DETAILS), supervisorController.getSupervisorById)
+
 module.exports = router;

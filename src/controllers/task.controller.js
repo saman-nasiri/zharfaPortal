@@ -75,7 +75,6 @@ const createQuizForTask = catchAsync(async(req, res) => {
     await taskService.getTaskById(taskId)
 
     const quiz = req.body;
-    console.log(quiz);
     const result = await taskService.createQuizForTask(taskId, quiz);
 
     res.send(result)
@@ -88,7 +87,7 @@ const getQuizRoomById = catchAsync(async(req, res) => {
 });
 
 const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
-    const internId = "6087b87b104caa2307e68566";
+    const internId = req.user.id;
     const taskId = req.params.taskId;
     const text = req.body.text;
     await taskService.getTaskById(taskId);
@@ -97,7 +96,7 @@ const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
 });
 
 const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
-    const internId = "6087b87b104caa2307e68566";
+    const internId = req.user.id;
     const taskId = req.params.taskId;
     const task = await taskService.getTaskById(taskId);
     if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TaskNotFound'); };
@@ -108,7 +107,7 @@ const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
 });
 
 const sendTextResToQuizByMentor = catchAsync(async(req, res) => {
-    const mentorId = "6087b8ac104caa2307e68567";
+    const mentorId = req.user.id;
     const quizResponseRoomId = req.params.quizResponseRoomId;
     const text = req.body.text;
     const result = await taskService.sendTextResToQuizByMentor(quizResponseRoomId, mentorId, text)
@@ -116,7 +115,7 @@ const sendTextResToQuizByMentor = catchAsync(async(req, res) => {
 });
 
 const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
-    const mentorId = "6087b8ac104caa2307e68567";
+    const mentorId = req.user.id;
     const quizResponseRoomId = req.params.quizResponseRoomId;
     await upload.uploadSingleAudio(req, res);
     const audioDetails = req.file;
@@ -131,7 +130,7 @@ const getTicketRoomById = catchAsync(async(req, res) => {
 });
 
 const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
-        const internId = "6087b87b104caa2307e68566";
+        const internId = req.user.id;
         const taskId = req.params.taskId;
         await taskService.getTaskById(taskId)
         const ticketBody = req.body;
@@ -140,7 +139,7 @@ const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
 });
 
 const addAudioTicketForTaskByIntern = catchAsync(async(req, res) => {
-        const internId = "6087b87b104caa2307e68566";
+        const internId = req.user.id;
         const taskId = req.params.taskId;
         await taskService.getTaskById(taskId)
         await upload.uploadSingleAudio(req, res);
@@ -150,7 +149,7 @@ const addAudioTicketForTaskByIntern = catchAsync(async(req, res) => {
 });
 
 const addTextTicketForTaskByMentor = catchAsync(async(req, res) => {
-        const mentorId = "6087b8ac104caa2307e68567";
+        const mentorId = req.user.id;
         const ticketRoomId = req.params.ticketRoomId;
         const ticketBody = req.body;
         const result = await taskService.addTextTicketForTaskByMentor(ticketRoomId, mentorId, ticketBody);
@@ -158,7 +157,7 @@ const addTextTicketForTaskByMentor = catchAsync(async(req, res) => {
 });
 
 const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
-        const mentorId = "6087b8ac104caa2307e68567";
+        const mentorId = req.user.id;
         const ticketRoomId = req.params.ticketRoomId;
         await upload.uploadSingleAudio(req, res);
         const audioDetails = req.file;
@@ -169,7 +168,7 @@ const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
 
 const doneTaskAction = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    const internId = "6087b87b104caa2307e68566"; // req.user._id
+    const internId = req.user.id;
     const task = await taskService.getTaskById(taskId);
     const action = await taskService.getInternTaskAction(taskId, internId);
     const doneTaskAction = await taskService.doneTaskAction(action, task);
@@ -177,7 +176,7 @@ const doneTaskAction = catchAsync(async(req, res) => {
 });
 
 const getTaskById = catchAsync(async(req, res) => {
-    const internId = "6087b87b104caa2307e68566"; // req.user._id
+    const internId = req.user.id;
     const task = await taskService.getTaskById(req.params.taskId, internId)
     res.status(httpStatus.OK).send(task);
 });

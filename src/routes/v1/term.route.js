@@ -3,7 +3,6 @@ const auth = require('../../middlewares/auth');
 const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const termController = require('../../controllers/term.controller');
-const { route } = require('./task.route');
 
 const router = express.Router();
 
@@ -49,6 +48,7 @@ router
 
 router
     .route('/weeks/:termId')
-        .get(auth(scope.READ_TERM_WEEKS), termController.getWeeksOfTheTermById)
+        .get(auth(scope.READ_TERM_WEEKS), termController.getTermWeeksById)
+
 
 module.exports = router;

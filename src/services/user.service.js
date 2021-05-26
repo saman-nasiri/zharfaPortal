@@ -80,6 +80,7 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+
 module.exports = {
   createUser,
   queryUsers,

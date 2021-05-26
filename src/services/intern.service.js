@@ -1,10 +1,14 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcryptjs');
 const { Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { toJSON, paginate } = require('../models/plugins/index');
+const { slsp, arrayShow } = require('../utils/defaultArrayType');
 
 const createIntern = async(internBody) => {
-    console.log(internBody);
-   try {
+    if (await Intern.isEmailTaken(internBody.email)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
+    };
     const intern = await Intern.create({
         firstName: internBody.firstName,
         lastName: internBody.lastName,
@@ -14,9 +18,6 @@ const createIntern = async(internBody) => {
     });
 
     return intern;
-   } catch (error) {
-       console.log(error);
-   }
 };
 
 
@@ -61,7 +62,7 @@ const changePassword = async(internId, passwordBody) => {
     const intern = await Intern.findOne({ _id: internId });
     const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
 
-    if (!(await Intern.isPasswordMatch(passwordBody.currentPassword))) {
+    if (!(await intern.isPasswordMatch(passwordBody.currentPassword))) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
     };
 
@@ -71,6 +72,48 @@ const changePassword = async(internId, passwordBody) => {
 
     return updatePassword;
 };
+
+
+/**
+ * Query for users
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+const queryInterns = async (filter, options) => {
+    const interns = await Intern.paginate(filter, options);
+    return interns;
+};
+
+
+
+const getTermInterns = async(termId, options) => {
+
+    const {sort, limit, skip, page} = slsp(options);
+
+    const interns = await Intern.find({ termsList: {  $in: termId } }).lean()
+    .select('_id firstName lastName email phoneNumber avatar')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    // let weeksList = weeks.weeksList;
+
+    // const weeksModel = await Promise.all(
+    //     weeksList.map(async(week) => {
+    //         const progressbar = await weekProgressbar(week, internId);
+    //         week["progressbar"] = progressbar.progressbar;
+    //         return week;
+    //     })
+    // )
+
+    const result = arrayShow(interns, limit, page);
+
+    return result;
+};
+
+
 module.exports = {
     createIntern,
     updateIntern,
@@ -78,5 +121,7 @@ module.exports = {
     getInternById,
     uploadAvatar,
     getInternByEmail,
-    changePassword
+    changePassword,
+    queryInterns,
+    getTermInterns
 };

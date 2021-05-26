@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const tutorialCategoryController = require('../../controllers/tutorialCategory.controller');
 const { route } = require('./task.route');
@@ -9,27 +10,27 @@ const router = express.Router();
 
 router
     .route('/create-main')
-        .post(tutorialCategoryController.createTutorialMainCategory)
+        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), tutorialCategoryController.createTutorialMainCategory)
 
 router
     .route('/create-sub/:mainTutorial')
-        .post(tutorialCategoryController.createTutorialSubCategory)
+        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), tutorialCategoryController.createTutorialSubCategory)
 
 router
     .route('/showMain')
-        .get(tutorialCategoryController.getMainTutorial)
+        .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getMainTutorial)
 
 router
     .route('/showSub/:mainSlug')
-        .get(tutorialCategoryController.getSubMainTutorial)
+        .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getSubMainTutorial)
 
 router
-    .route('/showOne/:slug')
-        .get(tutorialCategoryController.getTutorialBySlug)
+    .route('/:slug')
+        .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getTutorialBySlug)
 
 router
     .route('/delete/:slug')
-        .delete(tutorialCategoryController.deleteTutorialBySlug)
+        .delete(auth(scope.DELETE_TUTORIAL), tutorialCategoryController.deleteTutorialBySlug)
 
 
 

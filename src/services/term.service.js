@@ -2,6 +2,8 @@ const httpStatus = require('http-status');
 const { Term, Intern, Mentor, Week } = require('../models');
 const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
+const { slsp, arrayShow } = require('../utils/defaultArrayType');
+
 
 const createTerm = async(termBody, tutorialCategory) => {
     
@@ -21,7 +23,7 @@ const addInternsToTheTerm = async(term, internsList) => {
     const interns = await Intern.updateMany({ _id: internsList }, { "$addToSet": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
-        termsId: term._id
+        termsList: term._id
     }}, { "new": true, "upsert": true });
 
     return "updateIntern";
@@ -31,7 +33,7 @@ const removeInternsFromTheTerm = async(term, internsList) => {
     const interns = await Intern.updateMany({ _id: internsList }, { "$pull": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
-        termsId: term._id
+        termsList: term._id
     }}, { "new": true, "upsert": true })
 };
 
@@ -39,7 +41,7 @@ const addMentorToTheTerm = async(term, mentorsList) => {
     const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$addToSet": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
-        termsId: term._id
+        termsList: term._id
     }}, { "new": true, "upsert": true });
     
     const updateTerm = await Term.findById(term._id);
@@ -50,7 +52,7 @@ const removeMentorsFromTheTerm = async(term, mentorsList) => {
     const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$pull": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
-        termsId: term._id
+        termsList: term._id
     }}, { "new": true, "upsert": true });
     
     return "updateMentor";
@@ -83,8 +85,8 @@ const updateTerm = async(term, updateBody) => {
     return result;
 };
 
-const getTerms = async() => {
-    const terms = await Term.find();
+const getTerms = async(filter, options) => {
+    const terms = await Term.paginate(filter, options);
     if(!terms) { throw new ApiError(httpStatus.NOT_FOUND, 'TermsIsNotFound')};
     return terms;
 };
@@ -100,10 +102,14 @@ const deleteTermById = async(termId) => {
     return result;
 };
 
-const getWeeksOfTheTermById = async(termId, internId) => {
+const getTermWeeksById = async(termId, internId, options) => {
+    const {sort, limit, skip, page} = slsp(options);
+
     const weeks = await Term.findOne({ _id: termId }).lean()
     .populate('weeksList')
     .select('weekList -_id')
+    .sort(sort).skip(skip).limit(limit).exec()
+
 
     let weeksList = weeks.weeksList;
 
@@ -114,8 +120,9 @@ const getWeeksOfTheTermById = async(termId, internId) => {
             return week;
         })
     )
-
-    return weeksModel;
+    
+    const result = arrayShow(weeksModel, limit, page);
+    return result;
 }; 
 
 const removeWeekFromTerm = async(termId, weekId) => {
@@ -125,6 +132,7 @@ const removeWeekFromTerm = async(termId, weekId) => {
 
     return updateTerm;
 };
+
 
 module.exports = {
     createTerm,
@@ -137,6 +145,6 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
-    getWeeksOfTheTermById,
-    removeWeekFromTerm
+    getTermWeeksById,
+    removeWeekFromTerm,
 };

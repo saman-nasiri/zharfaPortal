@@ -38,10 +38,23 @@ const uploadAvatar = catchAsync(async(req, res) => {
 });
 
 const changePassword = catchAsync(async(req, res) => {
-    const mentorId = "6097ac14fa81fe23ef1f2ddc" // req.user.id;
+    const mentorId = req.user.id;
     const passwordBody = req.body;
     await mentorService.changePassword(mentorId, passwordBody);
     res.status(httpStatus.OK).send();
+});
+
+const getMentors = catchAsync(async(req, res) => {
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const mentors = await mentorService.getMentors(filter, options);
+    res.status(httpStatus.OK).send(mentors);
+});
+
+const getMentorById = catchAsync(async(req, res) => {
+    const mentorId = req.params.mentorId;
+    const mentor = await mentorService.getMentorById(mentorId);
+    res.status(httpStatus.OK).send(mentor);
 });
 
 module.exports = {
@@ -50,5 +63,6 @@ module.exports = {
     deleteMentor,
     uploadAvatar,
     changePassword,
-    
+    getMentors,
+    getMentorById
 };

@@ -32,6 +32,11 @@ const courseSchema = mongoose.Schema({
 });
 
 
+// add plugin that converts mongoose to json
+courseSchema.plugin(toJSON);
+courseSchema.plugin(paginate);
+
+
 const Course = mongoose.model('Course', courseSchema);
 
 module.exports = Course;

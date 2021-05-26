@@ -40,9 +40,22 @@ const uploadAvatar = catchAsync(async(req, res) => {
 const changePassword = catchAsync(async(req, res) => {
     const supervisorId = req.user.id;
     const passwordBody = req.body;
-    await supervisorService.changePassword(supervisorId, passwordBody);
-    res.status(httpStatus.OK).send();
+    const result = await supervisorService.changePassword(supervisorId, passwordBody);
+    res.status(httpStatus.OK).send(result);
 });
+
+const getSupervisor = catchAsync(async(req, res) => {
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const supervisor = await supervisorService.getSupervisor(filter, options);
+    res.status(httpStatus.OK).send(supervisor);
+});
+
+const getSupervisorById = catchAsync(async(req, res) => {
+    const supervisorId = req.params.supervisorId;
+    const supervsior = await supervisorService.getSupervisorById(supervisorId);
+    res.status(httpStatus.OK).send(supervsior);    
+})
 
 module.exports = {
     createSupervisor,
@@ -50,5 +63,6 @@ module.exports = {
     deleteSupervisor,
     uploadAvatar,
     changePassword,
-    
+    getSupervisor,
+    getSupervisorById
 };

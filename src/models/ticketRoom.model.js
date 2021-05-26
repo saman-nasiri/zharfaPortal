@@ -23,6 +23,10 @@ const ticketRoomSchema = new mongoose.Schema({
     }]
 });
 
+// add plugin that converts mongoose to json
+ticketRoomSchema.plugin(toJSON);
+ticketRoomSchema.plugin(paginate);
+
 
 const TicketRoom = mongoose.model('TicketRoom', ticketRoomSchema);
 

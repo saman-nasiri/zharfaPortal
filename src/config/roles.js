@@ -29,6 +29,8 @@ const scope = {
   DELETE_SUPERVISOR:          "delete:supervisor",
   UPLOAD_SUPERVISOR_AVATAR:   "upload:supervisor-avatar",
   CHANGE_PASSWORD_SUPERVISOR: "change-password:supervisor",
+  READ_SUPERVISORS:           "read:supervisors",
+  READ_SUPERVISOR_DETAILS:    "read:supervisor-details",
   
 
   // Mentor Route Auth Level
@@ -37,7 +39,8 @@ const scope = {
   DELETE_MENTOR:              "delete:mentor",
   UPLOAD_MENTOR_AVATAR:       "upload:mentor-avatar",
   CHANGE_PASSWORD_MENTOR:     "change-password:mentor",
-  READ_MENTOR_PROFILE:        "read:mentor-profile",
+  READ_MENTORS:               "read:mentor-details",         
+  READ_MENTOR_DETAILS:        "read:mentor-profile",
   WRITE_MENTOR_PROFILE:       "write:mentor-profile",
 
   // Intern Route Auth Level
@@ -47,7 +50,7 @@ const scope = {
   UPLOAD_INTERN_AVATAR:       "upload:intern-avatar",
   CHANGE_PASSWORD_INTERN:     "change-password:intern",
   READ_INTERNS:               "read:interns",
-  READ_INTERN_PROFILE:        "read:intern-profile",
+  READ_INTERN_DETALIS:        "read:intern-profile",
   WRITE_INTERN_PROFILE:       "write:intern-profile",
 
 
@@ -84,11 +87,12 @@ const scope = {
   CREATE_WEEK:                "create:week",
   UPDATE_WEEK:                "update:week",
   READ_WEEK_PROGRESSBAR:      "read:week-progreesbar",
+  SCORE_WEEK:                 "score:week",
   ACTION_WEEK:                "action:week",
   READ_WEEKS:                 "read:week",
   READ_WEEK_DETAILS:          "read:week-details",
   READ_WEEK_TASKS:            "read:week-tasks",
-  DELETE_TASK:                "delete:task",
+  DELETE_WEEK:                "delete:week",
 
   // Task Route Auth Level
   CREATE_TASK:                "create:task",
@@ -110,6 +114,16 @@ const scope = {
   DELETE_TASK:                "delete:task",
   READ_TASK_DETAILS:          "read:task-details",
   WIRTE_TASK_DETAILS:         "write:task-details",
+  REMOVE_TASK_IMAGE:          "remove:task-image",
+  REMOVE_TASK_VIDEO:          "remove:task-video",
+  REMOVE_TASK_AUDIO:          "remove:task-audio",
+  REMOVE_TASK_PDF:            "remove:task-pdf",
+  UPDATE_TASK_IMAGE_PROPERTY:          "update:task-image",
+  UPDATE_TASK_VIDEO_PROPERTY:          "update:task-video",
+  UPDATE_TASK_AUDIO_PROPERTY:          "update:task-audio",
+  UPDATE_TASK_PDF_PROPERTY:            "update:task-pdf",
+  
+
 
   // Ticket Route Auth Level
   READ_TICKET_ROOM:           "read:ticket-room",
@@ -117,6 +131,7 @@ const scope = {
   SEND_TICKET_AUDIO:          "send:ticket-audio",
   READ_TICKET_DETAILS:        "read:ticket-details",
   WRITE_TICKET_DETAILS:       "write:ticket-details",
+  READ_TICKET_ROOM:           "read:ticket-room",
 
   // Quiz Route Auth Level
   CREATE_QUIZ:               "create:quiz",
@@ -124,6 +139,7 @@ const scope = {
   DELETE_QUIZ:               "delete:quiz",
   READ_QUIZES:               "read:quies",
   READ_QUIZ_DETAILS:         "read:quiz-details",
+  READ_QUIZ_ROOM:            "read:quiz-room",
   WRITE_QUIZ_DETAILS:        "write:quiz-details",
   RES_QUIZ:                  "response-quiz",
 
@@ -134,16 +150,16 @@ const scope = {
 };
 
 
-const roleRights = new Map();
-roleRights.set(roles[0], [scope.CREATE_ADMIN, scope.UPDATE_ADMIN, scope.DELETE_ADMIN, scope.UPLOAD_ADMIN_AVATAR, scope.CHANGE_PASSWORD_ADMIN, scope.READ_ADMINS, scope.READ_ADMIN_DETAILS, scope.WRITE_ADMIN_PROFILE]);
-roleRights.set(roles[1], []);
-roleRights.set(roles[2], [scope.READ_INTERN_PROFILE, scope.WRITE_INTERN_PROFILE, scope.READ_TERM_DETAILS, scope.READ_WEEK_DETAILS, scope.READ_TASK_DETAILS, scope.READ_TICKET_DETAILS, scope.WRITE_TICKET_DETAILS, scope.READ_TUTORIAL_DETAILS, scope.READ_COURSE_DETAILS, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ]);
-roleRights.set(roles[3], [scope.CHANGE_PASSWORD_ADMIN]);
+// const roleRights = new Map();
+// roleRights.set(roles[0], [scope.CREATE_ADMIN, scope.UPDATE_ADMIN, scope.DELETE_ADMIN, scope.UPLOAD_ADMIN_AVATAR, scope.CHANGE_PASSWORD_ADMIN, scope.READ_ADMINS, scope.READ_ADMIN_DETAILS, scope.WRITE_ADMIN_PROFILE]);
+// roleRights.set(roles[1], []);
+// roleRights.set(roles[2], [scope.READ_INTERN_PROFILE, scope.WRITE_INTERN_PROFILE, scope.READ_TERM_DETAILS, scope.READ_WEEK_DETAILS, scope.READ_TASK_DETAILS, scope.READ_TICKET_DETAILS, scope.WRITE_TICKET_DETAILS, scope.READ_TUTORIAL_DETAILS, scope.READ_COURSE_DETAILS, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ]);
+// roleRights.set(roles[3], [scope.CHANGE_PASSWORD_ADMIN]);
 
-const admin  = [scope.CREATE_ADMIN, scope.UPDATE_ADMIN, scope.DELETE_ADMIN, scope.UPLOAD_ADMIN_AVATAR, scope.CHANGE_PASSWORD_ADMIN, scope.READ_ADMINS, scope.READ_ADMIN_DETAILS, scope.WRITE_ADMIN_PROFILE, scope.CREATE_MENTOR, scope.DELETE_MENTOR, scope.CREATE_INTERN, scope.DELETE_INTERN];
-const mentor = [scope.UPDATE_MENTOR, scope.UPLOAD_MENTOR_AVATAR, scope.CHANGE_PASSWORD_MENTOR, scope.READ_MENTOR_PROFILE, scope.WRITE_MENTOR_PROFILE, scope.READ_INTERNS, scope.READ_INTERN_PROFILE, scope.READ_TUTORIALS, scope.READ_COURSES, scope.READ_TERMS, scope.READ_TERM_DETAILS, scope.CREATE_WEEK, scope.READ_WEEK_PROGRESSBAR, scope.READ_WEEKS, scope.READ_WEEK_DETAILS, scope.READ_WEEK_TASKS, scope.CREATE_TASK, scope.UPDATE_TASK, scope.READ_TASK_BY_ID, scope.UPLOAD_TASK_IMAGE, scope.UPDATE_PROPERTY_IMAGE, scope.DELETE_TASK_IMAGE, scope.UPLOAD_TASK_VIDEO, scope.UPDATE_PROPERTY_VIDEO, scope.DELETE_TASK_VIDEO, scope.UPLOAD_TASK_AUDIO, scope.UPDATE_PROPERTY_AUDIO, scope.DELETE_TASK_AUDIO, scope.UPLOAD_TASK_PDF, scope.UPDATE_PROPERTY_PDF, scope.DELETE_TASK_PDF, scope.READ_TASK_DETAILS, scope.WIRTE_TASK_DETAILS, scope.SEND_TICKET_TEXT, scope.SEND_TICKET_AUDIO, scope.READ_TICKET_DETAILS, scope.CREATE_QUIZ, scope.UPDATE_QUIZ, scope.DELETE_QUIZ, scope.READ_QUIZES, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ, scope.PLAY_VIDEO, scope.PLAY_AUDIO];
-const intern = [scope.UPDATE_INTERN, scope.UPLOAD_INTERN_AVATAR, scope.CHANGE_PASSWORD_INTERN, scope.READ_INTERNS, scope.READ_INTERN_PROFILE, scope.READ_COURSES, scope.READ_COURSE_DETAILS, scope.READ_TERMS, scope.READ_TERM_DETAILS, scope.READ_WEEKS, scope.READ_WEEK_DETAILS, scope.READ_WEEK_PROGRESSBAR, scope.READ_WEEK_TASKS, scope.READ_TASK_BY_ID, scope.DONE_TASK, scope.SEND_TICKET_TEXT, scope.SEND_TICKET_AUDIO, scope.READ_TICKET_DETAILS, scope.READ_TICKET_ROOM, scope.READ_QUIZ_DETAILS, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ, scope.DOWNLOAD_FILE, scope.PLAY_AUDIO, scope.PLAY_VIDEO ];
-const supervisor = [scope.CHANGE_PASSWORD_SUPERVISOR];
+const admin  = [scope.CREATE_ADMIN, scope.UPDATE_ADMIN, scope.DELETE_ADMIN, scope.UPLOAD_ADMIN_AVATAR, scope.CHANGE_PASSWORD_ADMIN, scope.READ_ADMINS, scope.READ_ADMIN_DETAILS, scope.WRITE_ADMIN_PROFILE, scope.CREATE_MENTOR, scope.DELETE_MENTOR, scope.CREATE_INTERN, scope.DELETE_INTERN, scope.CREATE_TERM, scope.CREATE_TUTORIAL_CATEGORY, scope.UPDATE_TERM, scope.ADD_TERM_INTERN];
+const mentor = [scope.UPDATE_MENTOR, scope.UPLOAD_MENTOR_AVATAR, scope.CHANGE_PASSWORD_MENTOR, scope.READ_MENTOR_PROFILE, scope.WRITE_MENTOR_PROFILE, scope.READ_INTERNS, scope.READ_INTERN_DETALIS, scope.READ_TUTORIALS, scope.READ_COURSES, scope.READ_COURSE_DETAILS, scope.READ_TERMS, scope.READ_TERM_DETAILS, scope.CREATE_WEEK, scope.READ_WEEK_PROGRESSBAR, scope.READ_WEEKS, scope.READ_WEEK_DETAILS, scope.READ_WEEK_TASKS, scope.CREATE_TASK, scope.UPDATE_TASK, scope.READ_TASK_BY_ID, scope.UPLOAD_TASK_IMAGE, scope.UPDATE_PROPERTY_IMAGE, scope.DELETE_TASK_IMAGE, scope.UPLOAD_TASK_VIDEO, scope.UPDATE_PROPERTY_VIDEO, scope.DELETE_TASK_VIDEO, scope.UPLOAD_TASK_AUDIO, scope.UPDATE_PROPERTY_AUDIO, scope.DELETE_TASK_AUDIO, scope.UPLOAD_TASK_PDF, scope.UPDATE_PROPERTY_PDF, scope.DELETE_TASK_PDF, scope.READ_TASK_DETAILS, scope.WIRTE_TASK_DETAILS, scope.SEND_TICKET_TEXT, scope.SEND_TICKET_AUDIO, scope.READ_TICKET_DETAILS, scope.CREATE_QUIZ, scope.UPDATE_QUIZ, scope.DELETE_QUIZ, scope.READ_QUIZES, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ, scope.PLAY_VIDEO, scope.PLAY_AUDIO, scope.DELETE_WEEK, scope.READ_MENTORS, scope.READ_MENTOR_DETAILS, scope.CREATE_COURSE, scope.UPDATE_COURSE, scope.READ_TERM_WEEKS];
+const intern = [scope.UPDATE_INTERN, scope.UPLOAD_INTERN_AVATAR, scope.CHANGE_PASSWORD_INTERN, scope.READ_INTERNS, scope.READ_INTERN_DETALIS, scope.READ_COURSES, scope.READ_COURSE_DETAILS, scope.READ_TERMS, scope.READ_TERM_DETAILS, scope.READ_WEEKS, scope.READ_WEEK_DETAILS, scope.READ_WEEK_PROGRESSBAR, scope.READ_WEEK_TASKS, scope.READ_TASK_BY_ID, scope.DONE_TASK, scope.SEND_TICKET_TEXT, scope.SEND_TICKET_AUDIO, scope.READ_TICKET_DETAILS, scope.READ_TICKET_ROOM, scope.READ_QUIZ_DETAILS, scope.READ_QUIZ_DETAILS, scope.RES_QUIZ, scope.DOWNLOAD_FILE, scope.PLAY_AUDIO, scope.PLAY_VIDEO, scope.SCORE_WEEK, scope.ACTION_WEEK, scope.READ_MENTORS, scope.READ_MENTOR_DETAILS, scope.READ_TUTORIALS, scope.READ_TERM_WEEKS];
+const supervisor = [scope.READ_SUPERVISORS, scope.READ_SUPERVISOR_DETAILS, scope.CHANGE_PASSWORD_SUPERVISOR, scope.READ_MENTORS, scope.READ_MENTOR_DETAILS, scope.READ_INTERNS, scope.READ_INTERN_DETALIS, scope.READ_COURSES, scope.READ_COURSE_DETAILS, scope.READ_TERM_WEEKS];
 const tutorialCategory = [];
 const course = [];
 const term = [];
@@ -155,10 +171,9 @@ const upload = [];
 const download = [];
 
 roleRight = (role) => {
-  console.log(role);
   switch(role) {
     case 'admin':
-      return admin.concat(intern, mentor);
+      return admin.concat(intern, mentor, supervisor);
     
     case 'mentor':
       return mentor;
@@ -175,6 +190,6 @@ roleRight = (role) => {
 module.exports = {
   scope,
   roles,
-  roleRights,
+  // roleRights,
   roleRight
 };

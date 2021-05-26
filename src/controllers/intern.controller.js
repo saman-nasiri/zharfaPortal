@@ -38,17 +38,39 @@ const uploadAvatar = catchAsync(async(req, res) => {
 });
 
 const changePassword = catchAsync(async(req, res) => {
-    const internId = "6097ac14fa81fe23ef1f2ddc" // req.user.id;
+    const internId = req.user.id;
     const passwordBody = req.body;
-    await internService.changePassword(internId, passwordBody);
-    res.status(httpStatus.OK).send();
+    const result = await internService.changePassword(internId, passwordBody);
+    res.status(httpStatus.OK).send(result);
 });
 
+const getInterns = catchAsync(async(req, res) => {
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const interns = await internService.queryInterns(filter, options);
+    res.status(httpStatus.OK).send(interns);
+});
+
+const getInternById = catchAsync(async(req, res) => {
+    const internId = req.params.internId;
+    const intern = await internService.getInternById(internId);
+    res.status(httpStatus.OK).send(intern);
+});
+
+const getTermInterns = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const interns = await internService.getTermInterns(termId, options);
+    res.status(httpStatus.OK).send(interns);
+});
 
 module.exports = {
     createIntern,
     updateIntern,
     deleteIntern,
     uploadAvatar,
-    changePassword
+    changePassword,
+    getInterns,
+    getInternById,
+    getTermInterns
 };

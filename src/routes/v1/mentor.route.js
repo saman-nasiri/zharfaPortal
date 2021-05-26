@@ -16,7 +16,7 @@ router
         .put(auth(scope.UPDATE_MENTOR), mentorController.updateMentor)
 
 router
-    .route('/remove/:mentorId')
+    .route('/delete/:mentorId')
         .delete(auth(scope.DELETE_MENTOR), mentorController.deleteMentor)
 
 router
@@ -26,5 +26,13 @@ router
 router
     .route('/change-password')
         .put(auth(scope.CHANGE_PASSWORD_MENTOR), mentorController.changePassword)
+
+router
+    .route('/')
+        .get(auth(scope.READ_MENTORS), mentorController.getMentors)
+
+router
+    .route('/:mentorId')
+        .get(auth(scope.READ_MENTOR_DETAILS), mentorController.getMentorById)
 
 module.exports = router;

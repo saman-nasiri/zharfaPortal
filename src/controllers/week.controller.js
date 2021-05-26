@@ -18,7 +18,7 @@ const createWeek = catchAsync(async(req, res) => {
 
 const recordWeekScore = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
-    const internId = "6087b87b104caa2307e68566" // req.user._id
+    const internId = req.user.id;
     const action = await weekService.getInternWeekAction(weekId, internId); //if exist return not create action
     const week = await weekService.recordWeekScore(action); //if score is false do true and add week score
     res.status(httpStatus.OK).send('success');
@@ -26,7 +26,7 @@ const recordWeekScore = catchAsync(async(req, res) => {
 
  const recordWeekViewCount = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
-    const internId = "6087b87b104caa2307e68566" // req.user._id
+    const internId = req.user.id;
     const action = await weekService.getInternWeekAction(weekId, internId); //if exist return not create action
     const week = await weekService.recordWeekViewCount(action) //if viewCount is false do true and add week score
     res.status(httpStatus.OK).send('success');
@@ -34,7 +34,7 @@ const recordWeekScore = catchAsync(async(req, res) => {
 
  const weekProgressbar = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
-    const internId = "6087b87b104caa2307e68566" // req.user._id
+    const internId = req.user.id;
     const week = await weekService.getWeekById(weekId);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound'); };
     const progressbar = await weekService.weekProgressbar(week, internId);
@@ -42,7 +42,9 @@ const recordWeekScore = catchAsync(async(req, res) => {
  });
 
 const getWeeks = catchAsync(async(req, res) => {
-    const weeks = await weekService.getWeeks();
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const weeks = await weekService.getWeeks(filter, options);
     if(!weeks) { throw new ApiError(httpStatus.NOT_FOUND, 'WeeksNotFound') };
     res.status(httpStatus.OK).send(weeks);
 });

@@ -19,6 +19,10 @@ const quizResponseRoomSchema = mongoose.Schema({
     }]
 });
 
+// add plugin that converts mongoose to json
+quizResponseRoomSchema.plugin(toJSON);
+quizResponseRoomSchema.plugin(paginate);
+
 
 const QuizResponseRoom = mongoose.model("QuizResponseRoom", quizResponseRoomSchema);
 

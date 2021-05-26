@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const weekController = require('../../controllers/week.controller');
 const { route } = require('./task.route');
@@ -8,35 +9,35 @@ const router = express.Router();
 
 router
     .route('/create/:termId')
-        .post(weekController.createWeek)
+        .post(auth(scope.CREATE_WEEK), weekController.createWeek)
 
 router
     .route('/progressbar/:weekId')
-        .get(weekController.weekProgressbar)
+        .get(auth(scope.READ_WEEK_PROGRESSBAR), weekController.weekProgressbar)
 
 router
     .route('/action/score/:weekId')
-        .post(weekController.recordWeekScore)
+        .post(auth(scope.SCORE_WEEK), weekController.recordWeekScore)
 
 router
     .route('/action/viewCount/:weekId')
-        .post(weekController.recordWeekViewCount)
+        .post(auth(scope.ACTION_WEEK), weekController.recordWeekViewCount)
 
 router
     .route('/')
-        .get(weekController.getWeeks)
+        .get(auth(scope.READ_WEEKS), weekController.getWeeks)
 
 router
     .route('/:weekId')
-        .get(weekController.getWeekById)
+        .get(auth(scope.READ_WEEK_DETAILS), weekController.getWeekById)
 
 router
     .route('/tasks/:weekId')
-        .get(weekController.getTaskOfTheWeekByWeekId)
+        .get(auth(scope.READ_WEEK_TASKS), weekController.getTaskOfTheWeekByWeekId)
 
 router
     .route('/delete/:weekId')
-        .delete(weekController.deleteWeekById)
+        .delete(auth(scope.DELETE_WEEK), weekController.deleteWeekById)
 
         
 module.exports = router;

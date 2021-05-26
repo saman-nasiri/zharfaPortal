@@ -7,7 +7,7 @@ const upload = require('../middlewares/uploadFile');
 
 const createTerm = catchAsync(async(req, res) => {
     const termBody = req.body;
-    const tutorialCategory = await tutorialService.getTutorialCategoryBySlug(req.body.tutorialCategory);
+    const tutorialCategory = await tutorialService.getTutorialBySlug(req.body.tutorialCategory);
     if(!tutorialCategory) { throw new ApiError(httpStatus.NOT_FOUND, 'TutorialCategoryNotFound'); };
     const result = await termService.createTerm(termBody, tutorialCategory);
     res.status(httpStatus.CREATED).send(result);
@@ -19,7 +19,7 @@ const addInternsToTheTerm = catchAsync(async(req, res) => {
     const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
     const result = await termService.addInternsToTheTerm(term, internsList);
-    res.status(httpStatus.OK).send(term);
+    res.status(httpStatus.OK).send(result);
 });
 
 const removeInternsFromTheTerm = catchAsync(async(req, res) => {
@@ -62,8 +62,10 @@ const updateTerm = catchAsync(async(req, res) => {
 });
 
 const getTerms = catchAsync(async(req, res) => {
-    const terms = await termService.getTerms();
-    res.status(httpStatus.OK).send(result);
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const terms = await termService.getTerms(filter, options);
+    res.status(httpStatus.OK).send(terms);
 });
 
 const getTermById = catchAsync(async(req, res) => {
@@ -79,10 +81,11 @@ const deleteTermById = catchAsync(async(req, res) => {
 });
 
 
-const getWeeksOfTheTermById = catchAsync(async(req, res) => {
+const getTermWeeksById = catchAsync(async(req, res) => {
     const termId = req.params.termId;
-    const internId = '6087b87b104caa2307e68566';
-    const weeks = await termService.getWeeksOfTheTermById(termId, internId);
+    const internId = req.user.id;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const weeks = await termService.getTermWeeksById(termId, internId, options);
     res.status(httpStatus.OK).send(weeks);
 });
 
@@ -92,6 +95,7 @@ const removeWeekFromTerm = catchAsync(async(req, res) => {
     const result = await termService.removeWeekFromTerm(termId, weekId);
     res.status(httpStatus.OK).send(result);
 });
+
 
 module.exports = {
     createTerm,
@@ -103,6 +107,6 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
-    getWeeksOfTheTermById,
-    removeWeekFromTerm
+    getTermWeeksById,
+    removeWeekFromTerm,
 };

@@ -11,7 +11,6 @@ const createAdmin = catchAsync(async(req, res) => {
     res.status(httpStatus.CREATED).send(result);
 });
 
-
 const updateAdmin = catchAsync(async(req, res) => {
     const adminId = req.params.adminId;
     const updateBody = req.body;
@@ -38,11 +37,23 @@ const uploadAvatar = catchAsync(async(req, res) => {
 });
 
 const changePassword = catchAsync(async(req, res) => {
-    const adminId = req.user; // req.user.id;
-    console.log(adminId);
-    // const passwordBody = req.body;
-    // await adminService.changePassword(adminId, passwordBody);
-    // res.status(httpStatus.OK).send();
+    const adminId = req.user.id;
+    const passwordBody = req.body;
+    await adminService.changePassword(adminId, passwordBody);
+    res.status(httpStatus.OK).send();
+});
+
+const getAdmins = catchAsync(async(req, res) => {
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const admins = await adminService.getAdmins(filter, options);
+    res.status(httpStatus.OK).send(admins);
+});
+
+const getAdminById = catchAsync(async(req, res) => {
+    const adminId = req.params.adminId;
+    const admin = await adminService.getAdminById(adminId);
+    res.status(httpStatus.OK).send(admin);
 });
 
 module.exports = {
@@ -50,5 +61,7 @@ module.exports = {
     updateAdmin,
     deleteAdmin,
     uploadAvatar,
-    changePassword
+    changePassword,
+    getAdmins,
+    getAdminById
 };

@@ -1,9 +1,13 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcryptjs');
 const { Mentor } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const createMentor = async(mentorBody) => {    
-   try {
+
+const createMentor = async(mentorBody) => {   
+    if (await Mentor.isEmailTaken(internBody.email)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
+    };
     const mentor = await Mentor.create({
         firstName: mentorBody.firstName,
         lastName: mentorBody.lastName,
@@ -12,10 +16,6 @@ const createMentor = async(mentorBody) => {
     });
 
     return mentor;
-
-   } catch (error) {
-       console.log(error);
-   }
 };
 
 
@@ -57,11 +57,17 @@ const getMentorByEmail = async(email) => {
     return mentor;
 };
 
+const getMentors = async(filter, options) => {
+    const mentors = await Mentor.paginate(filter, options);
+    if(!mentors) { throw new ApiError(httpStatus.NOT_FOUND, 'MentorNotFound')};
+    return mentors;
+};
+
 const changePassword = async(mentorId, passwordBody) => {
     const mentor = await Mentor.findOne({ _id: mentorId });
     const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
 
-    if (!(await Mentor.isPasswordMatch(passwordBody.currentPassword))) {
+    if (!(await mentor.isPasswordMatch(passwordBody.currentPassword))) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
     };
 
@@ -78,6 +84,7 @@ module.exports = {
     deleteMentor,
     getMentorById,
     getMentorByEmail,
+    getMentors,
     changePassword,
     uploadAvatar
 };

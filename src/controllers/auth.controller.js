@@ -3,15 +3,24 @@ const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService, adminService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
+  const userExist = await authService.userRoleValidation(email);
+  if(userExist) { throw new ApiError(httpStatus.BAD_REQUEST, 'EmailIsExist') };
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
-const login = catchAsync(async (req, res) => {
+// login function for admin & mentor & supervisor
+const loginAMS = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const userRole = await authService.userRoleValidation(email);
-  console.log(userRole);
+  const userRole = await authService.userRoleValidationAMS(email);
+  const userData = await authService.getUserData(userRole, email, password);
+  res.status(httpStatus.OK).send(userData);
+});
+
+const loginIntern = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+  const userRole = await authService.userRoleValidationIntern(email);
   const userData = await authService.getUserData(userRole, email, password);
   res.status(httpStatus.OK).send(userData);
 });
@@ -39,7 +48,8 @@ const resetPassword = catchAsync(async (req, res) => {
 
 module.exports = {
   register,
-  login,
+  loginAMS,
+  loginIntern,
   logout,
   refreshTokens,
   forgotPassword,

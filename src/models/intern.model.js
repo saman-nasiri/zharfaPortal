@@ -20,7 +20,7 @@ const internSchema = mongoose.Schema({
     favoriteMovies: String,
     tutorialCategory: Array,
     termCode: Array,
-    termsId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
+    termsList : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 
     sex: {
         type: String,
@@ -46,7 +46,9 @@ const internSchema = mongoose.Schema({
 
     email: {
         type: String,
+        unique: true,
         trim: true,
+        lowercase: true,
     },
 
     role: {
@@ -91,6 +93,17 @@ const internSchema = mongoose.Schema({
 // add plugin that converts mongoose to json
 internSchema.plugin(toJSON);
 internSchema.plugin(paginate);
+
+/**
+ * Check if email is taken
+ * @param {string} email - The user's email
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+internSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+    const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+    return !!user;
+  };
 
 /**
  * Check if email is taken

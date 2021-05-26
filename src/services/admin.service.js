@@ -4,7 +4,9 @@ const { Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createAdmin = async(adminBody) => {
-    
+    if (await Admin.isEmailTaken(adminBody.email)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
+    };
    try {
     const admin = await Admin.create({
         firstName: adminBody.firstName,
@@ -74,6 +76,14 @@ const changePassword = async(adminId, passwordBody) => {
     return updatePassword;
 };
 
+
+const getAdmins = async(filter, options) => {
+    const admins = await Admin.paginate(filter, options);
+    if(!admins) { throw new ApiError(httpStatus.NOT_FOUND, 'AdminsNotFound')};
+    return admins;
+};
+
+
 module.exports = {
     createAdmin,
     updateAdmin,
@@ -81,5 +91,6 @@ module.exports = {
     getAdminById,
     uploadAvatar,
     getAdminByEmail,
-    changePassword
+    changePassword,
+    getAdmins,
 };

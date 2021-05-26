@@ -3,6 +3,9 @@ const { TutorialCategory } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createTutorialMainCategory = async(tutorialBody) => {
+    if (await TutorialCategory.isCategorySlugTaken(tutorialBody.slug)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'CategoryAlreadyTaken');
+    };
     const tutorialCategory = await TutorialCategory.create({
         title: tutorialBody.title,
         slug: tutorialBody.slug,
@@ -14,6 +17,9 @@ const createTutorialMainCategory = async(tutorialBody) => {
 };
 
 const createTutorialSubCategory = async(tutorialBody, mainTutorial) => {
+    if (await TutorialCategory.isCategorySlugTaken(tutorialBody.slug)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'CategoryAlreadyTaken');
+    };
     const toutrial = await TutorialCategory.create({
         title: tutorialBody.title,
         slug: tutorialBody.slug,

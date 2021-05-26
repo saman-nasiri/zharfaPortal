@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const courseController = require('../../controllers/course.controller');
 const { route } = require('./task.route');
@@ -8,30 +9,30 @@ const router = express.Router();
 
 router
     .route('/create-head')
-        .post(courseController.createHeadCourse)
+        .post(auth(scope.CREATE_COURSE), courseController.createHeadCourse)
 
 router
     .route('/create-sub/:headSlug')
-        .post(courseController.createSubsetHeadCourse)
+        .post(auth(scope.CREATE_COURSE), courseController.createSubsetHeadCourse)
 
 router
     .route('/showHead')
-        .get(courseController.getHeadCourse)
+        .get(auth(scope.READ_COURSES), courseController.getHeadCourse)
 
 router
     .route('/showSub/:headSlug')
-        .get(courseController.getSubCourse)
+        .get(auth(scope.READ_COURSES), courseController.getSubCourse)
 
 router
-    .route('/showOne/:slug')
-        .get(courseController.getCourseBySlug)
+    .route('/:slug')
+        .get(auth(scope.READ_COURSE_DETAILS), courseController.getCourseBySlug)
 
 router
     .route('/update/:courseId')
-        .put(courseController.updateCourseById)
+        .put(auth(scope.UPDATE_COURSE), courseController.updateCourseById)
 
 router
     .route('/delete/:courseId')
-        .delete(courseController.deleteCourseBySlug)
+        .delete(auth(scope.DELETE_COURSE), courseController.deleteCourseBySlug)
 
 module.exports = router;

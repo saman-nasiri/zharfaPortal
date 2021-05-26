@@ -9,6 +9,10 @@ const internTaskActionSchema = mongoose.Schema({
     done:     { type: Boolean, default: false }
 });
 
+// add plugin that converts mongoose to json
+internTaskActionSchema.plugin(toJSON);
+internTaskActionSchema.plugin(paginate);
+
 
 const InternTaskAction = mongoose.model('InternTaskAction', internTaskActionSchema);
 
