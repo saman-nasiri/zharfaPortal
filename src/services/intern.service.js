@@ -90,29 +90,6 @@ const queryInterns = async (filter, options) => {
 
 
 
-const getTermInterns = async(termId, options) => {
-
-    const {sort, limit, skip, page} = slsp(options);
-
-    const interns = await Intern.find({ termsList: {  $in: termId } }).lean()
-    .select('_id firstName lastName email phoneNumber avatar')
-    .sort(sort).skip(skip).limit(limit).exec()
-
-    // let weeksList = weeks.weeksList;
-
-    // const weeksModel = await Promise.all(
-    //     weeksList.map(async(week) => {
-    //         const progressbar = await weekProgressbar(week, internId);
-    //         week["progressbar"] = progressbar.progressbar;
-    //         return week;
-    //     })
-    // )
-
-    const result = arrayShow(interns, limit, page);
-
-    return result;
-};
-
 
 module.exports = {
     createIntern,
@@ -123,5 +100,4 @@ module.exports = {
     getInternByEmail,
     changePassword,
     queryInterns,
-    getTermInterns
 };

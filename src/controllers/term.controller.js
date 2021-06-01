@@ -81,13 +81,21 @@ const deleteTermById = catchAsync(async(req, res) => {
 });
 
 
-const getTermWeeksById = catchAsync(async(req, res) => {
+const getTermWeeks = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const internId = req.user.id;
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const weeks = await termService.getTermWeeksById(termId, internId, options);
+    const weeks = await termService.getTermWeeks(termId, internId, options);
     res.status(httpStatus.OK).send(weeks);
 });
+
+const getTermInterns = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const interns = await termService.getTermInterns(termId, options);
+    res.status(httpStatus.OK).send(interns);
+});
+
 
 const removeWeekFromTerm = catchAsync(async(req, res) => {
     const termId = req.params.termId;
@@ -107,6 +115,7 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
-    getTermWeeksById,
+    getTermWeeks,
+    getTermInterns,
     removeWeekFromTerm,
 };

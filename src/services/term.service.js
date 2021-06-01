@@ -76,11 +76,7 @@ const addWeekToTheTerm = async(term, weeksList) => {
 };
 
 const updateTerm = async(term, updateBody) => {
-    const result  = await Term.updateOne({ _id: term._id }, { "$set": updateBody }, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    }); ;
+    const result  = await Term.updateOne({ _id: term._id }, { "$set": updateBody }, { "new": true, "upsert": true }); ;
     
     return result;
 };
@@ -102,7 +98,7 @@ const deleteTermById = async(termId) => {
     return result;
 };
 
-const getTermWeeksById = async(termId, internId, options) => {
+const getTermWeeks = async(termId, internId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const weeks = await Term.findOne({ _id: termId }).lean()
@@ -125,6 +121,43 @@ const getTermWeeksById = async(termId, internId, options) => {
     return result;
 }; 
 
+
+const getTermInterns = async(termId, options) => {
+
+    const {sort, limit, skip, page} = slsp(options);
+
+    const interns = await Intern.find({ termsList: {  $in: termId } }).lean()
+    .select('_id firstName lastName email phoneNumber avatar')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const terms = await Term.findOne({ _id: termId }).lean()
+    .populate('weeksList')
+    .select('weekList -_id')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    let weeksList = terms.weeksList;
+
+    const internsmodel = await Promise.all(
+        interns.map(async(intern) => {
+        const termProgressBar = await Promise.all(
+            weeksList.map(async(week) => {
+                const progressbar = await weekProgressbar(week, intern._id);
+                termProgressBarTotal =+ progressbar.progressbar;
+                return termProgressBarTotal;
+            })
+        )
+        const totalTermProgressBar = termProgressBar.reduce((total, value) => { return total + value })
+        intern["termProgresbar"] = totalTermProgressBar;
+        return intern;
+      })
+    );
+
+    // console.log('internsmodel:', internsmodel);
+    const result = arrayShow(internsmodel, limit, page);
+
+    return result;
+};
+
 const removeWeekFromTerm = async(termId, weekId) => {
     const updateTerm = await Term.updateOne({ _id: termId }, { "$pull": {
         "weeksList": weekId
@@ -145,6 +178,7 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
-    getTermWeeksById,
+    getTermWeeks,
+    getTermInterns,
     removeWeekFromTerm,
 };

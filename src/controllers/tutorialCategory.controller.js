@@ -26,9 +26,9 @@ const getMainTutorial = catchAsync(async(req,res) => {
     res.status(httpStatus.OK).send(mainsTutorial);
 });
 
-const getSubMainTutorial = catchAsync(async(req,res) => {
+const getSubTutorial = catchAsync(async(req,res) => {
     const mainSlug = req.params.mainSlug;
-    const subTutorial = await tutorialService.getSubMainTutorial(mainSlug);
+    const subTutorial = await tutorialService.getSubTutorial(mainSlug);
     res.status(httpStatus.OK).send(subTutorial);
 });
 
@@ -49,7 +49,7 @@ module.exports = {
     createTutorialMainCategory,
     createTutorialSubCategory,
     getMainTutorial,
-    getSubMainTutorial,
+    getSubTutorial,
     getTutorialBySlug,
     deleteTutorialBySlug
 };

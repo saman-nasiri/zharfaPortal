@@ -35,7 +35,7 @@ const getMainTutorial = async() => {
     return mainTutorial;
 };
 
-const getSubMainTutorial = async(mainSlug) => {
+const getSubTutorial = async(mainSlug) => {
     const tutorial = await TutorialCategory.findOne({ slug: mainSlug });
     const subTutorial = await TutorialCategory.find({ parent: { $in: [new RegExp('^' + tutorial.parent)] } });
     return subTutorial;
@@ -59,7 +59,7 @@ module.exports = {
     createTutorialMainCategory,
     createTutorialSubCategory,
     getMainTutorial,
-    getSubMainTutorial,
+    getSubTutorial,
     getTutorialBySlug,
     deleteTutorialBySlug,
 };

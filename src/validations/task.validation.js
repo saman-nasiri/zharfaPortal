@@ -2,7 +2,7 @@ const Joi = require('@hapi/joi');
 const { objectId } = require('./custom.validation');
 
 
-const crateTask = {
+const createTask = {
     params: Joi.object().keys({
         weekId: Joi.string().custom(objectId),
     }),
@@ -200,6 +200,7 @@ const playFile = {
 
 
 module.exports = {
+    createTask,
     updateTaskById,
     getTaskById,
     doneTaskActin,

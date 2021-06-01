@@ -12,6 +12,11 @@ const createWeek = async(weekBody, term) => {
     return week;
 };
 
+const updateWeekById = async(weekId, updateBody) => {
+    await getWeekById(weekId);
+    const result = await Week.updateOne({ _id: weekId }, { "$set": updateBody }, { "new": true, "upsert": true });
+    return result;
+};
 
 const getInternWeekAction = async(weekId, internId) => {
     const action = await InternWeekAction.findOne({ weekId: weekId, internId: internId });
@@ -110,7 +115,7 @@ const getWeekById = async(weekId) => {
     return week;
 };
 
-const getTaskOfTheWeekByWeekId = async(weekId) => {
+const getWeekTasks = async(weekId) => {
     const tasks = await Task.find({ weekId: weekId })
     .select('_id title');
     return tasks;
@@ -125,6 +130,7 @@ const deleteWeekById = async(weekId) => {
 
 module.exports = {
     createWeek,
+    updateWeekById,
     getInternWeekAction,
     recordWeekScore,
     recordWeekViewCount,
@@ -132,6 +138,6 @@ module.exports = {
     weekProgressbar,
     getWeeks,
     getWeekById,
-    getTaskOfTheWeekByWeekId,
+    getWeekTasks,
     deleteWeekById
 };

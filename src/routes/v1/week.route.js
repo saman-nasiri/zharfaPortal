@@ -3,25 +3,29 @@ const auth = require('../../middlewares/auth');
 const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const weekController = require('../../controllers/week.controller');
-const { route } = require('./task.route');
+const weekValidation = require('../../validations/week.validation');
 
 const router = express.Router();
 
 router
     .route('/create/:termId')
-        .post(auth(scope.CREATE_WEEK), weekController.createWeek)
+        .post(auth(scope.CREATE_WEEK), validate(weekValidation.createWeek), weekController.createWeek)
+
+router
+    .route('/update/:weekId')
+        .put(auth(scope.UPDATE_WEEK), validate(weekValidation.updateWeekById), weekController.updateWeekById)
 
 router
     .route('/progressbar/:weekId')
-        .get(auth(scope.READ_WEEK_PROGRESSBAR), weekController.weekProgressbar)
+        .get(auth(scope.READ_WEEK_PROGRESSBAR), validate(weekValidation.weekProgressbar), weekController.weekProgressbar)
 
 router
     .route('/action/score/:weekId')
-        .post(auth(scope.SCORE_WEEK), weekController.recordWeekScore)
+        .post(auth(scope.SCORE_WEEK), validate(weekValidation.recordWeekScore), weekController.recordWeekScore)
 
 router
     .route('/action/viewCount/:weekId')
-        .post(auth(scope.ACTION_WEEK), weekController.recordWeekViewCount)
+        .post(auth(scope.ACTION_WEEK), validate(weekValidation.recordWeekViewCount), weekController.recordWeekViewCount)
 
 router
     .route('/')
@@ -29,11 +33,11 @@ router
 
 router
     .route('/:weekId')
-        .get(auth(scope.READ_WEEK_DETAILS), weekController.getWeekById)
+        .get(auth(scope.READ_WEEK_DETAILS), validate(weekValidation.getWeekById), weekController.getWeekById)
 
 router
     .route('/tasks/:weekId')
-        .get(auth(scope.READ_WEEK_TASKS), weekController.getTaskOfTheWeekByWeekId)
+        .get(auth(scope.READ_WEEK_TASKS), validate(weekValidation.getWeekTasks), weekController.getWeekTasks)
 
 router
     .route('/delete/:weekId')

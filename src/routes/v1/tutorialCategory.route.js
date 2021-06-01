@@ -3,34 +3,34 @@ const auth = require('../../middlewares/auth');
 const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const tutorialCategoryController = require('../../controllers/tutorialCategory.controller');
-const { route } = require('./task.route');
+const tutorialValidation = require('../../validations/tutorialCategory.validation');
 
 
 const router = express.Router();
 
 router
     .route('/create-main')
-        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), tutorialCategoryController.createTutorialMainCategory)
+        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), validate(tutorialValidation.createTutorialMainCategory),  tutorialCategoryController.createTutorialMainCategory)
 
 router
     .route('/create-sub/:mainTutorial')
-        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), tutorialCategoryController.createTutorialSubCategory)
+        .post(auth(scope.CREATE_TUTORIAL_CATEGORY), validate(tutorialValidation.createTutorialSubCategory), tutorialCategoryController.createTutorialSubCategory)
 
 router
-    .route('/showMain')
+    .route('/mainTutorial')
         .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getMainTutorial)
 
 router
-    .route('/showSub/:mainSlug')
-        .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getSubMainTutorial)
+    .route('/subTutorial/:mainSlug')
+        .get(auth(scope.READ_TUTORIALS), validate(tutorialValidation.getSubTutorial), tutorialCategoryController.getSubTutorial)
 
 router
     .route('/:slug')
-        .get(auth(scope.READ_TUTORIALS), tutorialCategoryController.getTutorialBySlug)
+        .get(auth(scope.READ_TUTORIALS), validate(tutorialValidation.getTutorialBySlug), tutorialCategoryController.getTutorialBySlug)
 
 router
     .route('/delete/:slug')
-        .delete(auth(scope.DELETE_TUTORIAL), tutorialCategoryController.deleteTutorialBySlug)
+        .delete(auth(scope.DELETE_TUTORIAL), validate(tutorialValidation.deleteTutorialBySlug), tutorialCategoryController.deleteTutorialBySlug)
 
 
 

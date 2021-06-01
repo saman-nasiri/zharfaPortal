@@ -431,9 +431,13 @@ const doneTaskAction = async(action, task) => {
             "doneCount": 1
         }}, { "new": true, "upsert": true });
 
+        const internWeekActions = await InternWeekAction.findOne({ weekId: task.weekId, internId: action.internId });
+        if(!internWeekActions) { const internWeekActions = await InternWeekAction.create({ weekId: task.weekId, internId: action.internId })};
         await InternWeekAction.updateOne({ weekId: task.weekId, internId: action.internId }, { "$inc": {
             doneTaskDuration: task.duration
         }});
+
+        return { message: 'Done Success'}
     }
     else {
         await InternTaskAction.updateOne({ _id: action._id }, { "$set": { 
@@ -447,6 +451,8 @@ const doneTaskAction = async(action, task) => {
         await InternWeekAction.updateOne({ weekId: task.weekId, internId: action.internId }, { "$inc": {
             doneTaskDuration: -task.duration
         }});
+
+        return { message: 'UnDone Success'}
     }
 };
 

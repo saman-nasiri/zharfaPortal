@@ -39,8 +39,8 @@ const uploadAvatar = catchAsync(async(req, res) => {
 const changePassword = catchAsync(async(req, res) => {
     const adminId = req.user.id;
     const passwordBody = req.body;
-    await adminService.changePassword(adminId, passwordBody);
-    res.status(httpStatus.OK).send();
+    const result = await adminService.changePassword(adminId, passwordBody);
+    res.status(httpStatus.OK).send(result);
 });
 
 const getAdmins = catchAsync(async(req, res) => {

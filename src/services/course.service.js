@@ -46,8 +46,14 @@ const getCourseBySlug = async(courseSlug) => {
     return course;
 };
 
+const getCourseById = async(courseId) => {
+    const course = await Course.findOne({ _id: courseId });
+    if(!course) { throw new ApiError(httpStatus.NOT_FOUND, 'CourseNotFound'); };
+    return course;
+};
 
 const updateCourseById = async(courseId, updateBody) => {
+    await getCourseById(courseId);
     const updateCourse = await Course.updateOne({ _id: courseId }, { "$set": updateBody }, { "new": true, "upsert": true });
     return updateCourse;
 };

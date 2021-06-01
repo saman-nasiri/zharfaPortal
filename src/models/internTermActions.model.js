@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 
-const InternTermRelationsSchema = mongoose.Schema({
+const InternTermActionsSchema = mongoose.Schema({
     internId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Intern' },
     termId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' },
     rate: { type: Boolean, default: false },
@@ -15,10 +15,10 @@ const InternTermRelationsSchema = mongoose.Schema({
 });
 
 // add plugin that converts mongoose to json
-InternTermRelationsSchema.plugin(toJSON);
-InternTermRelationsSchema.plugin(paginate);
+InternTermActionsSchema.plugin(toJSON);
+InternTermActionsSchema.plugin(paginate);
 
 
-const InternWeekAction = mongoose.model('InternTermRelations', InternTermRelationsSchema);
+const InternWeekAction = mongoose.model('InternTermActions', InternTermActionsSchema);
 
 module.exports = InternWeekAction;

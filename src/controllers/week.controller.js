@@ -16,6 +16,13 @@ const createWeek = catchAsync(async(req, res) => {
     res.status(httpStatus.CREATED).send(week);
 });
 
+const updateWeekById = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const updateBody = req.body;
+    const result = await weekService.updateWeekById(weekId, updateBody);
+    res.status(httpStatus.OK).send(result);
+});
+
 const recordWeekScore = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const internId = req.user.id;
@@ -55,9 +62,9 @@ const getWeekById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(week);
 });
 
-const getTaskOfTheWeekByWeekId = catchAsync(async(req, res) => {
+const getWeekTasks = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
-    const tasks = await weekService.getTaskOfTheWeekByWeekId(weekId);
+    const tasks = await weekService.getWeekTasks(weekId);
     res.status(httpStatus.OK).send(tasks);
 });
 
@@ -72,11 +79,12 @@ const deleteWeekById = catchAsync(async(req, res) => {
 
 module.exports = {
     createWeek,
+    updateWeekById,
     recordWeekScore,
     recordWeekViewCount,
     weekProgressbar,
     getWeeks,
     getWeekById,
     deleteWeekById,
-    getTaskOfTheWeekByWeekId
+    getWeekTasks
 };

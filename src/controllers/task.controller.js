@@ -169,10 +169,11 @@ const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
 const doneTaskAction = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     const internId = req.user.id;
+    console.log(taskId, internId);
     const task = await taskService.getTaskById(taskId);
     const action = await taskService.getInternTaskAction(taskId, internId);
     const doneTaskAction = await taskService.doneTaskAction(action, task);
-    res.status(httpStatus.OK).send({ message: 'Done Success'});
+    res.status(httpStatus.OK).send(doneTaskAction);
 });
 
 const getTaskById = catchAsync(async(req, res) => {
