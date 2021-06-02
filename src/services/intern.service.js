@@ -99,7 +99,7 @@ const getInternTerms = async(internId, options) => {
     .select('termsList -_id')
     .sort(sort).skip(skip).limit(limit).exec()
 
-    const result = arrayShow(terms, limit, page);
+    const result = arrayShow(terms.termsList, limit, page);
     return result;
 };
 
