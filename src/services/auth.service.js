@@ -175,6 +175,7 @@ const updateUserById = async(id, newPassword) => {
 
 const getUserData = async(userRole, email, password) => {
   switch(userRole) {
+    case 'owner':
     case 'admin':
          user   = await loginAdminWithEmailAndPassword(email, password);
          tokens = await tokenService.generateAuthTokens(user);

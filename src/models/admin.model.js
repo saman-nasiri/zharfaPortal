@@ -38,7 +38,7 @@ const adminSchema = mongoose.Schema({
     role: {
         type: String,
         // enum: roles,
-        default: 'admin'
+        enum: ['owner','admin']
     },
 });
 

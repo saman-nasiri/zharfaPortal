@@ -9,7 +9,11 @@ const adminValidation = require('../../validations/admin.validation');
 const router = express.Router();
 
 router
-    .route('/create')
+    .route('/create-owner')
+        .post(adminController.createOwner)
+
+router
+    .route('/create-admin')
         .post(auth(scope.CREATE_ADMIN), validate(adminValidation.createAdmin), adminController.createAdmin)
 
 router

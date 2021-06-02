@@ -14,7 +14,9 @@ const register = catchAsync(async (req, res) => {
 const loginAMS = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const userRole = await authService.userRoleValidationAMS(email);
+  console.log(userRole);
   const userData = await authService.getUserData(userRole, email, password);
+  console.log(userData);
   res.status(httpStatus.OK).send(userData);
 });
 
@@ -37,8 +39,8 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const email = await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  res.status(httpStatus.NO_CONTENT).send(email);
 });
 
 const resetPassword = catchAsync(async (req, res) => {

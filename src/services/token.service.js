@@ -50,13 +50,16 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, config.jwt.secret);
-  console.log(payload);
-  const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
-  if (!tokenDoc) {
-    throw new Error('Token not found');
+  try {
+    const payload = jwt.verify(token, config.jwt.secret);
+    const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
+    if (!tokenDoc) {
+      throw new Error('Token not found');
+    }
+    return tokenDoc;
+  } catch (error) {
+    console.log(error);
   }
-  return tokenDoc;
 };
 
 /**
@@ -99,8 +102,10 @@ const generateResetPasswordToken = async (email) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
   }
+
+  console.log(user);
   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
-  const resetPasswordToken = generateToken(user.id, expires);
+  const resetPasswordToken = generateToken(user.id, user.role, expires);
   await saveToken(resetPasswordToken, user.id, expires, 'resetPassword');
   return resetPasswordToken;
 };

@@ -5,6 +5,13 @@ const catchAsync = require('../utils/catchAsync');
 const { adminService } = require('../services');
 const upload = require('../middlewares/uploadFile');
 
+const createOwner = catchAsync(async(req, res) => {
+    const ownerBody = req.body;
+    const result = await adminService.createOwner(ownerBody);
+    res.status(httpStatus.CREATED).send(result);
+});
+
+
 const createAdmin = catchAsync(async(req, res) => {
     const adminBody = req.body;
     const result = await adminService.createAdmin(adminBody);
@@ -57,6 +64,7 @@ const getAdminById = catchAsync(async(req, res) => {
 });
 
 module.exports = {
+    createOwner,
     createAdmin,
     updateAdmin,
     deleteAdmin,

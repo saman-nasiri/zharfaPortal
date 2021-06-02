@@ -3,6 +3,26 @@ const bcrypt = require('bcryptjs');
 const { Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+const createOwner = async(ownerBody) => {
+    if (await Admin.isEmailTaken(ownerBody.email)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
+    };
+   try {
+    const owner = await Admin.create({
+        firstName: ownerBody.firstName,
+        lastName: ownerBody.lastName,
+        password: ownerBody.password,
+        email: ownerBody.email,
+        role: 'owner'
+    });
+
+    return owner;
+
+   } catch (error) {
+       console.log(error);
+   }
+};
+
 const createAdmin = async(adminBody) => {
     if (await Admin.isEmailTaken(adminBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
@@ -12,7 +32,8 @@ const createAdmin = async(adminBody) => {
         firstName: adminBody.firstName,
         lastName: adminBody.lastName,
         password: adminBody.password,
-        email: adminBody.email
+        email: adminBody.email,
+        role: 'admin'
     });
 
     return admin;
@@ -85,6 +106,7 @@ const getAdmins = async(filter, options) => {
 
 
 module.exports = {
+    createOwner,
     createAdmin,
     updateAdmin,
     deleteAdmin,
