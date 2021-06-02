@@ -104,7 +104,6 @@ const removeWeekFromTerm = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
-
 module.exports = {
     createTerm,
     addInternsToTheTerm,

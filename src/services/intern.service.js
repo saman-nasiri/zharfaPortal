@@ -40,6 +40,7 @@ const deleteIntern = async(internId) => {
 
 const getInternById = async(internId) => {
     const intern = await Intern.findById(internId);
+    if(!intern) { throw new ApiError(httpStatus.NOT_FOUND, 'InternNotFound')};
     return intern;
 };
 
@@ -89,6 +90,18 @@ const queryInterns = async (filter, options) => {
 };
 
 
+const getInternTerms = async(internId, options) => {
+    await getInternById(internId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const terms = await Intern.findOne({ _id: internId }).lean()
+    .populate('termsList')
+    .select('termsList -_id')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(terms, limit, page);
+    return result;
+};
 
 
 module.exports = {
@@ -100,4 +113,5 @@ module.exports = {
     getInternByEmail,
     changePassword,
     queryInterns,
+    getInternTerms
 };

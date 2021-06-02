@@ -152,7 +152,6 @@ const getTermInterns = async(termId, options) => {
       })
     );
 
-    // console.log('internsmodel:', internsmodel);
     const result = arrayShow(internsmodel, limit, page);
 
     return result;

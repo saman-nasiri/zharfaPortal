@@ -57,6 +57,13 @@ const getInternById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(intern);
 });
 
+const getInternTerms = catchAsync(async(req, res) => {
+    const internId = req.params.internId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const terms = await internService.getInternTerms(internId, options);
+    res.status(httpStatus.OK).send(terms);
+});
+
 module.exports = {
     createIntern,
     updateIntern,
@@ -65,4 +72,5 @@ module.exports = {
     changePassword,
     getInterns,
     getInternById,
+    getInternTerms
 };

@@ -35,7 +35,9 @@ router
     .route('/')
         .get(auth(scope.READ_INTERNS), internController.getInterns)
 
-
+router
+    .route('/terms/:internId')
+        .get(internController.getInternTerms)
 
 
 module.exports = router;

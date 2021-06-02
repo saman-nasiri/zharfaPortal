@@ -56,5 +56,4 @@ router
         .get(auth(scope.READ_TERM_INTERNS), validate(termValidation.getTermInterns), termController.getTermInterns)
 
 
-
 module.exports = router;
