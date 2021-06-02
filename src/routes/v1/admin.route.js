@@ -37,7 +37,7 @@ router
         .get(auth(scope.READ_ADMINS), adminController.getAdmins)
 
 router
-    .route('/:adminId')
+    .route('/profile/:adminId')
         .get(auth(scope.READ_ADMIN_DETAILS), validate(adminValidation.getAdminById), adminController.getAdminById);
 
 module.exports = router;

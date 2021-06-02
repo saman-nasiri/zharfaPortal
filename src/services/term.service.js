@@ -99,9 +99,11 @@ const deleteTermById = async(termId) => {
 };
 
 const getTermWeeks = async(termId, internId, options) => {
+    await getTermById(termId);
     const {sort, limit, skip, page} = slsp(options);
 
     const weeks = await Term.findOne({ _id: termId }).lean()
+
     .populate('weeksList')
     .select('weekList -_id')
     .sort(sort).skip(skip).limit(limit).exec()
@@ -118,7 +120,7 @@ const getTermWeeks = async(termId, internId, options) => {
     )
     
     const result = arrayShow(weeksModel, limit, page);
-    return result;
+    return weeks;
 }; 
 
 

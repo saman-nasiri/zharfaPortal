@@ -32,7 +32,7 @@ router
         .get(auth(scope.READ_SUPERVISORS), supervisorController.getSupervisor)
 
 router
-    .route('/:supervisorId')
+    .route('/profile/:supervisorId')
         .get(auth(scope.READ_SUPERVISOR_DETAILS), validate(supervisorValidation.getSupervisorById), supervisorController.getSupervisorById)
 
 module.exports = router;

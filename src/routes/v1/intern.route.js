@@ -12,7 +12,7 @@ router
         .post(auth(scope.CREATE_INTERN), validate(internValidation.createIntern), internController.createIntern)
 
 router
-    .route('/:internId')
+    .route('/profile/:internId')
         .get(auth(scope.READ_INTERN_DETAILS), validate(internValidation.getInternById), internController.getInternById);
         
 router

@@ -32,7 +32,7 @@ router
         .get(auth(scope.READ_MENTORS), mentorController.getMentors)
 
 router
-    .route('/:mentorId')
+    .route('/profile/:mentorId')
         .get(auth(scope.READ_MENTOR_DETAILS), validate(mentorValidation.getMentorById), mentorController.getMentorById)
 
 module.exports = router;

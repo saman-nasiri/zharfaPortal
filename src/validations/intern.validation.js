@@ -19,7 +19,22 @@ const updateInternById = {
             firstName: Joi.string(),
             lastName: Joi.string(),
             email: Joi.string().email(),
-            phoneNumber: Joi.string()
+            phoneNumber: Joi.string(),
+            birthday: Joi.string(),
+            skills: Joi.string(),
+            major: Joi.string(),
+            businessStory: Joi.string(),
+            inspirationalCharacters: Joi.string(),
+            inspirationalSentences: Joi.string(),
+            lastBooks: Joi.string(),
+            favoriteMovies: Joi.string(),
+            sex: Joi.string(),
+            maritalStatus: Joi.string(),
+            address: Joi.string(),
+            bloodType: Joi.string(),
+            jobStatus: Joi.string(),
+            degree: Joi.string(),
+            socialMedia: Joi.string(),
         }),
 };
 
