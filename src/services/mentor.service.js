@@ -5,7 +5,7 @@ const ApiError = require('../utils/ApiError');
 
 
 const createMentor = async(mentorBody) => {   
-    if (await Mentor.isEmailTaken(internBody.email)) {
+    if (await Mentor.isEmailTaken(mentorBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
     };
     const mentor = await Mentor.create({
