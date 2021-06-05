@@ -112,7 +112,7 @@ var storageAudio = multer.diskStorage({
     // Upload pdf files
 var storagePdf = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, `./public/pdfs`);
+      callback(null, setFilePath(`./public/pdfs`));
     },
     filename: (req, file, callback) => {
       const match = ["application/pdf"];

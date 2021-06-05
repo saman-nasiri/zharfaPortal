@@ -44,7 +44,9 @@ router
 router
     .route('/remove-mentors/:termId')
         .post(auth(scope.REMOVE_TERM_MENTOR), validate(termValidation.removeMentorsFromTheTerm), termController.removeMentorsFromTheTerm)
-
+router
+    .route('/mentors/:termId')
+        .get(auth(scope.READ_TERM_MENTORS), validate(termValidation.getTermMentors), termController.getTermMentors)
 
 
 // Term Week Route
@@ -63,7 +65,16 @@ router
 // Term File Route
 router
     .route('/videos/:termId')
-        .get(termController.getTermVideos)
+        .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermVideos)
+router
+    .route('/images/:termId')
+        .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermImages)
+router
+    .route('/audios/:termId')
+        .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermAudios)
+router
+    .route('/pdfs/:termId')
+        .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermPdfs)
 
 
         

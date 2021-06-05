@@ -141,11 +141,9 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 // user role validation function for admin & mentor & supervisor
 const userRoleValidationAMS = async(email) => {
   const admin  = await Admin.findOne({ email: email });
-  const intern = await Intern.findOne({ email: email });
   const mentor = await Mentor.findOne({ email: email });
   const supervisor = await Supervisor.findOne({ email: email });
   if(admin)   { return role = admin.role };
-  if(intern)  { return role = intern.role };
   if(mentor)  { return role = mentor.role };
   if(supervisor)    { return role = supervisor.role };
 };
@@ -204,6 +202,30 @@ const getUserData = async(userRole, email, password) => {
   }
 };
 
+const changePassword = async(user, passwordBody) => {
+  switch(user.role) {
+    case 'owner':
+    case 'admin':
+         result = await adminService.changePassword(user._id, passwordBody)
+      return result;
+    
+    case 'mentor':
+         result = await mentorService.changePassword(user._id, passwordBody)
+      return result;
+
+    case 'intern':
+         result = await internService.changePassword(user._id, passwordBody)
+      return result;
+
+    case 'supervisor':
+         result = await supervisorService.changePassword(user._id, passwordBody)
+      return result;
+
+
+    default:
+        throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
+  }
+};
 
 const baseURL = async () => {
   const domain = `${config.baseURL.serverDomain}`;
@@ -227,8 +249,10 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
+  changePassword,
   userRoleValidationAMS,
   userRoleValidationIntern,
   getUserData,
-  baseURL
+  baseURL,
+  findUserTypeById
 };

@@ -138,17 +138,14 @@ const getTermInterns = async(termId, options) => {
     .select('_id firstName lastName email phoneNumber avatar')
     .sort(sort).skip(skip).limit(limit).exec()
 
-    const terms = await Term.findOne({ _id: termId }).lean()
-    .populate('weeksList')
-    .select('weekList -_id')
+    const weeks = await Week.find({ termId: { "$in": termId } }).lean()
     .sort(sort).skip(skip).limit(limit).exec()
 
-    let weeksList = terms.weeksList;
 
     const internsmodel = await Promise.all(
         interns.map(async(intern) => {
         const termProgressBar = await Promise.all(
-            weeksList.map(async(week) => {
+            weeks.map(async(week) => {
                 const progressbar = await weekProgressbar(week, intern._id);
                 termProgressBarTotal =+ progressbar.progressbar;
                 return termProgressBarTotal;
@@ -161,6 +158,20 @@ const getTermInterns = async(termId, options) => {
     );
 
     const result = arrayShow(internsmodel, limit, page);
+
+    return result;
+};
+
+const getTermMentors = async(termId, options) => {
+
+    const {sort, limit, skip, page} = slsp(options);
+
+    const mentors = await Mentor.find({ termsList: {  "$in": termId } }).lean()
+    .select('_id firstName lastName email phoneNumber avatar')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+
+    const result = arrayShow(mentors, limit, page);
 
     return result;
 };
@@ -186,6 +197,68 @@ const getTermVideos = async(termId, options) => {
     return result;
 };
 
+const getTermImages = async(termId, options) => {
+
+    await getTermById(termId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const tasks = await Task.find({ termId: { "$in": termId }}).lean()
+    .select("title images")
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const taskModel = [];
+
+    tasks.forEach(async(task) => {
+        if(task.images.length > 0) {
+            taskModel.push(task)
+        }
+    })
+
+    const result = arrayShow(taskModel, limit, page);
+    return result;
+};
+
+const getTermAudios = async(termId, options) => {
+
+    await getTermById(termId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const tasks = await Task.find({ termId: { "$in": termId }}).lean()
+    .select("title audios")
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const taskModel = [];
+
+    tasks.forEach(async(task) => {
+        if(task.audios.length > 0) {
+            taskModel.push(task)
+        }
+    })
+
+    const result = arrayShow(taskModel, limit, page);
+    return result;
+};
+
+const getTermPdfs = async(termId, options) => {
+
+    await getTermById(termId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const tasks = await Task.find({ termId: { "$in": termId }}).lean()
+    .select("title pdfs")
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const taskModel = [];
+
+    tasks.forEach(async(task) => {
+        if(task.pdfs.length > 0) {
+            taskModel.push(task)
+        }
+    })
+
+    const result = arrayShow(taskModel, limit, page);
+    return result;
+};
 
 const removeWeekFromTerm = async(termId, weekId) => {
     const updateTerm = await Week.updateOne({ _id: weekId }, { "$pull": {
@@ -227,7 +300,11 @@ module.exports = {
     getTermWeeksForIntern,
     getTermWeeks,
     getTermInterns,
+    getTermMentors,
     getTermVideos,
+    getTermImages,
+    getTermAudios,
+    getTermPdfs,
     removeWeekFromTerm,
     addWeekToTerm
 };

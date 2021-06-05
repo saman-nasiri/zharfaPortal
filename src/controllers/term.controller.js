@@ -102,10 +102,38 @@ const getTermInterns = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(interns);
 });
 
+const getTermMentors = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const interns = await termService.getTermMentors(termId, options);
+    res.status(httpStatus.OK).send(interns);
+});
+
 const getTermVideos = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const videos = await termService.getTermVideos(termId, options);
+    res.status(httpStatus.OK).send(videos);
+});
+
+const getTermImages = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const videos = await termService.getTermImages(termId, options);
+    res.status(httpStatus.OK).send(videos);
+});
+
+const getTermAudios = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const videos = await termService.getTermAudios(termId, options);
+    res.status(httpStatus.OK).send(videos);
+});
+
+const getTermPdfs = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const videos = await termService.getTermPdfs(termId, options);
     res.status(httpStatus.OK).send(videos);
 });
 
@@ -136,7 +164,11 @@ module.exports = {
     deleteTermById,
     getTermWeeks,
     getTermInterns,
+    getTermMentors,
     getTermVideos,
+    getTermImages,
+    getTermAudios,
+    getTermPdfs,
     removeWeekFromTerm,
     addWeekToTerm
 };

@@ -84,6 +84,17 @@ const getTermInterns = {
     })
 };
 
+const getTermMentors = {
+    params: Joi.object().keys({
+        termId: Joi.string().custom(objectId)
+    })
+};
+
+const getTermFile = {
+    params: Joi.object().keys({
+        termId: Joi.string().custom(objectId)
+    })
+};
 
 module.exports = {
     createTerm,
@@ -97,5 +108,6 @@ module.exports = {
     getTermWeeks,
     deleteTermById,
     getTermById,
-    getTermInterns
+    getTermInterns,
+    getTermFile
 };
