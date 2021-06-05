@@ -16,9 +16,12 @@ const ApiError = require('./utils/ApiError');
 const multer = require('multer');
 const path = require('path');
 const bodyParser = require('body-parser');
+const router = express.Router();
+
 
 
 const app = express();
+
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
@@ -34,8 +37,9 @@ app.use(bodyParser.json());
 
 
 // parse urlencoded request body
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 
 // sanitize request data
@@ -73,5 +77,25 @@ app.use(errorConverter);
 app.use(errorHandler);
 
 app.use(multer);
+
+
+// handle cors
+app.use(cors());
+
+router.get("/", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
+  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+});
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
+
 
 module.exports = app;
