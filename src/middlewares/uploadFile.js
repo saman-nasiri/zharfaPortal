@@ -15,7 +15,7 @@ function setFilePath(dirPath) {
 const storage = multer.diskStorage({
 
     destination: function (req, res, cb) {
-        cb(null, setFilePath('./public/image'));
+        cb(null, setFilePath('./public/images'));
     },
     filename: function (req, res, cb) {
         cb(null, `saman$${new Date}`)
@@ -40,7 +40,7 @@ const file = upload.single('multi-files');
 
 var storageImages = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, setFilePath(`./public/image`));
+      callback(null, setFilePath(`./public/images`));
     },
     filename: (req, file, callback) => {
       const match = ["image/png", "image/jpeg",  "image/jpg"];
@@ -66,7 +66,7 @@ var storageImages = multer.diskStorage({
 // Upload video files
 var storageVideo = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, setFilePath(`./public/video`));
+      callback(null, setFilePath(`./public/videos`));
     },
     filename: (req, file, callback) => {
       const match = ["video/mp4", "video/mkv"];
@@ -89,7 +89,7 @@ var storageVideo = multer.diskStorage({
   // Upload audio files
 var storageAudio = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, setFilePath(`./public/audio`));
+      callback(null, setFilePath(`./public/audios`));
     },
     filename: (req, file, callback) => {
       const match = ["audio/mp3", "audio/mpeg"];
@@ -112,7 +112,7 @@ var storageAudio = multer.diskStorage({
     // Upload pdf files
 var storagePdf = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, `./public/pdf`);
+      callback(null, `./public/pdfs`);
     },
     filename: (req, file, callback) => {
       const match = ["application/pdf"];
@@ -136,7 +136,7 @@ var storagePdf = multer.diskStorage({
    // Upload audio files
 var storageSingleAudio = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, setFilePath(`./public/audio`));
+    callback(null, setFilePath(`./public/audios`));
   },
   filename: (req, file, callback) => {
     const match = ["audio/mp3", "audio/mpeg"];
@@ -161,7 +161,7 @@ var uploadSingleAudio =  util.promisify(uploadSingleAudioFiles);
   // Upload image files
    var storageSingleImage = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, setFilePath(`./public/image`));
+      callback(null, setFilePath(`./public/images`));
     },
     filename: (req, file, callback) => {
       const match = ["image/png", "image/jpeg",  "image/jpg"];
