@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Term, Intern, Mentor, Week } = require('../models');
+const { Term, Intern, Mentor, Week, Task } = require('../models');
 const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
@@ -98,21 +98,16 @@ const deleteTermById = async(termId) => {
     return result;
 };
 
-const getTermWeeks = async(termId, internId, options) => {
+const getTermWeeksForIntern = async(termId, internId, options) => {
     await getTermById(termId);
     const {sort, limit, skip, page} = slsp(options);
 
-    const weeks = await Term.findOne({ _id: termId }).lean()
-
-    .populate('weeksList')
-    .select('weekList -_id')
+    const weeks = await Week.find({ termId: { "$in": termId } }).lean()
     .sort(sort).skip(skip).limit(limit).exec()
 
 
-    let weeksList = weeks.weeksList;
-
     const weeksModel = await Promise.all(
-        weeksList.map(async(week) => {
+        weeks.map(async(week) => {
             const progressbar = await weekProgressbar(week, internId);
             week["progressbar"] = progressbar.progressbar;
             return week;
@@ -120,7 +115,18 @@ const getTermWeeks = async(termId, internId, options) => {
     )
     
     const result = arrayShow(weeksModel, limit, page);
-    return weeks;
+    return result;
+}; 
+
+const getTermWeeks = async(termId, internId, options) => {
+    await getTermById(termId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const weeks = await Week.find({ termId: { "$in": termId } }).lean()
+    .sort(sort).skip(skip).limit(limit).exec()
+    
+    const result = arrayShow(weeks, limit, page);
+    return result;
 }; 
 
 
@@ -128,7 +134,7 @@ const getTermInterns = async(termId, options) => {
 
     const {sort, limit, skip, page} = slsp(options);
 
-    const interns = await Intern.find({ termsList: {  $in: termId } }).lean()
+    const interns = await Intern.find({ termsList: {  "$in": termId } }).lean()
     .select('_id firstName lastName email phoneNumber avatar')
     .sort(sort).skip(skip).limit(limit).exec()
 
@@ -159,13 +165,52 @@ const getTermInterns = async(termId, options) => {
     return result;
 };
 
+const getTermVideos = async(termId, options) => {
+
+    await getTermById(termId);
+    const {sort, limit, skip, page} = slsp(options);
+
+    const tasks = await Task.find({ termId: { "$in": termId }}).lean()
+    .select("title videos")
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const taskModel = [];
+
+    tasks.forEach(async(task) => {
+        if(task.videos.length > 0) {
+            taskModel.push(task)
+        }
+    })
+
+    const result = arrayShow(taskModel, limit, page);
+    return result;
+};
+
+
 const removeWeekFromTerm = async(termId, weekId) => {
-    const updateTerm = await Term.updateOne({ _id: termId }, { "$pull": {
-        "weeksList": weekId
+    const updateTerm = await Week.updateOne({ _id: weekId }, { "$pull": {
+        "termId": termId
+    }}, { "new": true, "upsert": true })
+
+    await Task.updateOne({ weekId: { "$in":  weekId } }, { "$pull": {
+        "termId": termId
     }}, { "new": true, "upsert": true })
 
     return updateTerm;
 };
+
+const addWeekToTerm = async(termId, weekId) => {
+    const updateTerm = await Week.updateOne({ _id: weekId }, { "$set": {
+        "termId": termId
+    }}, { "new": true, "upsert": true })
+
+    await Task.updateOne({ weekId: { "$in":  weekId } }, { "$set": {
+        "termId": termId
+    }}, { "new": true, "upsert": true })
+
+    return updateTerm;
+};
+
 
 
 module.exports = {
@@ -179,7 +224,10 @@ module.exports = {
     getTerms,
     getTermById,
     deleteTermById,
+    getTermWeeksForIntern,
     getTermWeeks,
     getTermInterns,
+    getTermVideos,
     removeWeekFromTerm,
+    addWeekToTerm
 };

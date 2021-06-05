@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
+const config = require('../../src/config/config');
 const { Admin, Intern, Mentor, Supervisor } = require('../models');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
@@ -203,6 +204,23 @@ const getUserData = async(userRole, email, password) => {
   }
 };
 
+
+const baseURL = async () => {
+  const domain = `${config.baseURL.serverDomain}`;
+  const images =` ${domain}/${config.filePath.images}`;
+  const videos = `${domain}/${config.filePath.videos}`;
+  const audios = `${domain}/${config.filePath.audios}`;
+  const pdfs   = `${domain}/${config.filePath.pdfs}`;
+
+  return {
+    domain:     domain,
+    imagesPath: images,
+    videosPath: videos,
+    audiosPath: audios,
+    pdfsPath:   pdfs,
+  }
+}
+
 module.exports = {
   loginUserWithEmailAndPassword,
   loginAdminWithEmailAndPassword,
@@ -211,5 +229,6 @@ module.exports = {
   resetPassword,
   userRoleValidationAMS,
   userRoleValidationIntern,
-  getUserData
+  getUserData,
+  baseURL
 };

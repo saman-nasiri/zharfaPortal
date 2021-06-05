@@ -9,8 +9,8 @@ const weekSchema = mongoose.Schema({
     score:     { type: Number, default: 0 },
     viewCount: { type: Number, default: 0 },
     description: String,
-    // taskList: Array,
-    order: Number
+    order: Number,
+    termId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 });
 
 // add plugin that converts mongoose to json

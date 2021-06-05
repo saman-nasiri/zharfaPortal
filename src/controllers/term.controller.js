@@ -85,8 +85,14 @@ const getTermWeeks = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const internId = req.user.id;
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const weeks = await termService.getTermWeeks(termId, internId, options);
-    res.status(httpStatus.OK).send(weeks);
+    if(req.user.role === 'intern') { 
+        const weeks = await termService.getTermWeeksForIntern(termId, internId, options)
+        res.status(httpStatus.OK).send(weeks);
+     }
+    else { 
+        const weeks = await termService.getTermWeeks(termId, internId, options)
+        res.status(httpStatus.OK).send(weeks);
+     }
 });
 
 const getTermInterns = catchAsync(async(req, res) => {
@@ -96,11 +102,25 @@ const getTermInterns = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(interns);
 });
 
+const getTermVideos = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const videos = await termService.getTermVideos(termId, options);
+    res.status(httpStatus.OK).send(videos);
+});
+
 
 const removeWeekFromTerm = catchAsync(async(req, res) => {
     const termId = req.params.termId;
     const weekId = req.params.weekId;
     const result = await termService.removeWeekFromTerm(termId, weekId);
+    res.status(httpStatus.OK).send(result);
+});
+
+const addWeekToTerm = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const weekId = req.params.weekId;
+    const result = await termService.addWeekToTerm(termId, weekId);
     res.status(httpStatus.OK).send(result);
 });
 
@@ -116,5 +136,7 @@ module.exports = {
     deleteTermById,
     getTermWeeks,
     getTermInterns,
+    getTermVideos,
     removeWeekFromTerm,
+    addWeekToTerm
 };

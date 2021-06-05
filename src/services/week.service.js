@@ -6,7 +6,8 @@ const createWeek = async(weekBody, term) => {
     const week = await Week.create({
         title: weekBody.title,
         description: weekBody.description,
-        order: weekBody.order
+        order: weekBody.order,
+        termId: term._id
     });
     
     return week;
@@ -102,7 +103,6 @@ const weekProgressbar = async(week, internId) => {
     }
 };
 
-
 const getWeeks = async(filter, options) => {
     const weeks = await Week.paginate(filter, options);
     return weeks;
@@ -116,14 +116,14 @@ const getWeekById = async(weekId) => {
 };
 
 const getWeekTasks = async(weekId) => {
-    const tasks = await Task.find({ weekId: weekId })
+    const tasks = await Task.find({ weekId: { "$in": weekId } })
     .select('_id title');
     return tasks;
 };
 
 
 const deleteWeekById = async(weekId) => {
-    await Task.deleteMany({ weekId: weekId });
+    await Task.deleteMany({ weekId: { "$in": weekId } });
     const result = await Week.deleteOne({ _id: weekId });
     return result;
 };

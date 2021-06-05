@@ -22,6 +22,13 @@ const updateTermById = {
         }),
 };
 
+const addWeekToTerm = {
+    params: Joi.object().keys({
+        termId: Joi.string().custom(objectId),
+        weekId: Joi.string().custom(objectId)
+    })
+};
+
 const removeWeekFromTerm = {
     params: Joi.object().keys({
         termId: Joi.string().custom(objectId),
@@ -81,6 +88,7 @@ const getTermInterns = {
 module.exports = {
     createTerm,
     updateTermById,
+    addWeekToTerm,
     removeWeekFromTerm,
     addInternsToTheTerm,
     removeInternsFromTheTerm,

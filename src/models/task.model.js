@@ -6,12 +6,11 @@ const { toJSON, paginate } = require('./plugins');
 const taskSchema = mongoose.Schema({
     title: String,
     order: Number,
-    weekId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' },
+    weekId:  [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' } ],
+    termId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
     content: String,
     duration: Number,
     doneCount: { type: Number, default: 0 },
-    // rate:  Number,
-    // tickets: Array,
     course: {
         type: String,
         trim: true,
@@ -29,7 +28,7 @@ const taskSchema = mongoose.Schema({
         description: String,
         filename: String,
         mimetype: String,
-        size: String
+        size: String,
     }],
     audios:[{
         title: String,

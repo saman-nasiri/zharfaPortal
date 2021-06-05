@@ -48,6 +48,12 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const baseURL = catchAsync(async(req, res) => {
+  const baseURL = await authService.baseURL();
+  res.status(httpStatus.OK).send(baseURL);
+});
+
+
 module.exports = {
   register,
   loginAMS,
@@ -56,4 +62,5 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  baseURL
 };

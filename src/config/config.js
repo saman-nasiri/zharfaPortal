@@ -56,4 +56,14 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
+  baseURL: {
+    loclaDomain: envVars.LOCAL_DOMAIN,
+    serverDomain: envVars.SERVER_DOMAIN,
+  },
+  filePath: {
+    images: envVars.IMAGES_FILE_PATH,
+    videos: envVars.VIDEOS_FILE_PATH,
+    audios: envVars.AUDIOS_FILE_PATH,
+    pdfs: envVars.PDFS_FILE_PATH,
+  }
 };

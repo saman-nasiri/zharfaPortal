@@ -10,7 +10,6 @@ const termSchema = mongoose.Schema({
     description: String,
     startAt: Date,
     duration: Number,
-    weeksList:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' } ]
 });
 
 // add plugin that converts mongoose to json

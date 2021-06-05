@@ -10,9 +10,9 @@ const createWeek = catchAsync(async(req, res) => {
     const weekBody = req.body;
     const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
-    const week = await weekService.createWeek(weekBody);
+    const week = await weekService.createWeek(weekBody, term);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotCreated'); };
-    await termService.addWeekToTheTerm(term, week._id)
+    // await termService.addWeekToTheTerm(term, week._id)
     res.status(httpStatus.CREATED).send(week);
 });
 
