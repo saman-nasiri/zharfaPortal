@@ -62,12 +62,6 @@ const getWeekById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(week);
 });
 
-const getWeekTasks = catchAsync(async(req, res) => {
-    const weekId = req.params.weekId;
-    const tasks = await weekService.getWeekTasks(weekId);
-    res.status(httpStatus.OK).send(tasks);
-});
-
 const deleteWeekById = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const week = await weekService.getWeekById(weekId);
@@ -76,6 +70,11 @@ const deleteWeekById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+const getWeekTasks = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const tasks = await weekService.getWeekTasks(weekId);
+    res.status(httpStatus.OK).send(tasks);
+});
 
 module.exports = {
     createWeek,

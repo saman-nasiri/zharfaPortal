@@ -704,6 +704,8 @@ const deleteTaskById = async(taskId) => {
     }
 };
 
+
+
 module.exports = {
     createTask,
     uploadImageForTask,
@@ -738,5 +740,5 @@ module.exports = {
     getPdfFile,
     getVideofile,
     getAudiofile,
-    deleteTaskById
+    deleteTaskById,
 };

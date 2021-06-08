@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const { courseService } = require('.');
-const { Course } = require('../models');
+const { Course, Task } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { slsp, arrayShow } = require('../utils/defaultArrayType');
+
 
 const createHeadCourse = async(courseBody) => {
     const course = await Course.create({
@@ -72,6 +74,42 @@ const courseSlugIsExist = async(slug) => {
     }
 };
 
+const getTaskByCourseSlug = async(slug, options) => {
+    await courseSlugIsExist(slug);    
+    const {sort, limit, skip, page} = slsp(options);
+
+
+    const tasks = await Task.find({ course: slug })
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(tasks, limit, page);
+    return result;
+};
+
+
+
+const getQuizesByCourseSlug = async(slug, options) => {
+    await courseSlugIsExist(slug);    
+    const {sort, limit, skip, page} = slsp(options);
+
+    const tasks = await Task.find({ course: slug })
+    .select('title quizes')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const taskModel = [];
+
+    tasks.forEach(async(task) => {
+        if(task.videos.length > 0) {
+            taskModel.push(task)
+        }
+    })
+
+    const result = arrayShow(taskModel, limit, page);
+
+    return result;
+};
+
+
 module.exports = {
     createHeadCourse,
     createSubsetCourse,
@@ -80,5 +118,7 @@ module.exports = {
     getCourseBySlug,
     updateCourseById,
     deleteCourseBySlug,
-    courseSlugIsExist
+    courseSlugIsExist,
+    getTaskByCourseSlug,
+    getQuizesByCourseSlug
 };

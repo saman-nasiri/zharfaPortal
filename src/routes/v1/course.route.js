@@ -4,6 +4,7 @@ const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const courseController = require('../../controllers/course.controller');
 const courseValidation = require('../../validations/course.validation');
+const courseService = require('../../services/course.service');
 
 const router = express.Router();
 
@@ -35,9 +36,14 @@ router
     .route('/delete/:courseId')
         .delete(auth(scope.DELETE_COURSE), validate(courseValidation.deleteCourse), courseController.deleteCourseBySlug)
 
-// router
-//     .route('/:courseSlug')
-//         .get(taskController.getTaskByCourseSlug)
+router
+    .route('/lessons/:courseSlug')
+        .get(courseController.getTaskByCourseSlug);
+
+router
+    .route('/quizes/:courseSlug')
+        .get(courseController.getQuizesByCourseSlug)
+
 
 
 module.exports = router;

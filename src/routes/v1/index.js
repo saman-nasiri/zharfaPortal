@@ -11,6 +11,10 @@ const mentorRoute = require('./mentor.route');
 const courseRoute = require('./course.route');
 const supervisor = require('./supervisor.route');
 const tutorialCategoryRoute = require('./tutorialCategory.route');
+const videosRoute = require('./videos.route');
+const imagesRoute = require('./images.route');
+const pdfsRoute = require('./pdfs.route');
+
 
 const router = express.Router();
 
@@ -26,6 +30,10 @@ router.use('/mentor', mentorRoute);
 router.use('/course', courseRoute);
 router.use('/supervisor', supervisor);
 router.use('/tutorial', tutorialCategoryRoute)
+router.use('/videos', videosRoute);
+router.use('/images', imagesRoute);
+router.use('/pdfs', pdfsRoute);
+
 
 
 module.exports = router;

@@ -58,9 +58,18 @@ const deleteCourseBySlug = catchAsync(async(req, res) => {
 
 const getTaskByCourseSlug = catchAsync(async(req, res) => {
     const courseSlug = req.params.courseSlug;
-    const tasks = await taskService.getTaskByCourseSlug(courseSlug);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const tasks = await courseService.getTaskByCourseSlug(courseSlug, options);
     res.status(httpStatus.OK).send(tasks);
 });
+
+const getQuizesByCourseSlug = catchAsync(async(req, res) => {
+    const courseSlug = req.params.courseSlug;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const tasks = await courseService.getQuizesByCourseSlug(courseSlug, options);
+    res.status(httpStatus.OK).send(tasks);
+});
+
 
 
 module.exports = {
@@ -70,6 +79,8 @@ module.exports = {
     getSubCourse,
     getCourseBySlug,
     updateCourseById,
-    deleteCourseBySlug
+    deleteCourseBySlug,
+    getTaskByCourseSlug,
+    getQuizesByCourseSlug
 };
 
