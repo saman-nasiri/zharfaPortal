@@ -57,8 +57,6 @@ const changePassword = async(supervisorId, passwordBody) => {
     const supervisor = await Supervisor.findOne({ _id: supervisorId });
     const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
 
-    console.log(supervisor);
-    console.log(passwordBody);
     if (!(await supervisor.isPasswordMatch(passwordBody.currentPassword))) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
     };

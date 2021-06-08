@@ -13,11 +13,9 @@ const createIntern = catchAsync(async(req, res) => {
 
 
 const updateIntern = catchAsync(async(req, res) => {
-    const internId = req.params.internId;
+    const internId = req.user.id;
     const updateBody = req.body;
     const intern = await internService.getInternById(internId)
-    if(!intern) { throw new ApiError(httpStatus.NOT_FOUND, 'InternNotFound'); };
-
     const result = await internService.updateIntern(intern, updateBody);
     res.status(httpStatus.OK).send(result);
 });

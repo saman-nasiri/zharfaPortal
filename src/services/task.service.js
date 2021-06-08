@@ -484,7 +484,7 @@ const removeTaskImagesByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/image/${file}`)    
+        fse.unlinkSync(`./public/images/${file}`)    
     });
 
     return result;
@@ -505,7 +505,7 @@ const removeTaskVideosByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/video/${file}`)    
+        fse.unlinkSync(`./public/videos/${file}`)    
     });
 
     return result;
@@ -526,7 +526,7 @@ const removeTaskAudiosByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/audio/${file}`)    
+        fse.unlinkSync(`./public/audios/${file}`)    
     });
 
     return result;
@@ -549,7 +549,7 @@ const removeTaskPdfsByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/pdf/${file}`)    
+        fse.unlinkSync(`./public/pdfs/${file}`)    
     });
 
     return result;
@@ -668,6 +668,42 @@ const getAudiofile = async(filename, req, res) => {
     videoStream.pipe(res);
 };
 
+function setFilePath(dirPath) {
+    const filePath = fse.ensureDirSync(dirPath);
+    if(!filePath) { return dirPath; }
+    else { return filePath };
+};
+
+const deleteTaskById = async(taskId) => {
+    try {
+
+
+        
+        const task = await getTaskById(taskId);
+        task.audios.forEach((file) => {
+            fse.unlinkSync(`./public/audios/${file}`)    
+        });
+        
+        task.videos.forEach((file) => {
+            fse.unlinkSync(`./public/videos/${file}`)    
+        });
+    
+        task.images.forEach((file) => {
+            fse.unlinkSync(`./public/images/${file}`)    
+        });
+    
+        task.pdfs.forEach((file) => {
+            fse.unlinkSync(`./public/pdfs/${file}`)    
+        });
+    
+        const result = await Task.deleteOne({ _id: taskId });
+    
+        return "task";
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     createTask,
     uploadImageForTask,
@@ -701,5 +737,6 @@ module.exports = {
     updateTaskQuizesById,
     getPdfFile,
     getVideofile,
-    getAudiofile
+    getAudiofile,
+    deleteTaskById
 };

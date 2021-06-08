@@ -10,9 +10,8 @@ const creatTask = catchAsync(async(req, res) => {
     const taskBody = req.body;
     const weekId = req.params.weekId;
     const week = await weekService.getWeekById(weekId);
-    console.log(week._id);
     const task = await taskService.createTask(taskBody, week);
-    // await weekService.updateWeekDuration(weekId, task);
+    await weekService.updateWeekDuration(weekId, task);
     res.status(httpStatus.CREATED).send(task);
 });
 
@@ -281,6 +280,13 @@ const getAudiofile = catchAsync(async(req, res) => {
     const videoFile = await taskService.getAudiofile(filename, req, res);
 });
 
+const deleteTaskById = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const result = await taskService.deleteTaskById(taskId);
+    res.status(httpStatus.OK).send(result); 
+});
+
+
 module.exports = {
     creatTask,
     uploadImageForTask,
@@ -313,6 +319,7 @@ module.exports = {
     updateTaskQuizesById,
     getPdfFile,
     getVideofile,
-    getAudiofile
+    getAudiofile,
+    deleteTaskById,
 
 };

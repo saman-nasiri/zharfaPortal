@@ -16,8 +16,8 @@ router
         .get(auth(scope.READ_INTERN_DETAILS), validate(internValidation.getInternById), internController.getInternById);
         
 router
-    .route('/update/:internId')
-        .post(auth(scope.UPDATE_INTERN), validate(internValidation.updateInternById), internController.updateIntern)
+    .route('/update')
+        .post(auth(scope.UPDATE_INTERN), internController.updateIntern) // validate(internValidation.updateInternById),
 
 router
     .route('/delete/:internId')

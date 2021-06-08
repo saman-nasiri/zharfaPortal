@@ -77,5 +77,6 @@ router
         .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermPdfs)
 
 
+
         
 module.exports = router;

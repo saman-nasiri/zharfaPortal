@@ -21,15 +21,10 @@ const createIntern = async(internBody) => {
 };
 
 
-const updateIntern = async(intern, updateBody) => {
-
+const updateIntern = async(internId, updateBody) => {
     if(updateBody.password) { delete updateBody["password"] };
-    const result = await Intern.updateOne({ _id: intern._id }, {"$set": updateBody }, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });  
-
+    await Intern.updateOne({ _id: internId }, {"$set": updateBody }, { "new": true, "upsert": true });  
+    const result = await getInternById(internId);
     return result;
 };
 

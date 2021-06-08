@@ -15,6 +15,7 @@ router
 router
     .route('/:taskId')
         .get(auth(scope.READ_TASK_BY_ID), validate(taskValidation.getTaskById), taskController.getTaskById)
+        .delete(taskController.deleteTaskById)
 
 router
     .route('/done/:taskId')
@@ -137,7 +138,6 @@ router
         .get(auth(scope.PLAY_AUDIO), validate(taskValidation.playFile), taskController.getAudiofile);
 
 
-        
 module.exports = router;
 
 

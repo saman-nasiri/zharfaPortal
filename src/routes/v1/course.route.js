@@ -35,4 +35,9 @@ router
     .route('/delete/:courseId')
         .delete(auth(scope.DELETE_COURSE), validate(courseValidation.deleteCourse), courseController.deleteCourseBySlug)
 
+// router
+//     .route('/:courseSlug')
+//         .get(taskController.getTaskByCourseSlug)
+
+
 module.exports = router;

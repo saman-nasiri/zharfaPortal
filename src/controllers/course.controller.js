@@ -56,6 +56,12 @@ const deleteCourseBySlug = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(deleteCourse);
 });
 
+const getTaskByCourseSlug = catchAsync(async(req, res) => {
+    const courseSlug = req.params.courseSlug;
+    const tasks = await taskService.getTaskByCourseSlug(courseSlug);
+    res.status(httpStatus.OK).send(tasks);
+});
+
 
 module.exports = {
     createHeadCourse,
