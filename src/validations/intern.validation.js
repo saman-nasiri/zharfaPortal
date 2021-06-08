@@ -34,8 +34,14 @@ const updateInternById = {
             bloodType: Joi.string(),
             jobStatus: Joi.string(),
             degree: Joi.string(),
-            socialMedia: Joi.string(),
-        }),
+            socialMedia: Joi.object({
+                webSite: Joi.string(),
+                virgool: Joi.string(),
+                twitter: Joi.string(),
+                linkedin: Joi.string(),
+                instagram: Joi.string()
+            }),
+        }).options({ stripUnknown: true }),
 };
 
 const deleteIntern = {

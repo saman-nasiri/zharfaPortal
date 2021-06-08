@@ -13,9 +13,10 @@ const createIntern = catchAsync(async(req, res) => {
 
 
 const updateIntern = catchAsync(async(req, res) => {
-    const internId = req.user.id;
+    if(req.user.id === req.params.internId || req.params.internId === undefined) { internId = req.user.id } 
+    else { internId = req.params.internId };
     const updateBody = req.body;
-    const intern = await internService.getInternById(internId)
+    const intern = await internService.getInternById(internId);
     const result = await internService.updateIntern(intern, updateBody);
     res.status(httpStatus.OK).send(result);
 });
@@ -49,8 +50,9 @@ const getInterns = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(interns);
 });
 
-const getInternById = catchAsync(async(req, res) => {
-    const internId = req.params.internId;
+const getInternProfile = catchAsync(async(req, res) => {
+    if(req.user.id === req.params.internId || req.params.internId === undefined) { internId = req.user.id } 
+    else { internId = req.params.internId }
     const intern = await internService.getInternById(internId);
     res.status(httpStatus.OK).send(intern);
 });
@@ -69,6 +71,6 @@ module.exports = {
     uploadAvatar,
     changePassword,
     getInterns,
-    getInternById,
+    getInternProfile,
     getInternTerms
 };

@@ -12,12 +12,12 @@ router
         .post(auth(scope.CREATE_INTERN), validate(internValidation.createIntern), internController.createIntern)
 
 router
-    .route('/profile/:internId')
-        .get(auth(scope.READ_INTERN_DETAILS), validate(internValidation.getInternById), internController.getInternById);
+    .route('/profile/:internId?')
+        .get(auth(scope.READ_INTERN_DETAILS), validate(internValidation.getInternById), internController.getInternProfile);
         
 router
-    .route('/update')
-        .post(auth(scope.UPDATE_INTERN), internController.updateIntern) // validate(internValidation.updateInternById),
+    .route('/update/:internId?')
+        .post(auth(scope.UPDATE_INTERN),validate(internValidation.updateInternById), internController.updateIntern) // validate(internValidation.updateInternById),
 
 router
     .route('/delete/:internId')
