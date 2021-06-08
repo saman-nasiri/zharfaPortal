@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Term, Intern, Mentor, Week, Task } = require('../models');
+const { Term, Intern, Mentor, Week, Task, Course, TutorialCategory } = require('../models');
 const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
@@ -284,7 +284,11 @@ const addWeekToTerm = async(termId, weekId) => {
     return updateTerm;
 };
 
-
+const getTermCourses = async(termId) => {
+    const term = await Term.findOne({ _id: termId });
+    const courses = await Course.find({ tutorialCategory: term.tutorialCategory });
+    return courses;
+};
 
 module.exports = {
     createTerm,
@@ -306,5 +310,6 @@ module.exports = {
     getTermAudios,
     getTermPdfs,
     removeWeekFromTerm,
-    addWeekToTerm
+    addWeekToTerm,
+    getTermCourses
 };

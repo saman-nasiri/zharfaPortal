@@ -11,7 +11,7 @@ const createHeadCourse = catchAsync(async(req, res) => {
     const tutorial = await tutorialService.getTutorialBySlug(tutorialCategory);
     if(!tutorial) { throw new ApiError(httpStatus.NOT_FOUND, 'TutorialNotFound') };
     await courseService.courseSlugIsExist(req.body.slug);
-    const result = await courseService.createHeadCourse(courseBody);
+    const result = await courseService.createHeadCourse(courseBody, tutorial);
     res.status(httpStatus.CREATED).send(result);
 });
 
@@ -71,7 +71,6 @@ const getQuizesByCourseSlug = catchAsync(async(req, res) => {
 });
 
 
-
 module.exports = {
     createHeadCourse,
     createSubsetHeadCourse,
@@ -81,6 +80,7 @@ module.exports = {
     updateCourseById,
     deleteCourseBySlug,
     getTaskByCourseSlug,
-    getQuizesByCourseSlug
+    getQuizesByCourseSlug,
+
 };
 

@@ -76,7 +76,10 @@ router
     .route('/pdfs/:termId')
         .get(auth(scope.READ_FILE), validate(termValidation.getTermFile), termController.getTermPdfs)
 
-
+// Term Course
+router
+    .route('/courses/:termId')
+        .get(termController.getTermCourses)
 
         
 module.exports = router;

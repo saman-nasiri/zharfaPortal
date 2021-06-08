@@ -2,15 +2,16 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { taskService, weekService } = require('../services');
+const { taskService, weekService, courseService } = require('../services');
 const upload = require('../middlewares/uploadFile');
 
 
 const creatTask = catchAsync(async(req, res) => {
     const taskBody = req.body;
     const weekId = req.params.weekId;
+    const course = await courseService.getCourseBySlug(req.body.course)
     const week = await weekService.getWeekById(weekId);
-    const task = await taskService.createTask(taskBody, week);
+    const task = await taskService.createTask(taskBody, week, course);
     await weekService.updateWeekDuration(weekId, task);
     res.status(httpStatus.CREATED).send(task);
 });

@@ -11,11 +11,11 @@ const { data } = require('../config/logger');
  * @param {Object} taskBody
  * @returns {Promise<Task>}
  */
-const createTask = async (taskBody, week) => {
+const createTask = async (taskBody, week, course) => {
     try {
         const task = await Task.create({
             title: taskBody.title,
-            course: taskBody.course,
+            course: course.category,
             content: taskBody.content,
             duration: taskBody.duration,
             order: taskBody.order,

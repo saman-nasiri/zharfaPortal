@@ -152,6 +152,12 @@ const addWeekToTerm = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+const getTermCourses = catchAsync(async(req, res) => {
+    const termId = req.params.termId;
+    const courses = await termService.getTermCourses(termId);
+    res.status(httpStatus.OK).send(courses);
+});
+
 module.exports = {
     createTerm,
     addInternsToTheTerm,
@@ -170,5 +176,6 @@ module.exports = {
     getTermAudios,
     getTermPdfs,
     removeWeekFromTerm,
-    addWeekToTerm
+    addWeekToTerm,
+    getTermCourses
 };

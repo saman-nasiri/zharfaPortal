@@ -5,11 +5,11 @@ const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
 
 
-const createHeadCourse = async(courseBody) => {
+const createHeadCourse = async(courseBody, tutorial) => {
     const course = await Course.create({
         title: courseBody.title,
         slug: courseBody.slug,
-        tutorialCategory: courseBody.tutorialCategory, //add from dropDoen tutorialCategory list
+        tutorialCategory: tutorial.category, //add from dropDoen tutorialCategory list
         category: `/${courseBody.slug}`,
         parent: '/',
     });
