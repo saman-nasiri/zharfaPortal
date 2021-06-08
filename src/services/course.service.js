@@ -99,7 +99,7 @@ const getQuizesByCourseSlug = async(slug, options) => {
     const taskModel = [];
 
     tasks.forEach(async(task) => {
-        if(task.videos.length > 0) {
+        if(task.quizes.length > 0) {
             taskModel.push(task)
         }
     })
