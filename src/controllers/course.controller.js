@@ -27,13 +27,15 @@ const createSubsetHeadCourse = catchAsync(async(req, res) => {
 
 
 const getHeadCourse = catchAsync(async(req, res) => {
-    const courses = await courseService.getHeadCourse();
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const courses = await courseService.getHeadCourse(options);
     res.status(httpStatus.OK).send(courses);
 });
 
 const getSubCourse = catchAsync(async(req, res) => {
     const headSlug = req.params.headSlug;
-    const subCourse = await courseService.getSubCourse(headSlug);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const subCourse = await courseService.getSubCourse(headSlug, options);
     res.status(httpStatus.OK).send(subCourse);
 });
 

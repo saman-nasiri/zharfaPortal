@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const util = require('util');
-const fse = require('fs-extra')
+const fse = require('fs-extra');
 const { v4: uuidv4 } = require('uuid');
 
 

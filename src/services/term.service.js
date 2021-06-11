@@ -82,8 +82,10 @@ const updateTerm = async(term, updateBody) => {
 };
 
 const getTerms = async(filter, options) => {
-    const terms = await Term.paginate(filter, options);
+
+    const terms = await Term.paginate(filter, options)
     if(!terms) { throw new ApiError(httpStatus.NOT_FOUND, 'TermsIsNotFound')};
+    
     return terms;
 };
 
@@ -182,13 +184,15 @@ const getTermVideos = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title videos")
+    .select("title videos course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
+        // const course = await Course.findOne({ category: task.course });
         if(task.videos.length > 0) {
+            // task.course = ["course.title"]
             taskModel.push(task)
         }
     })
@@ -203,13 +207,15 @@ const getTermImages = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title images")
+    .select("title images course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
+        // const course = await Course.findOne({ category: task.course });
         if(task.images.length > 0) {
+            // task.course = ["course.title"]
             taskModel.push(task)
         }
     })
@@ -224,13 +230,15 @@ const getTermAudios = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title audios")
+    .select("title audios course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
+        // const course = await Course.findOne({ category: task.course });
         if(task.audios.length > 0) {
+            // task.course = ["course.title"]
             taskModel.push(task)
         }
     })
@@ -245,13 +253,15 @@ const getTermPdfs = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title pdfs")
+    .select("title pdfs course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
+        // const course = await Course.findOne({ category: task.course });
         if(task.pdfs.length > 0) {
+            // task.course = ["course.title"]
             taskModel.push(task)
         }
     })
@@ -285,9 +295,14 @@ const addWeekToTerm = async(termId, weekId) => {
 };
 
 const getTermCourses = async(termId) => {
+    const {sort, limit, skip, page} = slsp(options);
+
     const term = await Term.findOne({ _id: termId });
-    const courses = await Course.find({ tutorialCategory: term.tutorialCategory });
-    return courses;
+    const courses = await Course.find({ tutorialCategory: term.tutorialCategory })
+    .sort(sort).skip(skip).limit(limit).exec()
+    
+    const result = arrayShow(courses, limit, page);
+    return result;
 };
 
 module.exports = {

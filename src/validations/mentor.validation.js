@@ -18,7 +18,7 @@ const updateMentorById = {
             firstName: Joi.string(),
             lastName: Joi.string(),
             email: Joi.string()
-        }),
+        }).options({ stripUnknown: true }),
 };
 
 const deleteMentor = {

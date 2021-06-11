@@ -287,6 +287,29 @@ const deleteTaskById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result); 
 });
 
+const getTaskVideos = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const videos = await taskService.getTaskVideos(taskId);
+    res.status(httpStatus.OK).send(videos);
+});
+
+const getTaskImages = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const images = await taskService.getTaskImages(taskId);
+    res.status(httpStatus.OK).send(images);
+});
+
+const getTaskAudios = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const videos = await taskService.getTaskAudios(taskId);
+    res.status(httpStatus.OK).send(videos);
+});
+
+const getTaskPdfs = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
+    const pdfs = await taskService.getTaskPdfs(taskId);
+    res.status(httpStatus.OK).send(pdfs);
+});
 
 module.exports = {
     creatTask,
@@ -322,5 +345,8 @@ module.exports = {
     getVideofile,
     getAudiofile,
     deleteTaskById,
-
+    getTaskVideos,
+    getTaskImages,
+    getTaskAudios,
+    getTaskPdfs
 };

@@ -137,6 +137,22 @@ router
     .route('/play-audio/:filename')
         .get(auth(scope.PLAY_AUDIO), validate(taskValidation.playFile), taskController.getAudiofile);
 
+        
+
+// Term File Route
+router
+    .route('/videos/:taskId')
+        .get(auth(scope.READ_FILE), validate(taskValidation.getTermFile), taskController.getTaskVideos)
+router
+    .route('/images/:taskId')
+        .get(auth(scope.READ_FILE), validate(taskValidation.getTermFile), taskController.getTaskImages)
+router
+    .route('/audios/:taskId')
+        .get(auth(scope.READ_FILE), validate(taskValidation.getTermFile), taskController.getTaskAudios)
+router
+    .route('/pdfs/:taskId')
+        .get(auth(scope.READ_FILE), validate(taskValidation.getTermFile), taskController.getTaskPdfs)
+
 
 module.exports = router;
 

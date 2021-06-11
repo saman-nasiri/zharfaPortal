@@ -29,16 +29,26 @@ const createSubsetCourse = async(courseBody, headCourse) => {
     return course;
 };
 
-const getHeadCourse = async() => {
-    const course = await Course.find({ parent: '/' });
-    return course;
+const getHeadCourse = async(options) => {
+    const {sort, limit, skip, page} = slsp(options);
+
+    const courses = await Course.find({ parent: '/' })
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(courses, limit, page);
+    return result;
 };
 
 
-const getSubCourse = async(headSlug) => {
+const getSubCourse = async(headSlug, options) => {
+    const {sort, limit, skip, page} = slsp(options);
+
     const course = await Course.findOne({ slug: headSlug });
-    const subCourses = await Course.find({ parent: { $in: [new RegExp('^' + course.parent)] } });
-    return subCourses;
+    const subCourses = await Course.find({ parent: { $in: [new RegExp('^' + course.parent)] } })
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(subCourses, limit, page);
+    return result;
 };
 
 

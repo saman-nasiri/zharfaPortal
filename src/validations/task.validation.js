@@ -92,7 +92,7 @@ const updateTaskById = {
             order:Joi.number(), 
             content:Joi.string(),
             duration:Joi.number(),
-        }),
+        }).options({ stripUnknown: true }),
 };
 
 
@@ -194,7 +194,7 @@ const downloadFile = {
 
 const playFile = {
     params: Joi.object().keys({
-        filename: Joi.string().custom(objectId),
+        filename: Joi.string(),
     }),
 };
 

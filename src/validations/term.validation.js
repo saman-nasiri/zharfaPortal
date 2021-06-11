@@ -19,7 +19,7 @@ const updateTermById = {
         tutorialCategory: Joi.string(),
         termCode: Joi.string(),
         description: Joi.string(),
-        }),
+        }).options({ stripUnknown: true }),
 };
 
 const addWeekToTerm = {

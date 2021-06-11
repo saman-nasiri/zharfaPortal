@@ -587,7 +587,7 @@ const updateTaskQuizesById = async(quizId, quizBody) => {
 };
 
 const getPdfFile = async(filename) => {
-    const filePath = path.join('public', 'pdf', filename);
+    const filePath = path.join('public', 'pdfs', filename);
     const file = await fse.readFile(filePath, data) 
     return file;
 };
@@ -597,7 +597,7 @@ const getVideofile = async(filename, req, res) => {
     // if (!range) {
     //     return res.status(400).send("Requires Range header");
     // }
-    const videoPath = path.join('public', 'video', filename);
+    const videoPath = path.join('public', 'videos', filename);
     const videoSize = fse.statSync(videoPath).size;
     console.log('rang: ', range);
 
@@ -638,7 +638,7 @@ const getAudiofile = async(filename, req, res) => {
     // if (!range) {
     //     res.status(400).send("Requires Range header");
     // }
-    const videoPath = path.join('public', 'audio', filename);
+    const videoPath = path.join('public', 'audios', filename);
     const videoSize = fse.statSync(videoPath).size;
 
 
@@ -668,42 +668,82 @@ const getAudiofile = async(filename, req, res) => {
     videoStream.pipe(res);
 };
 
-function setFilePath(dirPath) {
-    const filePath = fse.ensureDirSync(dirPath);
-    if(!filePath) { return dirPath; }
-    else { return filePath };
-};
 
 const deleteTaskById = async(taskId) => {
+    await getTaskById(taskId);
     try {
 
-
-        
         const task = await getTaskById(taskId);
         task.audios.forEach((file) => {
-            fse.unlinkSync(`./public/audios/${file}`)    
+            fse.ensureDir(`./public/audios/${file}`)
+            .then(() => {  fse.unlinkSync(`./public/audios/${file}`); })
         });
         
         task.videos.forEach((file) => {
-            fse.unlinkSync(`./public/videos/${file}`)    
+            console.log(file);
+            fse.ensureDir(`./public/videos/${file}`)
+            .then(() => { fse.unlinkSync(`./public/videos/${file}`); });
         });
     
         task.images.forEach((file) => {
-            fse.unlinkSync(`./public/images/${file}`)    
+            fse.ensureDir(`./public/images/${file}`)
+            .then(() => { fse.unlinkSync(`./public/images/${file}`); });
         });
     
         task.pdfs.forEach((file) => {
-            fse.unlinkSync(`./public/pdfs/${file}`)    
+            ifse.ensureDir(`./public/pdfs/${file}`)
+            .then(() => { fse.unlinkSync(`./public/pdfs/${file}`); });
         });
     
         const result = await Task.deleteOne({ _id: taskId });
     
-        return "task";
+        return result;
     } catch (error) {
         console.log(error);
     }
 };
 
+
+const getTaskVideos = async(taskId) => {
+
+    await getTaskById(taskId);
+
+    const tasks = await Task.findOne({ _id: taskId }).lean()
+    .select("title videos")
+
+    return tasks;
+};
+
+const getTaskImages = async(taskId) => {
+
+    await getTaskById(taskId);
+
+    const images = await Task.findOne({ _id:  taskId }).lean()
+    .select("title images")
+
+
+    return images;
+};
+
+const getTaskAudios = async(taskId) => {
+
+    await getTaskById(taskId);
+
+    const tasks = await Task.findOne({ _id:  taskId }).lean()
+    .select("title audios")
+
+    return tasks;
+};
+
+const getTaskPdfs = async(taskId) => {
+
+    await getTaskById(taskId);
+
+    const tasks = await Task.findOne({ _id:  taskId }).lean()
+    .select("title pdfs")
+
+    return tasks;
+};
 
 
 module.exports = {
@@ -741,4 +781,8 @@ module.exports = {
     getVideofile,
     getAudiofile,
     deleteTaskById,
+    getTaskVideos,
+    getTaskAudios,
+    getTaskImages,
+    getTaskPdfs
 };

@@ -24,7 +24,7 @@ const updateCourseById = {
     body: Joi.object().keys({
             title: Joi.string(),
             slug: Joi.string()
-        }),
+        }).options({ stripUnknown: true }),
 };
 
 const deleteCourse = {

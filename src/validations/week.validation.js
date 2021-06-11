@@ -20,7 +20,7 @@ const updateWeekById = {
             title: Joi.string().required(),
             description: Joi.string(),
             order: Joi.number()
-        }),
+        }).options({ stripUnknown: true }),
 };
 
 const deleteWeek = {

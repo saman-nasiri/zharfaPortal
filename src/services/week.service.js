@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const { Week, InternWeekAction, Task} = require('../models');
 const ApiError = require('../utils/ApiError');
+const { slsp, arrayShow } = require('../utils/defaultArrayType');
+
 
 const createWeek = async(weekBody, term) => {
     const week = await Week.create({
@@ -104,6 +106,7 @@ const weekProgressbar = async(week, internId) => {
 };
 
 const getWeeks = async(filter, options) => {
+    
     const weeks = await Week.paginate(filter, options);
     return weeks;
 };
@@ -115,14 +118,21 @@ const getWeekById = async(weekId) => {
     return week;
 };
 
-const getWeekTasks = async(weekId) => {
+const getWeekTasks = async(weekId, options) => {
+    const {sort, limit, skip, page} = slsp(options);
+
     const tasks = await Task.find({ weekId: { "$in": weekId } })
-    .select('_id title');
-    return tasks;
+    .select('_id title')
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(tasks, limit, page);
+
+    return result;
 };
 
 
 const deleteWeekById = async(weekId) => {
+
     await Task.deleteMany({ weekId: { "$in": weekId } });
     const result = await Week.deleteOne({ _id: weekId });
     return result;
