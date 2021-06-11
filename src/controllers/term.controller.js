@@ -154,7 +154,8 @@ const addWeekToTerm = catchAsync(async(req, res) => {
 
 const getTermCourses = catchAsync(async(req, res) => {
     const termId = req.params.termId;
-    const courses = await termService.getTermCourses(termId);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const courses = await termService.getTermCourses(termId, options);
     res.status(httpStatus.OK).send(courses);
 });
 

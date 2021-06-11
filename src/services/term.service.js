@@ -294,10 +294,10 @@ const addWeekToTerm = async(termId, weekId) => {
     return updateTerm;
 };
 
-const getTermCourses = async(termId) => {
+const getTermCourses = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
-    const term = await Term.findOne({ _id: termId });
+    const term = await getTermById(termId);
     const courses = await Course.find({ tutorialCategory: term.tutorialCategory })
     .sort(sort).skip(skip).limit(limit).exec()
     
