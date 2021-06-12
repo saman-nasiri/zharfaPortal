@@ -311,6 +311,14 @@ const getTaskPdfs = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(pdfs);
 });
 
+const getQuizByTaskId = catchAsync(async(req, res) => {
+    const internId = req.user;
+    const taskId = req.params.taskId;
+    console.log(internId, taskId);
+    const quizDeatils = await taskService.getQuizByTaskId(internId, taskId);
+    res.status(httpStatus.OK).send(quizDeatils);
+});
+
 module.exports = {
     creatTask,
     uploadImageForTask,
@@ -348,5 +356,6 @@ module.exports = {
     getTaskVideos,
     getTaskImages,
     getTaskAudios,
-    getTaskPdfs
+    getTaskPdfs,
+    getQuizByTaskId
 };

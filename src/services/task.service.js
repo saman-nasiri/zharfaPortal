@@ -745,6 +745,20 @@ const getTaskPdfs = async(taskId) => {
     return tasks;
 };
 
+const getQuizByTaskId = async(internId, taskId) => {
+    const quizQuestion = await Task.findOne({ _id: taskId })
+    .select("title quizes")
+
+    const quizRoom = await QuizResponseRoom({ internId: internId, taskId: taskId });
+
+    quizModel = {
+        title: quizQuestion.title,
+        questions: quizQuestion.quizes,
+        answers: quizRoom
+    }
+
+    return quizModel;
+};
 
 module.exports = {
     createTask,
@@ -784,5 +798,6 @@ module.exports = {
     getTaskVideos,
     getTaskAudios,
     getTaskImages,
-    getTaskPdfs
+    getTaskPdfs,
+    getQuizByTaskId
 };
