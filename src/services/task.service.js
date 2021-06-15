@@ -466,10 +466,6 @@ const getTaskById = async(taskId, internId) => {
     if(taskAction) { task["done"] = taskAction.done };
 
 
-    // const audio = await Audio.find({_id: {"$in": task.audios }});
-    // const ticket = await TicketRoom.find({"tickets._id": {$in: "607d1fdac8d8ab1b8c72605c"}})
-    // return ticket;
-
     return task;
 };
 

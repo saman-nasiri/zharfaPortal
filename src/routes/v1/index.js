@@ -14,6 +14,7 @@ const tutorialCategoryRoute = require('./tutorialCategory.route');
 const videosRoute = require('./videos.route');
 const imagesRoute = require('./images.route');
 const pdfsRoute = require('./pdfs.route');
+const public = require('./public.route');
 
 
 const router = express.Router();
@@ -33,7 +34,7 @@ router.use('/tutorial', tutorialCategoryRoute)
 router.use('/videos', videosRoute);
 router.use('/images', imagesRoute);
 router.use('/pdfs', pdfsRoute);
-
+router.use('/public', public);
 
 
 module.exports = router;

@@ -64,6 +64,17 @@ const getInternTerms = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(terms);
 });
 
+const getProvince =catchAsync(async(req, res) => {
+    const province = await internService.getProvince();
+    res.status(httpStatus.OK).send(province);
+});
+
+const getCities =catchAsync(async(req, res) => {
+    const provinceId = parseInt(req.params.provinceId);
+    const cities = await internService.getCities(provinceId);
+    res.status(httpStatus.OK).send(cities);
+});
+
 module.exports = {
     createIntern,
     updateIntern,
@@ -72,5 +83,7 @@ module.exports = {
     changePassword,
     getInterns,
     getInternProfile,
-    getInternTerms
+    getInternTerms,
+    getProvince,
+    getCities
 };

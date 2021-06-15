@@ -8,7 +8,6 @@ const { scope } = require('../../config/roles');
 const router = express.Router();
 
 // router.post('/register', validate(authValidation.register), authController.register);
-router.get('/baseURL', authController.baseURL)
 router.post('/login-ams', validate(authValidation.login), authController.loginAMS);
 router.post('/login-intern', validate(authValidation.login), authController.loginIntern);
 router.post('/logout', validate(authValidation.logout), authController.logout);

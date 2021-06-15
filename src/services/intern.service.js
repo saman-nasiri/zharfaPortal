@@ -4,6 +4,8 @@ const { Intern, Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { toJSON, paginate } = require('../models/plugins/index');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
+const geoData = require('@nimahkh/iran_beauty');
+
 
 const createIntern = async(internBody) => {
     if (await Intern.isEmailTaken(internBody.email)) {
@@ -98,6 +100,17 @@ const getInternTerms = async(internId, options) => {
     return result;
 };
 
+const getProvince = async() => {
+    const province = await geoData.getProvinces();
+    return province;
+};
+
+const getCities = async(provinceId) => {
+    console.log(provinceId);
+    const cities = await geoData.getCities(provinceId);
+    console.log(cities);
+    return cities;
+};
 
 module.exports = {
     createIntern,
@@ -108,5 +121,7 @@ module.exports = {
     getInternByEmail,
     changePassword,
     queryInterns,
-    getInternTerms
+    getInternTerms,
+    getProvince,
+    getCities
 };
