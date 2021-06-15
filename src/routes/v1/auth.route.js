@@ -14,7 +14,7 @@ router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
-router.put(auth(scope.CHANGE_PASSWORD), '/change-password', auth(scope.CHANGE_PASSWORD), authController.changePassword)
+router.put('/change-password', auth(scope.CHANGE_PASSWORD), authController.changePassword)
 
 module.exports = router;
 
