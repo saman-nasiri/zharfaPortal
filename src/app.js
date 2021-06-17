@@ -27,7 +27,7 @@ app.use(cors());
 app.options('*', cors());
 app.options('*', cors()) // include before other routes
 var corsOptions = {
-  origin: 'http://localhost:8080',
+  origin: 'http://panel.zharfa.college',
   optionsSuccessStatus: 200, // For legacy browser support
   methods: "GET, PUT, POST"
 }
