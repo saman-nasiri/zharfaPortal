@@ -22,8 +22,9 @@ const router = express.Router();
 
 const app = express();
 
-// handle cors
+// enable cors
 app.use(cors());
+app.options('*', cors());
 
 var whitelist = ['http://panel.zharfa.college']
 var corsOptionsDelegate = function (req, callback) {
@@ -77,10 +78,6 @@ app.use(mongoSanitize());
 
 // gzip compression
 app.use(compression());
-
-// enable cors
-app.use(cors());
-app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
