@@ -25,8 +25,8 @@ const app = express();
 // enable cors
 app.use(cors());
 app.options('*', cors());
-
-var whitelist = ['http://panel.zharfa.college']
+app.options('*', cors()) // include before other routes
+var whitelist = ['http://panel.zharfa.college', 'http://www.panel.zharfa.college/api/auth/login-intern']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
