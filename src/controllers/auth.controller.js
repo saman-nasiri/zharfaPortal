@@ -20,9 +20,18 @@ const loginAMS = catchAsync(async (req, res) => {
 
 const loginIntern = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const userRole = await authService.userRoleValidationIntern(email);
-  const userData = await authService.getUserData(userRole, email, password);
-  res.status(httpStatus.OK).send(userData);
+  const usernameType = await authService.usernameTypeValidation(req.body.email);
+  
+  if(usernameType === 'email') {
+    const userRole = await authService.userRoleValidationInternByEmail(email);
+    const userData = await authService.getUserData(userRole, email, password);
+    res.status(httpStatus.OK).send(userData);
+  }
+  else if(usernameType === 'phoneNumber') {
+    const userRole = await authService.userRoleValidationInternByPhoneNumber(email);
+    const userData = await authService.getUserData(userRole, email, password);
+    res.status(httpStatus.OK).send(userData);
+  }
 });
 
 const logout = catchAsync(async (req, res) => {

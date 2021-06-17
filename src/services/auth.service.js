@@ -10,6 +10,9 @@ const internService = require('./intern.service');
 const supervisorService = require('./supervisor.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
+const emailValidator = require('email-validator');
+const validatePhoneNumber = require('validate-phone-number-node-js');
+
 
 /**
  * Login with username and password
@@ -149,8 +152,14 @@ const userRoleValidationAMS = async(email) => {
 };
 
 // user role validation function for Intern
-const userRoleValidationIntern = async(email) => {
+const userRoleValidationInternByEmail = async(email) => {
   const intern = await Intern.findOne({ email: email });
+  if(intern)  { return role = intern.role };
+};
+
+// user role validation function for Intern
+const userRoleValidationInternByPhoneNumber = async(phoneNumber) => {
+  const intern = await Intern.findOne({ phoneNumber: phoneNumber });
   if(intern)  { return role = intern.role };
 };
 
@@ -243,6 +252,14 @@ const baseURL = async () => {
   }
 }
 
+const usernameTypeValidation = async(username) => {
+  const isEmail = emailValidator.validate(username);
+  if(isEmail) { console.log('Is Email'); return 'email'}
+  const isPhoneNumber = validatePhoneNumber.validate(username);
+  if(isPhoneNumber) { console.log('Is Phone Number'); return 'phoneNumber' }
+};
+
+
 module.exports = {
   loginUserWithEmailAndPassword,
   loginAdminWithEmailAndPassword,
@@ -251,8 +268,10 @@ module.exports = {
   resetPassword,
   changePassword,
   userRoleValidationAMS,
-  userRoleValidationIntern,
+  userRoleValidationInternByEmail,
+  userRoleValidationInternByPhoneNumber,
   getUserData,
   baseURL,
-  findUserTypeById
+  findUserTypeById,
+  usernameTypeValidation
 };
