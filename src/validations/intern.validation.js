@@ -20,29 +20,29 @@ const updateInternById = {
             lastName: Joi.string(),
             email: Joi.string().email(),
             phoneNumber: Joi.string(),
-            birthday: Joi.string(),
-            skills: Joi.string(),
-            major: Joi.string(),
-            businessStory: Joi.string(),
-            inspirationalCharacters: Joi.string(),
-            inspirationalSentences: Joi.string(),
-            lastBooks: Joi.string(),
+            birthday: Joi.string().allow('').allow(null).default('null'),
+            skills: Joi.string().allow('').allow(null).default('null'),
+            major: Joi.string().allow('').allow(null).default('null'),
+            businessStory: Joi.string().allow('').allow(null).default('null'),
+            inspirationalCharacters: Joi.string().allow('').allow(null).default('null'),
+            inspirationalSentences: Joi.string().allow('').allow(null).default('null'),
+            lastBooks: Joi.string().allow('').allow(null).default('null'),
             favoriteMovies: Joi.string().allow('').allow(null).default('null'),
             sex: Joi.string().allow('').allow(null).default('null'),
             maritalStatus: Joi.string().allow('').allow(null).default('null'),
             address: Joi.object({
-                state: Joi.string(),
-                city: Joi.string()
+                state: Joi.string().allow('').allow(null).default('null'),
+                city: Joi.string().allow('').allow(null).default('null')
             }).allow('').allow(null).default('null'),
             bloodType: Joi.string().allow('').allow(null).default('null'),
             jobStatus: Joi.string().allow('').allow(null).default('null'),
             degree: Joi.string().allow('').allow(null).default('null'),
             socialMedia: Joi.object({
-                webSite: Joi.string(),
-                virgool: Joi.string(),
-                twitter: Joi.string(),
-                linkedin: Joi.string(),
-                instagram: Joi.string()
+                webSite: Joi.string().allow('').allow(null).default('null'),
+                virgool: Joi.string().allow('').allow(null).default('null'),
+                twitter: Joi.string().allow('').allow(null).default('null'),
+                linkedin: Joi.string().allow('').allow(null).default('null'),
+                instagram: Joi.string().allow('').allow(null).default('null')
             }).allow('').allow(null).default('null'),
         }).options({ stripUnknown: true }),
 };
