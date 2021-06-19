@@ -51,7 +51,7 @@ const loginAdminWithEmailAndPassword = async (email, password) => {
 const loginMentorWithEmailAndPassword = async (email, password) => {
   const mentor = await mentorService.getMentorByEmail(email);
   if (!mentor || !(await mentor.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
   }
   return mentor;
 };
@@ -66,7 +66,7 @@ const loginMentorWithEmailAndPassword = async (email, password) => {
 const loginInternWithEmailAndPassword = async (email, password) => {
   const intern = await internService.getInternByEmail(email);
   if (!intern || !(await intern.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
   }
   return intern;
 };

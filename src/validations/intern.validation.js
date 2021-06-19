@@ -27,20 +27,23 @@ const updateInternById = {
             inspirationalCharacters: Joi.string(),
             inspirationalSentences: Joi.string(),
             lastBooks: Joi.string(),
-            favoriteMovies: Joi.string(),
-            sex: Joi.string(),
-            maritalStatus: Joi.string(),
-            address: Joi.string(),
-            bloodType: Joi.string(),
-            jobStatus: Joi.string(),
-            degree: Joi.string(),
+            favoriteMovies: Joi.string().allow('').allow(null).default('null'),
+            sex: Joi.string().allow('').allow(null).default('null'),
+            maritalStatus: Joi.string().allow('').allow(null).default('null'),
+            address: Joi.object({
+                state: Joi.string(),
+                city: Joi.string()
+            }).allow('').allow(null).default('null'),
+            bloodType: Joi.string().allow('').allow(null).default('null'),
+            jobStatus: Joi.string().allow('').allow(null).default('null'),
+            degree: Joi.string().allow('').allow(null).default('null'),
             socialMedia: Joi.object({
                 webSite: Joi.string(),
                 virgool: Joi.string(),
                 twitter: Joi.string(),
                 linkedin: Joi.string(),
                 instagram: Joi.string()
-            }),
+            }).allow('').allow(null).default('null'),
         }).options({ stripUnknown: true }),
 };
 
