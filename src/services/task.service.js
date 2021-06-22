@@ -162,12 +162,12 @@ const createQuizForTask = async(taskId, questions) => {
         
         
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
+            "needAnswer": true,
             "quizes": { "$each": questionModel }
-        }}, { "new": true, "upsert": true },
-        function(err) {
-            if(!err) {console.log('Update');}
-            if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-        });  
+        }}, { "new": true, "upsert": true });  
+        await Task.updateOne({_id: taskId}, {"$set": {
+            "needAnswer": true
+        }}, { "new": true, "upsert": true });
         
     return updatedTask;
     }

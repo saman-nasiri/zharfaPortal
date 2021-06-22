@@ -11,6 +11,11 @@ const weekSchema = mongoose.Schema({
     description: String,
     order: Number,
     termId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
+    supervisorPublicOpinion: {
+     supervisorId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Supervisor' },
+     filename: String,
+     mimetype: String,
+    }
 });
 
 // add plugin that converts mongoose to json

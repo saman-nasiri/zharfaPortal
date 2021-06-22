@@ -4,6 +4,7 @@ const { scope } = require('../../config/roles');
 const validate = require('../../middlewares/validate');
 const weekController = require('../../controllers/week.controller');
 const weekValidation = require('../../validations/week.validation');
+const taskController = require('../../controllers/task.controller');
 
 const router = express.Router();
 
@@ -42,6 +43,9 @@ router
 router
     .route('/delete/:weekId')
         .delete(auth(scope.DELETE_WEEK), weekController.deleteWeekById)
-
         
+router
+    .route('/voice/:weekId')
+        .post(auth(scope.ACTION_WEEK), weekController.recordPublicVoiceForWeek)
+
 module.exports = router;

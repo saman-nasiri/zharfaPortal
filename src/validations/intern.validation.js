@@ -30,20 +30,16 @@ const updateInternById = {
             favoriteMovies: Joi.string().allow('').allow(null).default('null'),
             sex: Joi.string().allow('').allow(null).default('null'),
             maritalStatus: Joi.string().allow('').allow(null).default('null'),
-            address: Joi.object({
-                state: Joi.string().allow('').allow(null).default('null'),
-                city: Joi.string().allow('').allow(null).default('null')
-            }).allow('').allow(null).default('null'),
+            province: Joi.string().allow('').allow(null).default('null'),
+            city: Joi.string().allow('').allow(null).default('null'),
             bloodType: Joi.string().allow('').allow(null).default('null'),
             jobStatus: Joi.string().allow('').allow(null).default('null'),
             degree: Joi.string().allow('').allow(null).default('null'),
-            socialMedia: Joi.object({
-                webSite: Joi.string().allow('').allow(null).default('null'),
-                virgool: Joi.string().allow('').allow(null).default('null'),
-                twitter: Joi.string().allow('').allow(null).default('null'),
-                linkedin: Joi.string().allow('').allow(null).default('null'),
-                instagram: Joi.string().allow('').allow(null).default('null')
-            }).allow('').allow(null).default('null'),
+            webSite: Joi.string().allow('').allow(null).default('null'),
+            virgool: Joi.string().allow('').allow(null).default('null'),
+            twitter: Joi.string().allow('').allow(null).default('null'),
+            linkedin: Joi.string().allow('').allow(null).default('null'),
+            instagram: Joi.string().allow('').allow(null).default('null')
         }).options({ stripUnknown: true }),
 };
 

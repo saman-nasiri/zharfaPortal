@@ -56,12 +56,7 @@ const internSchema = mongoose.Schema({
         // enum: roles,
         default: 'intern'
     },
-
-    address: {
-        state: String,
-        city: String,
-    },
-
+    
     bloodType: {
         type: String,
         enum: ['A', 'B', 'AB', 'O']
@@ -76,14 +71,14 @@ const internSchema = mongoose.Schema({
         type: String,
         enum: ['diploma', 'associateDiploma', 'bachelor', 'masters','Ph.D']
     },
-
-    socialMedia: {
-       webSite: String,
-       virgool: String,
-       twitter: String,
-       linkedin: String,
-       instagram: String
-    }
+    
+    province: String,
+    city: String,
+    webSite: String,
+    virgool: String,
+    twitter: String,
+    linkedin: String,
+    instagram: String
     
 },
 {

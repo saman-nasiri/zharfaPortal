@@ -35,4 +35,5 @@ router
     .route('/profile/:supervisorId')
         .get(auth(scope.READ_SUPERVISOR_DETAILS), validate(supervisorValidation.getSupervisorById), supervisorController.getSupervisorById)
 
+
 module.exports = router;

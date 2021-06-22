@@ -44,6 +44,10 @@ const taskSchema = mongoose.Schema({
         mimetype: String,
         size: String
     }],
+    needAnswer:  {
+        type: Boolean,
+        default: false,
+    },
     quizes: [{
                 description: String,
                 alternatives: [{

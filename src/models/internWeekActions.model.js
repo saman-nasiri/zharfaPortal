@@ -9,6 +9,11 @@ const internWeekActionSchema = mongoose.Schema({
     score: { type: Boolean, default: false },
     viewCount:  { type: Boolean, default: false },
     doneTaskDuration: { type: Number, default: 0 },
+    supervisorPrivateOpinion: {
+        supervisorId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Supervisor' },
+        filename: String,
+        mimetype: String,
+    },
     progressBar: {
         min: { type: Number, min: 0 },
         max: { type: Number, min: 100 }

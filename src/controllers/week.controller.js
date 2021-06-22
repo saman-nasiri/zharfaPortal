@@ -77,6 +77,16 @@ const getWeekTasks = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(tasks);
 });
 
+const recordPublicVoiceForWeek = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const supervisorId = req.user.id;
+    await upload.uploadSingleAudio(req, res);
+    const audioDetails = req.file;
+    const result = await weekService.recordPublicVoiceForWeek(weekId, supervisorId, audioDetails);
+    res.status(httpStatus.OK).send(result);
+});
+
+
 module.exports = {
     createWeek,
     updateWeekById,
@@ -86,5 +96,6 @@ module.exports = {
     getWeeks,
     getWeekById,
     deleteWeekById,
-    getWeekTasks
+    getWeekTasks,
+    recordPublicVoiceForWeek
 };

@@ -152,7 +152,7 @@ var storageSingleAudio = multer.diskStorage({
   }
 });
 
-var uploadSingleAudioFiles = multer({ storage: storageSingleAudio, limits: { fileSize: 1024 * 1024 * 100 }}).single("multi-files");
+var uploadSingleAudioFiles = multer({ storage: storageSingleAudio, limits: { fileSize: 1024 * 1024 * 1000 }}).single("single-file");
 var uploadSingleAudio =  util.promisify(uploadSingleAudioFiles);
 
 
