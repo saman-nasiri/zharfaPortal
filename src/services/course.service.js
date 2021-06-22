@@ -85,11 +85,11 @@ const courseSlugIsExist = async(slug) => {
 };
 
 const getTaskByCourseSlug = async(slug, options) => {
-    await getCourseBySlug(slug);    
+    const course = await getCourseBySlug(slug);    
     const {sort, limit, skip, page} = slsp(options);
 
 
-    const tasks = await Task.find({ course: slug })
+    const tasks = await Task.find({ course: course.category })
     .sort(sort).skip(skip).limit(limit).exec()
 
     const result = arrayShow(tasks, limit, page);
@@ -99,10 +99,10 @@ const getTaskByCourseSlug = async(slug, options) => {
 
 
 const getQuizesByCourseSlug = async(slug, options) => {
-    await getCourseBySlug(slug);    
+    const course = await getCourseBySlug(slug);    
     const {sort, limit, skip, page} = slsp(options);
 
-    const tasks = await Task.find({ course: slug })
+    const tasks = await Task.find({ course: course.category })
     .select('title quizes')
     .sort(sort).skip(skip).limit(limit).exec()
 
