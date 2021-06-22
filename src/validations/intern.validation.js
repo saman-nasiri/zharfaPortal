@@ -20,7 +20,7 @@ const updateInternById = {
             lastName: Joi.string(),
             email: Joi.string().email(),
             phoneNumber: Joi.string(),
-            birthday: Joi.string().allow('').allow(null).default('null'),
+            birthday: Joi.string(),
             skills: Joi.string().allow('').allow(null).default('null'),
             major: Joi.string().allow('').allow(null).default('null'),
             businessStory: Joi.string().allow('').allow(null).default('null'),
