@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const fse = require('fs-extra');
 const path = require('path');
-const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponseRoom } = require('../models');
+const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizResponseRoom, Intern, Mentor } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { data } = require('../config/logger');
 
@@ -177,7 +177,7 @@ const createQuizForTask = async(taskId, questions) => {
       };
 };
 
-const getQuizRoomById = async(roomId) => {
+const getQuizRoomByRoomId = async(roomId) => {
     const quizRoom = await QuizResponseRoom.findOne({ _id: roomId });
     if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizRoomNotFound')};
     return quizRoom;
@@ -186,8 +186,11 @@ const getQuizRoomById = async(roomId) => {
 const sendTextResToQuizByIntern = async(taskId, internId, text) => {
 
     let quizResponseRoom = await QuizResponseRoom.findOne({ taskId: taskId, internId: internId });
-    if(!quizResponseRoom) { quizResponseRoom = await QuizResponseRoom.create({ taskId: taskId, internId: internId }); }
+    if(!quizResponseRoom) { quizResponseRoom = await QuizResponseRoom.create({ taskId: taskId, internId: internId }); };
+    const intern = await Intern.findById(internId);
+
     const response = {
+        senderName: intern.firstName + ' ' + intern.lastName,
         senderId: internId,
         replayTo: taskId,
         text: text,
@@ -212,12 +215,15 @@ const sendAudioResToQuizByIntern = async(taskId, internId, audioDetails) => {
 
     let quizResponseRoom = await QuizResponseRoom.findOne({ taskId: taskId, internId: internId });
     if(!quizResponseRoom) { quizResponseRoom = await QuizResponseRoom.create({ taskId: taskId, internId: internId }); }
+    const intern = await Intern.findById(internId);
+
     const audioFile = {
         filename: audioDetails.filename,
         mimetype: audioDetails.mimetype,
         size: audioDetails.size
     };
     const response = {
+        senderName: intern.firstName + ' ' + intern.lastName,
         senderId: internId,
         replayTo: taskId,
         audio: audioFile,
@@ -242,8 +248,10 @@ const sendTextResToQuizByMentor = async(quizResponseRoomId, mentorId, text) => {
 
     const quizResponseRoom = await QuizResponseRoom.findOne({ _id: quizResponseRoomId });
     if(!quizResponseRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
-    
+    const mentor = await Mentor.findById(mentorId);
+
     const response = {
+        senderName: mentor.firstName + ' ' + mentor.lastName,
         senderId: mentorId,
         replayTo: quizResponseRoomId,
         text: text,
@@ -265,7 +273,7 @@ const sendAudioResToQuizByMentor = async(quizResponseRoomId, mentorId, audioDeta
 
     let quizResponseRoom = await QuizResponseRoom.findOne({ _id: quizResponseRoomId });
     if(!quizResponseRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizNotFound'); };
-    
+    const mentor = await Mentor.findById(mentorId);
     
     const audioFile = {
         filename: audioDetails.filename,
@@ -273,6 +281,7 @@ const sendAudioResToQuizByMentor = async(quizResponseRoomId, mentorId, audioDeta
         size: audioDetails.size
     };
     const response = {
+        senderName: mentor.firstName + ' ' + mentor.lastName,
         senderId: mentorId,
         replayTo: quizResponseRoomId,
         audio: audioFile,
@@ -295,7 +304,10 @@ const addTextTicketForTaskByIntern = async(taskId, internId, ticketBody) => {
 
         let ticketRoom = await TicketRoom.findOne({taskId: taskId, internId: internId});
         if(!ticketRoom) { ticketRoom = await TicketRoom.create({taskId: taskId, internId: internId})};
+        const intern = await Intern.findById(internId);
+
         const ticket = {
+            senderName: intern.firstName + ' ' + intern.lastName,
             senderId: internId,
             replayTo: taskId,
             text: ticketBody.text,
@@ -324,8 +336,10 @@ const addAudioTicketForTaskByIntern = async(taskId, internId, audioDetails) => {
 
         let ticketRoom = await TicketRoom.findOne({taskId: taskId, internId: internId});
         if(!ticketRoom) { ticketRoom = await TicketRoom.create({taskId: taskId, internId: internId})};
-    
+        const intern = await Intern.findById(internId);
+        
         const audioFile = {
+            senderName: intern.firstName + ' ' + intern.lastName,
             filename: audioDetails.filename,
             mimetype: audioDetails.mimetype,
             size: audioDetails.size
@@ -353,7 +367,10 @@ const addAudioTicketForTaskByIntern = async(taskId, internId, audioDetails) => {
 const addTextTicketForTaskByMentor = async(ticketRoomId, mentorId, ticketBody) => {
         let ticketRoom = await TicketRoom.findOne({ _id: ticketRoomId });
         if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound'); };
+        const mentor = await Mentor.findById(mentorId);
+
         const ticket = {
+            senderName: mentor.firstName + ' ' + mentor.lastName,
             senderId: mentorId,
             replayTo: ticketRoomId,
             text: ticketBody.text,
@@ -376,8 +393,10 @@ const addTextTicketForTaskByMentor = async(ticketRoomId, mentorId, ticketBody) =
 const addAudioTicketForTaskByMentor = async(ticketRoomId, mentorId, audioDetails) => {
         let ticketRoom = await TicketRoom.findOne({ _id: ticketRoomId });
         if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound'); };
+        const mentor = await Mentor.findById(mentorId);
         
         const audioFile = {
+            senderName: mentor.firstName + ' ' + mentor.lastName,
             filename: audioDetails.filename,
             mimetype: audioDetails.mimetype,
             size: audioDetails.size
@@ -739,11 +758,12 @@ const getTaskPdfs = async(taskId) => {
     return tasks;
 };
 
-const getQuizByTaskId = async(internId, taskId) => {
+const getQuizRoomByTaskId = async(internId, taskId) => {
     const quizQuestion = await Task.findOne({ _id: taskId })
     .select("title quizes")
 
-    const quizRoom = await QuizResponseRoom({ internId: internId, taskId: taskId });
+    const quizRoom = await QuizResponseRoom.findOne({ internId: internId, taskId: taskId })
+    .select('-taskId -internId')
 
     quizModel = {
         title: quizQuestion.title,
@@ -761,7 +781,7 @@ module.exports = {
     uploadAudioForTask,
     uploadPdfFileForTask,
     createQuizForTask,
-    getQuizRoomById,
+    getQuizRoomByRoomId,
     sendTextResToQuizByIntern,
     sendAudioResToQuizByIntern, 
     sendTextResToQuizByMentor,
@@ -793,5 +813,5 @@ module.exports = {
     getTaskAudios,
     getTaskImages,
     getTaskPdfs,
-    getQuizByTaskId
+    getQuizRoomByTaskId
 };

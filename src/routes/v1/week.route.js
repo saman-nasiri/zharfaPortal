@@ -45,7 +45,11 @@ router
         .delete(auth(scope.DELETE_WEEK), weekController.deleteWeekById)
         
 router
-    .route('/voice/:weekId')
-        .post(auth(scope.ACTION_WEEK), weekController.recordPublicVoiceForWeek)
+    .route('/supervisor-public-opinion/:weekId')
+        .post(auth(scope.ACTION_WEEK), weekController.supervisorPublicOpinionForWeek)
+
+router
+    .route('/supervisor-private-opinion/:weekId/:internId')
+        .post(auth(scope.ACTION_WEEK), weekController.supervisorPrivateOpinionForWeek)
 
 module.exports = router;

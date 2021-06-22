@@ -10,6 +10,7 @@ const quizResponseRoomSchema = mongoose.Schema({
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
     responses: [{
+        senderName: String,
         senderId: { type: mongoose.SchemaTypes.ObjectId },
         replayTo: { type: mongoose.SchemaTypes.ObjectId },
         text:  String,

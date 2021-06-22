@@ -38,12 +38,12 @@ router
         .post(auth(scope.UPLOAD_TASK_PDF), validate(taskValidation.uploadPdfForTask), taskController.uploadPdfFileForTask)
 
 router
-    .route('/quiz/:taskId')
-        .get(auth(scope.READ_QUIZ_ROOM), taskController.getQuizByTaskId);
+    .route('/quiz-room/:taskId')
+        .get(auth(scope.READ_QUIZ_ROOM), taskController.getQuizRoomByTaskId);
 
 router
-    .route('/quiz/room/:roomId')
-        .get(auth(scope.READ_QUIZ_ROOM), validate(taskValidation.getQuizRoomById), taskController.getQuizRoomById);
+    .route('/quiz-room/:roomId')
+        .get(auth(scope.READ_QUIZ_ROOM), validate(taskValidation.getQuizRoomById), taskController.getQuizRoomByRoomId);
 
 router
     .route('/quiz/create/:taskId')

@@ -77,12 +77,23 @@ const getWeekTasks = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(tasks);
 });
 
-const recordPublicVoiceForWeek = catchAsync(async(req, res) => {
+const supervisorPublicOpinionForWeek = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const supervisorId = req.user.id;
     await upload.uploadSingleAudio(req, res);
     const audioDetails = req.file;
-    const result = await weekService.recordPublicVoiceForWeek(weekId, supervisorId, audioDetails);
+    const result = await weekService.supervisorPublicOpinionForWeek(weekId, supervisorId, audioDetails);
+    res.status(httpStatus.OK).send(result);
+});
+
+
+const supervisorPrivateOpinionForWeek = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const internId = req.params.internId;
+    const supervisorId = req.user.id;
+    await upload.uploadSingleAudio(req, res);
+    const audioDetails = req.file;
+    const result = await weekService.supervisorPrivateOpinionForWeek(weekId, supervisorId, internId, audioDetails);
     res.status(httpStatus.OK).send(result);
 });
 
@@ -97,5 +108,6 @@ module.exports = {
     getWeekById,
     deleteWeekById,
     getWeekTasks,
-    recordPublicVoiceForWeek
+    supervisorPublicOpinionForWeek,
+    supervisorPrivateOpinionForWeek
 };

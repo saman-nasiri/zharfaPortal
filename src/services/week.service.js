@@ -138,7 +138,7 @@ const deleteWeekById = async(weekId) => {
     return result;
 };
 
-const recordPublicVoiceForWeek = async(weekId, superviserId, audioDetails) => {
+const supervisorPublicOpinionForWeek = async(weekId, superviserId, audioDetails) => {
     const oponinModel = {
         supervisorId: superviserId,
         filename: audioDetails.filename,
@@ -147,6 +147,20 @@ const recordPublicVoiceForWeek = async(weekId, superviserId, audioDetails) => {
 
     const updateWeek = await Week.updateOne({ _id: weekId }, { "$set": { 
         "supervisorPublicOpinion": oponinModel
+    }}, { "new": true, "upsert": true } );
+
+    return updateWeek;
+}
+
+const supervisorPrivateOpinionForWeek = async(weekId, superviserId, internId, audioDetails) => {
+    const oponinModel = {
+        supervisorId: superviserId,
+        filename: audioDetails.filename,
+        mimetype: audioDetails.mimetype,
+    };
+
+    const updateWeek = await InternWeekAction.updateOne({ weekId: weekId, internId: internId }, { "$set": { 
+        "supervisorPrivateOpinion": oponinModel
     }}, { "new": true, "upsert": true } );
 
     return updateWeek;
@@ -164,5 +178,6 @@ module.exports = {
     getWeekById,
     getWeekTasks,
     deleteWeekById,
-    recordPublicVoiceForWeek
+    supervisorPublicOpinionForWeek,
+    supervisorPrivateOpinionForWeek
 };
