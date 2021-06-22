@@ -160,15 +160,13 @@ const createQuizForTask = async(taskId, questions) => {
         });
 
         
-        
         const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "needAnswer": true,
             "quizes": { "$each": questionModel }
         }}, { "new": true, "upsert": true });  
         await Task.updateOne({_id: taskId}, {"$set": {
             "needAnswer": true
         }}, { "new": true, "upsert": true });
-        
+
     return updatedTask;
     }
     catch(err) {
