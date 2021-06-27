@@ -55,7 +55,7 @@ const taskSchema = mongoose.Schema({
     quiz: {
                 description: String,
                 alternatives: [{
-                    id: {
+                    value: {
                         type: String,
                         required: true,
                         enum: ['A', 'B', 'C', 'D']
