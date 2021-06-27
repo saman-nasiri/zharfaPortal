@@ -106,9 +106,7 @@ const getProvince = async() => {
 };
 
 const getCities = async(provinceId) => {
-    console.log(provinceId);
     const cities = await geoData.getCities(provinceId);
-    console.log(cities);
     return cities;
 };
 

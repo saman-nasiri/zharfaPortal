@@ -122,7 +122,7 @@ const getWeekTasks = async(weekId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ weekId: { "$in": weekId } })
-    .select('_id title')
+    .select('_id title order')
     .sort(sort).skip(skip).limit(limit).exec()
 
     const result = arrayShow(tasks, limit, page);

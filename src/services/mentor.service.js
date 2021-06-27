@@ -22,11 +22,7 @@ const createMentor = async(mentorBody) => {
 const updateMentor = async(mentor, updateBody) => {
 
     if(updateBody.password) { delete updateBody["password"] };
-    const result = await Mentor.updateOne({ _id: mentor._id }, {"$set": updateBody }, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });  
+    const result = await Mentor.updateOne({ _id: mentor._id }, {"$set": updateBody }, { "new": true, "upsert": true });  
 
     return result;
 };

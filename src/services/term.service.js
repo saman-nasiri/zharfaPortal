@@ -62,11 +62,7 @@ const addWeekToTheTerm = async(term, weeksList) => {
     
     const updateTerm = await Term.updateOne({ _id: term._id }, {"$addToSet": {
         "weeksList": weeksList,
-    }}, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    }); 
+    }}, { "new": true, "upsert": true }); 
     
     const weeks = await Week.updateOne({ _id: weeksList }, { "$set": {
         "tutorialCategory": term.tutorialCategory,

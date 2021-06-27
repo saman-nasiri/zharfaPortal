@@ -46,6 +46,26 @@ router
         .get(auth(scope.READ_QUIZ_ROOM), validate(taskValidation.getQuizRoomById), taskController.getQuizRoomByRoomId);
 
 router
+    .route('/add-quiz/test/:taskId')
+        .post(taskController.addTestQuizToTask);
+
+router
+    .route('/res-quiz/test/:taskId')
+        .post(auth(scope.RES_QUIZ), taskController.responseTestQuiz);
+
+router
+    .route('/add-quiz/discriptive/:taskId')
+        .post(taskController.addDiscriptiveQuizToTask);
+
+router
+    .route('/res-quiz/discriptive/:taskId')
+        .post(auth(scope.RES_QUIZ), taskController.responseDiscriptiveQuiz)
+
+router
+    .route('/quiz-room/send-message/:quizRoomId')
+        .post(auth(scope.SEND_MESSAGE), taskController.sendTextMessageInQuizRoom)
+
+router
     .route('/quiz/create/:taskId')
         .post(auth(scope.CREATE_QUIZ), validate(taskValidation.createQuizForTask), taskController.createQuizForTask);
 

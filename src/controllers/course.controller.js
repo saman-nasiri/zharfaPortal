@@ -68,6 +68,7 @@ const getTaskByCourseSlug = catchAsync(async(req, res) => {
 const getQuizesByCourseSlug = catchAsync(async(req, res) => {
     const courseSlug = req.params.courseSlug;
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    console.log(courseSlug);
     const tasks = await courseService.getQuizesByCourseSlug(courseSlug, options);
     res.status(httpStatus.OK).send(tasks);
 });

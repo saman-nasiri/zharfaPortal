@@ -47,11 +47,7 @@ const createAdmin = async(adminBody) => {
 const updateAdmin = async(admin, updateBody) => {
 
     if(updateBody.password) { delete updateBody["password"] };
-    const result = await Admin.updateOne({ _id: admin._id }, {"$set": updateBody }, { "new": true, "upsert": true },
-    function(err) {
-        if(!err) {console.log('Update');}
-        if(err) { throw new ApiError(httpStatus.NO_CONTENT, err)}
-    });  
+    const result = await Admin.updateOne({ _id: admin._id }, {"$set": updateBody }, { "new": true, "upsert": true });  
 
     return result;
 };

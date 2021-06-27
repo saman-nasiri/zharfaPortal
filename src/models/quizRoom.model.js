@@ -3,14 +3,21 @@ const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 
 
-const quizResponseRoomSchema = mongoose.Schema({
+const quizRoomSchema = mongoose.Schema({
     taskId:   { type: mongoose.SchemaTypes.ObjectId, ref: 'Task' },
     internId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Intern' },
     score:    { type: Number, default: 0 },
+    questionBody: String,
+    TestAnswer: { 
+        type:String,
+        enum: ['A', 'B', 'C', 'D']
+    },
+    discriptiveAnswer: String,
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
-    responses: [{
+    chatContent: [{
         senderName: String,
+        senderRole: String,
         senderId: { type: mongoose.SchemaTypes.ObjectId },
         replayTo: { type: mongoose.SchemaTypes.ObjectId },
         text:  String,
@@ -21,10 +28,10 @@ const quizResponseRoomSchema = mongoose.Schema({
 });
 
 // add plugin that converts mongoose to json
-quizResponseRoomSchema.plugin(toJSON);
-quizResponseRoomSchema.plugin(paginate);
+quizRoomSchema.plugin(toJSON);
+quizRoomSchema.plugin(paginate);
 
 
-const QuizResponseRoom = mongoose.model("QuizResponseRoom", quizResponseRoomSchema);
+const QuizRoom = mongoose.model("QuizRoom", quizRoomSchema);
 
-module.exports = QuizResponseRoom;
+module.exports = QuizRoom;

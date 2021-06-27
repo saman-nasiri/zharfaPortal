@@ -44,11 +44,15 @@ const taskSchema = mongoose.Schema({
         mimetype: String,
         size: String
     }],
-    needAnswer:  {
+    testQuiz: {
         type: Boolean,
         default: false,
     },
-    quizes: [{
+    discriptiveQuiz:  {
+        type: Boolean,
+        default: false,
+    },
+    quiz: {
                 description: String,
                 alternatives: [{
                     text: {
@@ -61,7 +65,7 @@ const taskSchema = mongoose.Schema({
                         default: false
                     }
                 }]
-    }],
+    },
 
 });
 

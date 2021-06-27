@@ -12,7 +12,7 @@ module.exports.TicketRoom = require('./ticketRoom.model');
 module.exports.TutorialCategory = require('./tutorialCategory.model');
 module.exports.InternWeekAction = require('./internWeekActions.model');
 module.exports.InternTaskAction = require('./internTaskActions.model');
-module.exports.QuizResponseRoom = require('./quizResponseRoom.model');
+module.exports.QuizRoom = require('./quizRoom.model');
 
 
 

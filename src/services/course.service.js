@@ -102,19 +102,13 @@ const getQuizesByCourseSlug = async(slug, options) => {
     const course = await getCourseBySlug(slug);    
     const {sort, limit, skip, page} = slsp(options);
 
-    const tasks = await Task.find({ course: course.category })
-    .select('title quizes')
+    console.log('course.category:', course.category);
+
+    const tasks = await Task.find({ "$and": [{ course: course.category }, { "$or": [{discriptiveQuiz: true}, { testQuiz: true }] } ]})
+    .select('title order')
     .sort(sort).skip(skip).limit(limit).exec()
 
-    const taskModel = [];
-
-    tasks.forEach(async(task) => {
-        if(task.quizes.length > 0) {
-            taskModel.push(task)
-        }
-    })
-
-    const result = arrayShow(taskModel, limit, page);
+    const result = arrayShow(tasks, limit, page);
 
     return result;
 };
