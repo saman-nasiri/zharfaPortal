@@ -849,14 +849,26 @@ const getQuizRoomByTaskId = async(internId, taskId) => {
     .select('-taskId -internId')
     if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, "QuizRoomNotFound") };
 
-    quizDetails = {
-        title: task.title,
-        question: task.quiz,
-        answer: quizRoom.testAnswer,
-        chatRoom: quizRoom
-    }
+    if(task.testQuiz === true) {
+        quizDetails = {
+            title: task.title,
+            question: task.quiz,
+            answer: quizRoom.testAnswer,
+            chatRoom: quizRoom
+        }
 
-    return quizDetails;
+        return quizDetails;
+    }
+    else if(task.discriptiveQuiz) {
+        quizDetails = {
+            title: task.title,
+            question: task.quiz,
+            answer: quizRoom.discriptiveAnswer,
+            chatRoom: quizRoom
+        }
+
+        return quizDetails;
+    }
 };
 
 module.exports = {
