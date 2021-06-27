@@ -360,7 +360,6 @@ const getTaskPdfs = catchAsync(async(req, res) => {
 const getQuizRoomByTaskId = catchAsync(async(req, res) => {
     const internId = req.user;
     const taskId = req.params.taskId;
-    console.log(internId, taskId);
     const quizDeatils = await taskService.getQuizRoomByTaskId(internId, taskId);
     res.status(httpStatus.OK).send(quizDeatils);
 });

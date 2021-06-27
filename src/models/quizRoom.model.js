@@ -7,8 +7,7 @@ const quizRoomSchema = mongoose.Schema({
     taskId:   { type: mongoose.SchemaTypes.ObjectId, ref: 'Task' },
     internId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Intern' },
     score:    { type: Number, default: 0 },
-    questionBody: String,
-    TestAnswer: { 
+    testAnswer: { 
         type:String,
         enum: ['A', 'B', 'C', 'D']
     },

@@ -149,22 +149,22 @@ const addTestQuizToTask = async(taskId, question) => {
         "quiz": questionModel
     }}, { "new": true, "upsert": true })
 
-    return addQuiz;
+    return { status: 200, message: 'Success'};
 };
 
 const responseTestQuiz = async(taskId, internId, responseBody) => {
     let quizRoom = await QuizRoom.findOne({ taskId: taskId, internId: internId });
     if(!quizRoom) { quizRoom = await QuizRoom.create({ taskId: taskId, internId: internId }); };
     const intern = await Intern.findById(internId);
-
+    console.log(responseBody);
     const responsed = await QuizRoom.updateOne({_id: quizRoom._id}, {"$set": {
-        "TestAnswer": responseBody,
+        "testAnswer": responseBody,
         "internResponse": true,
         "mentorResponse": false,
     }}, { "new": true, "upsert": true });
 
 
-    return responsed;
+    return { status: 200, message: 'Success'};
 };
 
 const addDiscriptiveQuizToTask = async(taskId, question) => {
@@ -178,7 +178,7 @@ const addDiscriptiveQuizToTask = async(taskId, question) => {
         "quiz": questionModel
     }}, { "new": true, "upsert": true });
 
-    return addQuiz;
+    return { status: 200, message: 'Success'};
 };
 
 const responseDiscriptiveQuiz = async(taskId, internId, responseBody) => {
@@ -193,7 +193,7 @@ const responseDiscriptiveQuiz = async(taskId, internId, responseBody) => {
     }}, { "new": true, "upsert": true });
 
 
-    return responsed;
+    return { status: 200, message: 'Success'};
 };
 
 const sendTextMessageInQuizRoom = async(quizRoomId, sender, text) => {
@@ -228,7 +228,7 @@ const sendTextMessageInQuizRoom = async(quizRoomId, sender, text) => {
     }
 
 
-    return sendMessage;
+    return { status: 200, message: 'Success'};
 
 };
 
@@ -844,19 +844,19 @@ const getTaskPdfs = async(taskId) => {
 };
 
 const getQuizRoomByTaskId = async(internId, taskId) => {
-    const quizQuestion = await Task.findOne({ _id: taskId })
-    .select("title quizes")
-
+    const task = await Task.findOne({ _id: taskId });
     const quizRoom = await QuizRoom.findOne({ internId: internId, taskId: taskId })
     .select('-taskId -internId')
+    if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, "QuizRoomNotFound") };
 
-    quizModel = {
-        title: quizQuestion.title,
-        questions: quizQuestion.quizes,
-        answers: quizRoom
+    quizDetails = {
+        title: task.title,
+        question: task.quiz,
+        answer: quizRoom.testAnswer,
+        chatRoom: quizRoom
     }
 
-    return quizModel;
+    return quizDetails;
 };
 
 module.exports = {
