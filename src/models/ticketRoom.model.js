@@ -14,8 +14,9 @@ const ticketRoomSchema = new mongoose.Schema({
     },
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
-    tickets: [{
+    ticketContent: [{
         senderName: String,
+        senderRole: String,
         senderId: { type: mongoose.SchemaTypes.ObjectId },
         replayTo: { type: mongoose.SchemaTypes.ObjectId },
         text:  String,

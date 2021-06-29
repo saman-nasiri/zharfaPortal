@@ -116,56 +116,17 @@ const sendTextMessageInQuizRoom = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
-const createQuizForTask = catchAsync(async(req, res) => {
-    const taskId = req.params.taskId;
-    await taskService.getTaskById(taskId)
-
-    const quiz = req.body;
-    const result = await taskService.createQuizForTask(taskId, quiz);
-
-    res.send(result)
-});
-
 const getQuizRoomByRoomId = catchAsync(async(req, res) => {
     const roomId = req.params.roomId;
     const quizRoom = await taskService.getQuizRoomByRoomId(roomId);
     res.status(httpStatus.OK).send(quizRoom);
 });
 
-const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
-    const internId = req.user.id;
+const createTicketRoom = catchAsync(async(req, res) => {
+    const user = req.user;
     const taskId = req.params.taskId;
     const text = req.body.text;
-    await taskService.getTaskById(taskId);
-    const result = await taskService.sendTextResToQuizByIntern(taskId, internId, text)
-    res.status(httpStatus.OK).send(result);
-});
-
-const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
-    const internId = req.user.id;
-    const taskId = req.params.taskId;
-    const task = await taskService.getTaskById(taskId);
-    if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TaskNotFound'); };
-    await upload.uploadSingleAudio(req, res);
-    const audioDetails = req.file;
-    const result = await taskService.sendAudioResToQuizByIntern(taskId, internId, audioDetails)
-    res.status(httpStatus.OK).send(result);
-});
-
-const sendTextResToQuizByMentor = catchAsync(async(req, res) => {
-    const mentorId = req.user.id;
-    const quizRoomId = req.params.quizRoomId;
-    const text = req.body.text;
-    const result = await taskService.sendTextResToQuizByMentor(quizRoomId, mentorId, text)
-    res.status(httpStatus.OK).send(result);
-});
-
-const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
-    const mentorId = req.user.id;
-    const quizRoomId = req.params.quizRoomId;
-    await upload.uploadSingleAudio(req, res);
-    const audioDetails = req.file;
-    const result = await taskService.sendAudioResToQuizByMentor(quizRoomId, mentorId, audioDetails)
+    const result = await taskService.createTicketRoom(taskId, user, text);
     res.status(httpStatus.OK).send(result);
 });
 
@@ -175,40 +136,13 @@ const getTicketRoomById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(ticketRoom);
 });
 
-const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
-        const internId = req.user.id;
-        const taskId = req.params.taskId;
-        await taskService.getTaskById(taskId)
-        const ticketBody = req.body;
-        const result = await taskService.addTextTicketForTaskByIntern(taskId, internId, ticketBody);
-        res.status(httpStatus.OK).send(result);
-});
+const sendTextMessageInTicketRoom = catchAsync(async(req, res) => {
+    const user = req.user;
+    const ticketRoomId = req.params.ticketRoomId;
+    const text = req.body.text;
 
-const addAudioTicketForTaskByIntern = catchAsync(async(req, res) => {
-        const internId = req.user.id;
-        const taskId = req.params.taskId;
-        await taskService.getTaskById(taskId)
-        await upload.uploadSingleAudio(req, res);
-        const audioDetails = req.file;
-        const result = await taskService.addAudioTicketForTaskByIntern(taskId, internId, audioDetails);
-        res.status(httpStatus.OK).send(result);
-});
-
-const addTextTicketForTaskByMentor = catchAsync(async(req, res) => {
-        const mentorId = req.user.id;
-        const ticketRoomId = req.params.ticketRoomId;
-        const ticketBody = req.body;
-        const result = await taskService.addTextTicketForTaskByMentor(ticketRoomId, mentorId, ticketBody);
-        res.status(httpStatus.OK).send(result);
-});
-
-const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
-        const mentorId = req.user.id;
-        const ticketRoomId = req.params.ticketRoomId;
-        await upload.uploadSingleAudio(req, res);
-        const audioDetails = req.file;
-        const result = await taskService.addAudioTicketForTaskByMentor(ticketRoomId, mentorId, audioDetails);
-        res.status(httpStatus.OK).send(result);
+    const result = await taskService.sendTextMessageInTicketRoom(ticketRoomId, user, text);
+    res.status(httpStatus.OK).send(result);
 });
 
 
@@ -370,17 +304,8 @@ module.exports = {
     uploadVideoForTask,
     uploadAudioForTask,
     uploadPdfFileForTask,
-    createQuizForTask,
     getQuizRoomByRoomId,
-    sendTextResToQuizByIntern,
-    sendAudioResToQuizByIntern,
-    sendTextResToQuizByMentor,
-    sendAudioResToQuizByMentor,
     getTicketRoomById,
-    addTextTicketForTaskByIntern,
-    addAudioTicketForTaskByIntern,
-    addTextTicketForTaskByMentor,
-    addAudioTicketForTaskByMentor,
     doneTaskAction,
     getTaskById,
     updateTaskById,
@@ -407,5 +332,109 @@ module.exports = {
     responseTestQuiz,
     addDiscriptiveQuizToTask,
     responseDiscriptiveQuiz,
-    sendTextMessageInQuizRoom
+    sendTextMessageInQuizRoom,
+    createTicketRoom,
+    sendTextMessageInTicketRoom
 };
+
+
+    // createQuizForTask,
+    // sendTextResToQuizByIntern,
+    // sendAudioResToQuizByIntern,
+    // sendTextResToQuizByMentor,
+    // sendAudioResToQuizByMentor,
+
+
+
+// const createQuizForTask = catchAsync(async(req, res) => {
+//     const taskId = req.params.taskId;
+//     await taskService.getTaskById(taskId)
+
+//     const quiz = req.body;
+//     const result = await taskService.createQuizForTask(taskId, quiz);
+
+//     res.send(result)
+// });
+
+// const sendTextResToQuizByIntern = catchAsync(async(req, res) => {
+//     const internId = req.user.id;
+//     const taskId = req.params.taskId;
+//     const text = req.body.text;
+//     await taskService.getTaskById(taskId);
+//     const result = await taskService.sendTextResToQuizByIntern(taskId, internId, text)
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const sendAudioResToQuizByIntern = catchAsync(async(req, res) => {
+//     const internId = req.user.id;
+//     const taskId = req.params.taskId;
+//     const task = await taskService.getTaskById(taskId);
+//     if(!task) { throw new ApiError(httpStatus.NOT_FOUND, 'TaskNotFound'); };
+//     await upload.uploadSingleAudio(req, res);
+//     const audioDetails = req.file;
+//     const result = await taskService.sendAudioResToQuizByIntern(taskId, internId, audioDetails)
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const sendTextResToQuizByMentor = catchAsync(async(req, res) => {
+//     const mentorId = req.user.id;
+//     const quizRoomId = req.params.quizRoomId;
+//     const text = req.body.text;
+//     const result = await taskService.sendTextResToQuizByMentor(quizRoomId, mentorId, text)
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const sendAudioResToQuizByMentor = catchAsync(async(req, res) => {
+//     const mentorId = req.user.id;
+//     const quizRoomId = req.params.quizRoomId;
+//     await upload.uploadSingleAudio(req, res);
+//     const audioDetails = req.file;
+//     const result = await taskService.sendAudioResToQuizByMentor(quizRoomId, mentorId, audioDetails)
+//     res.status(httpStatus.OK).send(result);
+// });
+
+
+
+
+
+
+// addTextTicketForTaskByIntern,
+// addAudioTicketForTaskByIntern,
+// addTextTicketForTaskByMentor,
+// addAudioTicketForTaskByMentor,
+
+// const addTextTicketForTaskByIntern = catchAsync(async(req, res) => {
+//     const internId = req.user.id;
+//     const taskId = req.params.taskId;
+//     await taskService.getTaskById(taskId)
+//     const ticketBody = req.body;
+//     const result = await taskService.addTextTicketForTaskByIntern(taskId, internId, ticketBody);
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const addAudioTicketForTaskByIntern = catchAsync(async(req, res) => {
+//     const internId = req.user.id;
+//     const taskId = req.params.taskId;
+//     await taskService.getTaskById(taskId)
+//     await upload.uploadSingleAudio(req, res);
+//     const audioDetails = req.file;
+//     const result = await taskService.addAudioTicketForTaskByIntern(taskId, internId, audioDetails);
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const addTextTicketForTaskByMentor = catchAsync(async(req, res) => {
+//     const mentorId = req.user.id;
+//     const ticketRoomId = req.params.ticketRoomId;
+//     const ticketBody = req.body;
+//     const result = await taskService.addTextTicketForTaskByMentor(ticketRoomId, mentorId, ticketBody);
+//     res.status(httpStatus.OK).send(result);
+// });
+
+// const addAudioTicketForTaskByMentor = catchAsync(async(req, res) => {
+//     const mentorId = req.user.id;
+//     const ticketRoomId = req.params.ticketRoomId;
+//     await upload.uploadSingleAudio(req, res);
+//     const audioDetails = req.file;
+//     const result = await taskService.addAudioTicketForTaskByMentor(ticketRoomId, mentorId, audioDetails);
+//     res.status(httpStatus.OK).send(result);
+// });

@@ -91,14 +91,14 @@ const updateWeekDuration = async(weekId, task) => {
 
 const weekProgressbar = async(week, internId) => {
 
-    const weekAction = await InternWeekAction.findOne({ weekId: week._id, internId: internId });
-    if(!weekAction) {
+    const internWeekAction = await InternWeekAction.findOne({ weekId: week._id, internId: internId });
+    if(!internWeekAction) {
         const result = { progressbar : 0 };
 
         return result;
     }
     else {
-        const progressbar = Math.ceil(parseInt(weekAction.doneTaskDuration) / parseInt(week.duration) * 100)
+        const progressbar = Math.ceil(parseInt(internWeekAction.doneTaskDuration) / parseInt(week.duration) * 100)
         const result = { progressbar : progressbar };
 
         return result;
@@ -122,7 +122,7 @@ const getWeekTasks = async(weekId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ weekId: { "$in": weekId } })
-    .select('_id title order')
+    .select('_id title order duration')
     .sort(sort).skip(skip).limit(limit).exec()
 
     const result = arrayShow(tasks, limit, page);

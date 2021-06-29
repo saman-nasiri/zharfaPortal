@@ -66,44 +66,16 @@ router
         .post(auth(scope.SEND_MESSAGE), taskController.sendTextMessageInQuizRoom)
 
 router
-    .route('/quiz/create/:taskId')
-        .post(auth(scope.CREATE_QUIZ), validate(taskValidation.createQuizForTask), taskController.createQuizForTask);
+    .route('/create-ticket/:taskId')
+        .post(auth(scope.CREATE_TICKET), taskController.createTicketRoom)
 
 router
-    .route('/quiz/text-res/intern/:taskId')
-        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern), taskController.sendTextResToQuizByIntern);
-
-router
-    .route('/quiz/audio-res/intern/:taskId')
-        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern),  taskController.sendAudioResToQuizByIntern);
-
-router
-    .route('/quiz/text-res/mentor/:quizResponseRoomId')
-        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendTextResToQuizByMentor);
-
-router
-    .route('/quiz/audio-res/mentor/:quizResponseRoomId')
-        .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendAudioResToQuizByMentor);
+    .route('/ticket-room/send-message/:ticketRoomId')
+        .post(auth(scope.SEND_TICKET_TEXT), taskController.sendTextMessageInTicketRoom)
 
 router
     .route('/ticket/room/:roomId')
         .get(auth(scope.READ_TICKET_ROOM), validate(taskValidation.getTaskById), taskController.getTicketRoomById);
-
-router
-    .route('/ticket/text/intern/:taskId')
-        .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByIntern), taskController.addTextTicketForTaskByIntern);
-
-router
-    .route('/ticket/audio/intern/:taskId')
-        .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByIntern),  taskController.addAudioTicketForTaskByIntern);
-
-router
-    .route('/ticket/text/mentor/:ticketRoomId')
-        .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByMentor),  taskController.addTextTicketForTaskByMentor);
-
-router
-    .route('/ticket/audio/mentor/:ticketRoomId')
-        .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByMentor),  taskController.addAudioTicketForTaskByMentor);
 
 router
     .route('/update/:taskId')
@@ -181,4 +153,43 @@ router
 module.exports = router;
 
 
+
+
+// router
+//     .route('/quiz/create/:taskId')
+//         .post(auth(scope.CREATE_QUIZ), validate(taskValidation.createQuizForTask), taskController.createQuizForTask);
+
+// router
+//     .route('/quiz/text-res/intern/:taskId')
+//         .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern), taskController.sendTextResToQuizByIntern);
+
+// router
+//     .route('/quiz/audio-res/intern/:taskId')
+//         .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByIntern),  taskController.sendAudioResToQuizByIntern);
+
+// router
+//     .route('/quiz/text-res/mentor/:quizResponseRoomId')
+//         .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendTextResToQuizByMentor);
+
+// router
+//     .route('/quiz/audio-res/mentor/:quizResponseRoomId')
+//         .post(auth(scope.RES_QUIZ), validate(taskValidation.sendResToQuizByMentor),  taskController.sendAudioResToQuizByMentor);
+
+
+
+// router
+//     .route('/ticket/text/intern/:taskId')
+//         .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByIntern), taskController.addTextTicketForTaskByIntern);
+
+// router
+//     .route('/ticket/audio/intern/:taskId')
+//         .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByIntern),  taskController.addAudioTicketForTaskByIntern);
+
+// router
+//     .route('/ticket/text/mentor/:ticketRoomId')
+//         .post(auth(scope.SEND_TICKET_TEXT), validate(taskValidation.sendTicketByMentor),  taskController.addTextTicketForTaskByMentor);
+
+// router
+//     .route('/ticket/audio/mentor/:ticketRoomId')
+//         .post(auth(scope.SEND_TICKET_AUDIO), validate(taskValidation.sendTicketByMentor),  taskController.addAudioTicketForTaskByMentor);
 
