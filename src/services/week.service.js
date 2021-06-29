@@ -105,6 +105,11 @@ const weekProgressbar = async(week, internId) => {
     }
 };
 
+const deleteWeekProgressbar = async(weekId, internId) => {
+  await InternWeekAction.deleteOne({ weekId: weekId, internId: internId });
+  return { status: 200, message: "ActionIsDelete" };  
+};
+
 const getWeeks = async(filter, options) => {
     
     const weeks = await Week.paginate(filter, options);
@@ -174,6 +179,7 @@ module.exports = {
     recordWeekViewCount,
     updateWeekDuration,
     weekProgressbar,
+    deleteWeekProgressbar,
     getWeeks,
     getWeekById,
     getWeekTasks,

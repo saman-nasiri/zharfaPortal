@@ -48,7 +48,14 @@ const recordWeekScore = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(progressbar);
  });
 
-const getWeeks = catchAsync(async(req, res) => {
+ const deleteWeekProgressbar = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const internId = req.params.internId;
+    const result = await weekService.deleteWeekProgressbar(weekId, internId);
+    res.status(httpStatus.OK).send(result);
+ });
+ 
+ const getWeeks = catchAsync(async(req, res) => {
     const filter = pick(req.query, ['name', 'role']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const weeks = await weekService.getWeeks(filter, options);
@@ -104,6 +111,7 @@ module.exports = {
     recordWeekScore,
     recordWeekViewCount,
     weekProgressbar,
+    deleteWeekProgressbar,
     getWeeks,
     getWeekById,
     deleteWeekById,

@@ -21,6 +21,10 @@ router
         .get(auth(scope.READ_WEEK_PROGRESSBAR), validate(weekValidation.weekProgressbar), weekController.weekProgressbar)
 
 router
+    .route('/delete-action/:weekId/:internId')
+        .delete(auth(scope.DELETE_WEEK_ACTION), weekController.deleteWeekProgressbar);
+
+router
     .route('/action/score/:weekId')
         .post(auth(scope.SCORE_WEEK), validate(weekValidation.recordWeekScore), weekController.recordWeekScore)
 
