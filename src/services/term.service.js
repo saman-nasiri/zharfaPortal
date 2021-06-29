@@ -101,8 +101,6 @@ const getTermWeeksForIntern = async(termId, internId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const weeks = await Week.find({ termId: { "$in": termId } }).lean()
-    .sort(sort).skip(skip).limit(limit).exec()
-
 
     const weeksModel = await Promise.all(
         weeks.map(async(week) => {
