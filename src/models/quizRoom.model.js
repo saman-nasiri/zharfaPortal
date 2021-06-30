@@ -14,16 +14,22 @@ const quizRoomSchema = mongoose.Schema({
     discriptiveAnswer: String,
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
-    chatContent: [{
-        senderName: String,
-        senderRole: String,
-        senderId: { type: mongoose.SchemaTypes.ObjectId },
-        replayTo: { type: mongoose.SchemaTypes.ObjectId },
-        text:  String,
-        audio: Object,
-        pdf:   Object,
+    mentorAnswer: {
+        mentorId: { type: mongoose.SchemaTypes.ObjectId },
+        mentorName: String,
+        text: String,
         date:  Date
-    }]
+    }
+    // chatContent: [{
+    //     senderName: String,
+    //     senderRole: String,
+    //     senderId: { type: mongoose.SchemaTypes.ObjectId },
+    //     replayTo: { type: mongoose.SchemaTypes.ObjectId },
+    //     text:  String,
+    //     audio: Object,
+    //     pdf:   Object,
+    //     date:  Date
+    // }]
 });
 
 // add plugin that converts mongoose to json

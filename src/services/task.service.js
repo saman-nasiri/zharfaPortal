@@ -233,12 +233,28 @@ const sendTextMessageInQuizRoom = async(quizRoomId, sender, text) => {
 
 };
 
+
 const getQuizRoomByRoomId = async(roomId) => {
     const quizRoom = await QuizRoom.findOne({ _id: roomId });
     if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'QuizRoomNotFound')};
     return quizRoom;
 };
 
+const mentorCheckOutQuizResponse = async(quizRoom, sender, text) => {
+
+    mentorAnswer = {
+        mentorId: sender.id,
+        mentorName: sender.firstName + ' ' + sender.lastName,
+        text: text
+    };
+
+    const sendMessage = await QuizRoom.updateOne({_id: quizRoom}, {"$set": {
+        "mentorAnswer": mentorAnswer,
+    }}, { "new": true, "upsert": true }); 
+
+    return { status: 200, message: 'Success'};
+
+};
 
 const createTicketRoom = async(taskId, sender, text) => {
     let ticketRoom = await TicketRoom.findOne({ taskId: taskId, internId: sender.id });
@@ -349,11 +365,17 @@ const getTaskById = async(taskId, internId) => {
 
     if(task.testQuiz === true) {
         const quizRoom = await QuizRoom.findOne({ taskId: task._id, internId: internId });
-        if(quizRoom) { task["quizAnswer"] = quizRoom.testAnswer }; 
+        if(quizRoom) { 
+            task["quizAnswer"] = quizRoom.testAnswer,
+            task["mentorAnswer"] = quizRoom.mentorAnswer
+        }; 
     }
     if(task.discriptiveQuiz === true) {
         const quizRoom = await QuizRoom.findOne({ taskId: task._id, internId: internId });
-        if(quizRoom) { task["quizAnswer"] = quizRoom.discriptiveAnswer }; 
+        if(quizRoom) { 
+            task["quizAnswer"] = quizRoom.discriptiveAnswer,
+            task["mentorAnswer"] = quizRoom.mentorAnswer
+        }; 
     }
     
     return task;
@@ -692,6 +714,7 @@ module.exports = {
     addDiscriptiveQuizToTask,
     responseDiscriptiveQuiz,
     sendTextMessageInQuizRoom,
+    mentorCheckOutQuizResponse,
     createTicketRoom,
     sendTextMessageInTicketRoom
 };

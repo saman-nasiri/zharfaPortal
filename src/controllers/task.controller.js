@@ -116,6 +116,15 @@ const sendTextMessageInQuizRoom = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+const mentorCheckOutQuizResponse = catchAsync(async(req, res) => {
+    const quizRoomId = req. params.quizRoomId;
+    const sender = req.user;
+    const text = req.body.text;
+    const result = await taskService.mentorCheckOutQuizResponse(quizRoomId, sender, text);
+    res.status(httpStatus.OK).send(result);
+});
+
+
 const getQuizRoomByRoomId = catchAsync(async(req, res) => {
     const roomId = req.params.roomId;
     const quizRoom = await taskService.getQuizRoomByRoomId(roomId);
@@ -333,6 +342,7 @@ module.exports = {
     addDiscriptiveQuizToTask,
     responseDiscriptiveQuiz,
     sendTextMessageInQuizRoom,
+    mentorCheckOutQuizResponse,
     createTicketRoom,
     sendTextMessageInTicketRoom
 };

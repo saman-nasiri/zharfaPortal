@@ -66,6 +66,10 @@ router
         .post(auth(scope.SEND_MESSAGE), taskController.sendTextMessageInQuizRoom)
 
 router
+    .route('/check-out-quiz/:quizRoomId')
+        .post(auth(scope.CHECKOUT_QUIZ), taskController.mentorCheckOutQuizResponse)
+
+router
     .route('/create-ticket/:taskId')
         .post(auth(scope.CREATE_TICKET), taskController.createTicketRoom)
 
