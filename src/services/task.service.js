@@ -347,7 +347,15 @@ const getTaskById = async(taskId, internId) => {
     const taskAction = await InternTaskAction.findOne({ taskId: task._id, internId: internId })
     if(taskAction) { task["done"] = taskAction.done };
 
-
+    if(task.testQuiz === true) {
+        const quizRoom = await QuizRoom.findOne({ taskId: task._id, internId: internId });
+        if(quizRoom) { task["quizAnswer"] = quizRoom.testAnswer }; 
+    }
+    if(task.discriptiveQuiz === true) {
+        const quizRoom = await QuizRoom.findOne({ taskId: task._id, internId: internId });
+        if(quizRoom) { task["quizAnswer"] = quizRoom.discriptiveAnswer }; 
+    }
+    
     return task;
 };
 

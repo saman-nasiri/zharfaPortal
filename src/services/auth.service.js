@@ -29,66 +29,6 @@ const loginUserWithEmailAndPassword = async (email, password) => {
 };
 
 /**
- * Login with username and password
- * @param {string} email
- * @param {string} password
- * @returns {Promise<Admin>}
- */
-const loginAdminWithEmailAndPassword = async (email, password) => {
-    const admin = await adminService.getAdminByEmail(email);
-    if (!admin || !(await admin.isPasswordMatch(password))) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
-    }
-    return admin;
-};
-
-/**
- * Login with username and password
- * @param {string} email
- * @param {string} password
- * @returns {Promise<Admin>}
- */
-const loginMentorWithEmailAndPassword = async (email, password) => {
-  const mentor = await mentorService.getMentorByEmail(email);
-  if (!mentor || !(await mentor.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
-  }
-  return mentor;
-};
-
-
-/**
- * Login with username and password
- * @param {string} email
- * @param {string} password
- * @returns {Promise<Admin>}
- */
-const loginInternWithEmailAndPassword = async (email, password) => {
-  const intern = await internService.getInternByEmail(email);
-  if (!intern || !(await intern.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
-  }
-  return intern;
-};
-
-
-
-/**
- * Login with username and password
- * @param {string} email
- * @param {string} password
- * @returns {Promise<Admin>}
- */
-const loginSupervisorWithEmailAndPassword = async (email, password) => {
-  const supervisor = await supervisorService.getSupervisorByEmail(email);
-  if (!supervisor || !(await supervisor.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
-  }
-  return supervisor;
-};
-
-
-/**
  * Logout
  * @param {string} refreshToken
  * @returns {Promise}
@@ -175,7 +115,7 @@ const findUserTypeById = async(id) => {
 };
 
 const updateUserById = async(id, newPassword) => {
-  const admin = await Admin.updateOne({ _id: id }, { "$set": { password: newPassword }});
+  const admin  = await Admin.updateOne({ _id: id },  { "$set": { password: newPassword }});
   const mentor = await Mentor.updateOne({ _id: id }, { "$set": { password: newPassword }});
   const intern = await Intern.updateOne({ _id: id }, { "$set": { password: newPassword }});
   const supervisor = await Supervisor.updateOne({ _id: id }, { "$set": { password: newPassword }});
@@ -184,30 +124,65 @@ const updateUserById = async(id, newPassword) => {
 const getUserData = async(userRole, email, password) => {
   switch(userRole) {
     case 'owner':
+          user   = await loginWithEmailAndPassword(userRole, email, password);
+          tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
     case 'admin':
-         user   = await loginAdminWithEmailAndPassword(email, password);
+         user   = await loginWithEmailAndPassword(userRole, email, password);
          tokens = await tokenService.generateAuthTokens(user);
       return {user, tokens};
     
     case 'mentor':
-         user   = await loginMentorWithEmailAndPassword(email, password);
+         user   = await loginWithEmailAndPassword(userRole, email, password);
          tokens = await tokenService.generateAuthTokens(user);
       return {user, tokens};
 
     case 'intern':
-         user   = await loginInternWithEmailAndPassword(email, password);
+         user   = await loginWithEmailAndPassword(userRole, email, password);
          tokens = await tokenService.generateAuthTokens(user);
       return {user, tokens};
 
     case 'supervisor':
-         user   = await loginSupervisorWithEmailAndPassword(email, password);
+         user   = await loginWithEmailAndPassword(userRole, email, password);
          tokens = await tokenService.generateAuthTokens(user);
       return {user, tokens};
 
 
     default:
-        // res.status(httpStatus.NOT_FOUND).send('UserNotFound');
+        
         throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
+  }
+};
+
+const loginWithEmailAndPassword = async(role, email, password) => {
+  
+  if(role === 'owner' || role === 'admin') {
+      const admin = await adminService.getAdminByEmail(email);
+      if (!admin || !(await admin.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+      }
+      return admin;
+  }
+  if(role === 'mentor') {
+      const mentor = await mentorService.getMentorByEmail(email);
+      if (!mentor || !(await mentor.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
+      }
+      return mentor;
+  }
+  if(role === 'intern') {
+      const intern = await internService.getInternByEmail(email);
+      if (!intern || !(await intern.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
+      }
+      return intern;
+  }
+  if(role === 'supervisor') {
+      const supervisor = await supervisorService.getSupervisorByEmail(email);
+      if (!supervisor || !(await supervisor.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+      }
+      return supervisor;
   }
 };
 
@@ -262,7 +237,6 @@ const usernameTypeValidation = async(username) => {
 
 module.exports = {
   loginUserWithEmailAndPassword,
-  loginAdminWithEmailAndPassword,
   logout,
   refreshAuth,
   resetPassword,
