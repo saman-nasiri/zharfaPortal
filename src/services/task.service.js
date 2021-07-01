@@ -367,7 +367,7 @@ const getTaskById = async(taskId, internId) => {
         const quizRoom = await QuizRoom.findOne({ taskId: task._id, internId: internId });
         if(quizRoom) { 
             task["quizAnswer"] = quizRoom.testAnswer,
-            task["mentorAnswer"] = quizRoom.mentorAnswer
+            task["mentorAnswer"] = quizRoom.mentorAnswer.text
         }; 
     }
     if(task.discriptiveQuiz === true) {
