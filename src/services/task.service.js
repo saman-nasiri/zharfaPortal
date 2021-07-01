@@ -653,7 +653,7 @@ const getTaskPdfs = async(taskId) => {
 const getQuizRoomByTaskId = async(internId, taskId) => {
     const task = await Task.findOne({ _id: taskId });
     const quizRoom = await QuizRoom.findOne({ internId: internId, taskId: taskId })
-    .select('-taskId -internId')
+    // .select('-taskId -internId')
     if(!quizRoom) { throw new ApiError(httpStatus.NOT_FOUND, "QuizRoomNotFound") };
 
     if(task.testQuiz === true) {
@@ -674,7 +674,7 @@ const getQuizRoomByTaskId = async(internId, taskId) => {
             chatRoom: quizRoom
         }
 
-        return quizDetails;
+        return quizRoom;
     }
 };
 
