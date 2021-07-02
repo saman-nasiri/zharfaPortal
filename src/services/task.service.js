@@ -4,6 +4,7 @@ const path = require('path');
 const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizRoom, Intern, Mentor } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { data } = require('../config/logger');
+const { slsp, arrayShow } = require('../utils/defaultArrayType');
 
 
 /**
@@ -257,8 +258,11 @@ const mentorCheckOutQuizResponse = async(quizRoom, sender, text) => {
 };
 
 const createTicketRoom = async(taskId, sender, text) => {
+    const task = await Task.findOne({ _id: taskId });
+    if(!task) { throw new ApiError(httpStatus.NOT_FOUND, "TaskNotFound") };
     let ticketRoom = await TicketRoom.findOne({ taskId: taskId, internId: sender.id });
-    if(!ticketRoom) { ticketRoom = await TicketRoom.create({ taskId: taskId, internId: sender.id })};
+    if(!ticketRoom) { ticketRoom = await TicketRoom.create({ title: task.title, taskId: taskId, internId: sender.id })};
+    // await Task.updateOne({ _id: taskId }, { "$set": { "haveTicket": true }}, { "new": true, "upsert": true });
 
     sendTextMessageInTicketRoom(ticketRoom.id, sender, text);
 
@@ -301,6 +305,18 @@ const getTicketRoomById = async(roomId) => {
     const ticketRoom = await TicketRoom.findOne({ _id: roomId });
     if(!ticketRoom) { throw new ApiError(httpStatus.NOT_FOUND, 'TicketRoomNotFound')};
     return ticketRoom;
+};
+
+const getInternTicketRoomList = async(internId, options) => {    
+    const {sort, limit, skip, page} = slsp(options);
+
+    const ticketRooms = await TicketRoom.find({ internId: internId })
+    .select("-ticketContent")
+    .sort(sort).skip(skip).limit(limit).exec()
+
+    const result = arrayShow(ticketRooms, limit, page);
+
+    return result;
 };
 
 const getInternTaskAction = async(taskId, internId) => {
@@ -661,7 +677,7 @@ const getQuizRoomByTaskId = async(internId, taskId) => {
             title: task.title,
             question: task.quiz,
             answer: quizRoom.testAnswer,
-            chatRoom: quizRoom
+            // chatRoom: quizRoom
         }
 
         return quizDetails;
@@ -671,10 +687,9 @@ const getQuizRoomByTaskId = async(internId, taskId) => {
             title: task.title,
             question: task.quiz,
             answer: quizRoom.discriptiveAnswer,
-            chatRoom: quizRoom
         }
 
-        return quizRoom;
+        return quizDetails;
     }
 };
 
@@ -686,6 +701,7 @@ module.exports = {
     uploadPdfFileForTask,
     getQuizRoomByRoomId,
     getTicketRoomById,
+    getInternTicketRoomList,
     getInternTaskAction,
     doneTaskAction,
     getTaskById,

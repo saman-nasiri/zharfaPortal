@@ -4,6 +4,7 @@ const { toJSON, paginate } = require('./plugins');
 
 
 const ticketRoomSchema = new mongoose.Schema({
+    title: String,
     taskId: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Task'

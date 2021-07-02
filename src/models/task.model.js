@@ -11,6 +11,10 @@ const taskSchema = mongoose.Schema({
     content: String,
     duration: Number,
     doneCount: { type: Number, default: 0 },
+    haveTicket: {
+        type: Boolean,
+        default: false
+    },
     course: {
         type: String,
         trim: true,

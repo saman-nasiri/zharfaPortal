@@ -102,8 +102,6 @@ const getQuizesByCourseSlug = async(slug, options) => {
     const course = await getCourseBySlug(slug);    
     const {sort, limit, skip, page} = slsp(options);
 
-    console.log('course.category:', course.category);
-
     const tasks = await Task.find({ "$and": [{ course: course.category }, { "$or": [{discriptiveQuiz: true}, { testQuiz: true }] } ]})
     .select('title order')
     .sort(sort).skip(skip).limit(limit).exec()

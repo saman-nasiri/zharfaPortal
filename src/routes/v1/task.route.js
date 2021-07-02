@@ -37,6 +37,11 @@ router
     .route('/upload/pdfs/:taskId')
         .post(auth(scope.UPLOAD_TASK_PDF), validate(taskValidation.uploadPdfForTask), taskController.uploadPdfFileForTask)
 
+
+
+
+
+// Quiz Room Route
 router
     .route('/quiz-room/by-taskId/:taskId')
         .get(auth(scope.READ_QUIZ_ROOM), taskController.getQuizRoomByTaskId);
@@ -69,6 +74,11 @@ router
     .route('/check-out-quiz/:quizRoomId')
         .post(auth(scope.CHECKOUT_QUIZ), taskController.mentorCheckOutQuizResponse)
 
+
+
+
+
+//Ticket Room Route 
 router
     .route('/create-ticket/:taskId')
         .post(auth(scope.CREATE_TICKET), taskController.createTicketRoom)
@@ -78,8 +88,14 @@ router
         .post(auth(scope.SEND_TICKET_TEXT), taskController.sendTextMessageInTicketRoom)
 
 router
-    .route('/ticket/room/:roomId')
-        .get(auth(scope.READ_TICKET_ROOM), validate(taskValidation.getTaskById), taskController.getTicketRoomById);
+    .route('/ticket-room/:roomId')
+        .get(auth(scope.READ_TICKET_ROOM), taskController.getTicketRoomById);
+
+router
+    .route('/list/ticket-room')
+       .get(auth(scope.READ_TICKET_ROOM), taskController.getInternTicketRoomList)
+
+
 
 router
     .route('/update/:taskId')

@@ -145,6 +145,13 @@ const getTicketRoomById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(ticketRoom);
 });
 
+const getInternTicketRoomList = catchAsync(async(req, res) => {
+    const internId = req.user.id;
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const result = await taskService.getInternTicketRoomList(internId, options);
+    res.status(httpStatus.OK).send(result);
+});
+
 const sendTextMessageInTicketRoom = catchAsync(async(req, res) => {
     const user = req.user;
     const ticketRoomId = req.params.ticketRoomId;
@@ -307,6 +314,8 @@ const getQuizRoomByTaskId = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(quizDeatils);
 });
 
+
+
 module.exports = {
     creatTask,
     uploadImageForTask,
@@ -315,6 +324,7 @@ module.exports = {
     uploadPdfFileForTask,
     getQuizRoomByRoomId,
     getTicketRoomById,
+    getInternTicketRoomList,
     doneTaskAction,
     getTaskById,
     updateTaskById,
