@@ -8,7 +8,7 @@ const taskSchema = mongoose.Schema({
     order: Number,
     weekId:  [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Week' } ],
     termId : [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
-    content: String,
+    content: Object,
     duration: Number,
     doneCount: { type: Number, default: 0 },
     haveTicket: {

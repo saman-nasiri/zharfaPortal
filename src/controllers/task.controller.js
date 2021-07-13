@@ -37,10 +37,11 @@ const uploadVideoForTask = catchAsync(async(req, res) => {
     await upload.uploadVideo(req, res);
     const videoDetails = req.files;
     const videoBody = req.body;
-    console.log(videoBody);
+    console.log('videoDetails:', videoDetails);
+    
     const result = await taskService.uploadVideoForTask(taskId, videoBody, videoDetails);
 
-    res.send(result)
+    res.status(httpStatus.OK).send(result)
 });
 
 const uploadAudioForTask = catchAsync(async(req, res) => {

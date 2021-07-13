@@ -9,7 +9,7 @@ const createTask = {
     body: Joi.object().keys({
         title: Joi.string(),
         course: Joi.string(),
-        content: Joi.string(),
+        content: Joi.object(),
         duration: Joi.number(),
         order: Joi.number()
     }),

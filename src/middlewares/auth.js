@@ -10,7 +10,6 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
   req.user = user;
 
   if (requiredRights.length) {
-    // const userRights = roleRights.get(user.role);
     const userRights = roleRight(user.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
     if (!hasRequiredRights && req.params.ownerId !== user.id && req.params.internId !== user.id && req.params.mentorId !== user.id && req.params.adminId !== user.id && req.params.supervisorId !== user.id) {

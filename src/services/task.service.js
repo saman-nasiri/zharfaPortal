@@ -61,28 +61,46 @@ const uploadImageForTask = async(taskId, imageBody, imageDetails) => {
 };
 
 const uploadVideoForTask = async(taskId, videoBody, videoDetails) => {
-    try {
-        const videoModel = videoDetails.map((videoDetail) => {
-            const video = {
+    if(videoDetails.length === 0) { 
+        try {
+            const videoDetail = [{
                 title: videoBody.title,
                 description: videoBody.description,
-                filename: videoDetail.filename,
-                mimetype: videoDetail.mimetype,
-                size: videoDetail.size
-            };
-
-            return video;
-        });
-        
-        const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "videos": { "$each": videoModel }
-        }}, { "new": true, "upsert": true });  
-        
-        return updatedTask;
+            }];
+            const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
+                "videos": { "$each": videoDetail }
+            }}, { "new": true, "upsert": true });  
+            
+            return updatedTask;
+        }
+        catch(err) {
+            console.log(err);
+        };
     }
-    catch(err) {
-        console.log(err);
-    };
+    else {
+        try {
+            const videoModel = videoDetails.map((videoDetail) => {
+                const video = {
+                    title: videoBody.title,
+                    description: videoBody.description,
+                    filename: videoDetail.filename,
+                    mimetype: videoDetail.mimetype,
+                    size: videoDetail.size
+                };
+    
+                return video;
+            });
+            
+            const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
+                "videos": { "$each": videoModel }
+            }}, { "new": true, "upsert": true });  
+            
+            return updatedTask;
+        }
+        catch(err) {
+            console.log(err);
+        };
+    }
 };
 
 
