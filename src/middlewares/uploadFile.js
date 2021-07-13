@@ -128,7 +128,7 @@ var storagePdf = multer.diskStorage({
     }
   });
 
-  var uploadPdfFiles = multer({ storage: storagePdf, limits: { fileSize: 1024 * 1024 * 10 }}).array("multi-files", 10);
+  var uploadPdfFiles = multer({ storage: storagePdf, limits: { fileSize: 1024 * 1024 * 60 }}).array("multi-files", 10);
   var uploadPdf =  util.promisify(uploadPdfFiles);
 
 
