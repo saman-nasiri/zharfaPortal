@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Week, InternWeekAction, Task} = require('../models');
+const { Week, InternWeekAction, Task, InternTaskAction } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
 
@@ -123,14 +123,24 @@ const getWeekById = async(weekId) => {
     return week;
 };
 
-const getWeekTasks = async(weekId, options) => {
+const getWeekTasks = async(weekId, internId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
-    const tasks = await Task.find({ weekId: { "$in": weekId } })
-    .select('_id title order duration done')
+    const tasks = await Task.find({ weekId: { "$in": weekId } }).lean()
+    .select(' title order duration done')
     .sort(sort).skip(skip).limit(limit).exec()
 
-    const result = arrayShow(tasks, limit, page);
+    const taskModel = await Promise.all(
+        tasks.map(async(task) => {
+            console.log(task._id);
+            const done = await InternTaskAction.findOne({ taskId: task._id, internId: internId });
+            if(done) { task["done"] = done.done; }
+            return task;
+            
+        })
+    )
+
+    const result = arrayShow(taskModel, limit, page);
 
     return result;
 };
