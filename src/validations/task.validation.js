@@ -90,7 +90,7 @@ const updateTaskById = {
     body: Joi.object().keys({
             title: Joi.string(),
             order:Joi.number(), 
-            content:Joi.string(),
+            content:Joi.object(),
             duration:Joi.number(),
         }).options({ stripUnknown: true }),
 };
