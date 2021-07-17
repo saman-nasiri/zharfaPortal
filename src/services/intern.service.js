@@ -56,6 +56,13 @@ const getInternByEmail = async(email) => {
     return intern;
 };
 
+
+const getInternByPhoneNumber = async(phoneNumber) => {
+    const intern = await Intern.findOne({ phoneNumber: phoneNumber });
+    return intern;
+};
+
+
 const changePassword = async(internId, passwordBody) => {
     const intern = await Intern.findOne({ _id: internId });
     const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
@@ -117,6 +124,7 @@ module.exports = {
     getInternById,
     uploadAvatar,
     getInternByEmail,
+    getInternByPhoneNumber,
     changePassword,
     queryInterns,
     getInternTerms,

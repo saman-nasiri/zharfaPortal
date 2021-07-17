@@ -53,6 +53,11 @@ const getMentorByEmail = async(email) => {
     return mentor;
 };
 
+const getMentorByPhoneNumber = async(phoneNumber) => {
+    const mentor = await Mentor.findOne({ phoneNumber: phoneNumber });
+    return mentor;
+};
+
 const getMentors = async(filter, options) => {
     const mentors = await Mentor.paginate(filter, options);
     if(!mentors) { throw new ApiError(httpStatus.NOT_FOUND, 'MentorNotFound')};
@@ -80,6 +85,7 @@ module.exports = {
     deleteMentor,
     getMentorById,
     getMentorByEmail,
+    getMentorByPhoneNumber,
     getMentors,
     changePassword,
     uploadAvatar

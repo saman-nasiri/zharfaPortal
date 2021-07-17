@@ -3,10 +3,10 @@ const { objectId } = require('./custom.validation');
 
 const createSupervisor = {
     body: Joi.object().keys({
-        firstName: Joi.string(),
-        lastName: Joi.string(),
-        password: Joi.string(),
-        email: Joi.string()
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        password: Joi.string().required(),
+        email: Joi.string().required()
     }),
 };
 

@@ -55,7 +55,7 @@ const removeMentorsFromTheTerm = async(term, mentorsList) => {
         termsList: term._id
     }}, { "new": true, "upsert": true });
     
-    return "updateMentor";
+    return  { status: 200, message: 'Success'};
 };
 
 const addWeekToTheTerm = async(term, weeksList) => {

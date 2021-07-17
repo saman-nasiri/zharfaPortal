@@ -188,7 +188,7 @@ const updateTaskQuizesById = {
 
 const downloadFile = {
     params: Joi.object().keys({
-        filename: Joi.string().custom(objectId),
+        filename: Joi.string(),
     }),
 };
 

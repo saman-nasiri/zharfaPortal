@@ -426,7 +426,7 @@ const removeTaskImagesByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/images/${file}`)    
+        fse.unlinkSync(`./public/files/images/${file}`)    
     });
 
     return result;
@@ -447,7 +447,7 @@ const removeTaskVideosByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/videos/${file}`)    
+        fse.unlinkSync(`./public/files/videos/${file}`)    
     });
 
     return result;
@@ -468,7 +468,7 @@ const removeTaskAudiosByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/audios/${file}`)    
+        fse.unlinkSync(`./public/files/audios/${file}`)    
     });
 
     return result;
@@ -491,7 +491,7 @@ const removeTaskPdfsByName = async(taskId, removeList) => {
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
-        fse.unlinkSync(`./public/pdfs/${file}`)    
+        fse.unlinkSync(`./public/files/pdfs/${file}`)    
     });
 
     return result;
@@ -529,17 +529,14 @@ const updateTaskQuizesById = async(quizId, quizBody) => {
 };
 
 const getPdfFile = async(filename) => {
-    const filePath = path.join('public', 'pdfs', filename);
-    const file = await fse.readFile(filePath, data) 
+    const filePath = path.join('public', 'files', 'pdfs', filename);
+    const file = await fse.readFile(filePath, data);
     return file;
 };
 
 const getVideofile = async(filename, req, res) => {
     const range = req.headers.range;
-    // if (!range) {
-    //     return res.status(400).send("Requires Range header");
-    // }
-    const videoPath = path.join('public', 'videos', filename);
+    const videoPath = path.join('public', 'files', 'videos', filename);
     const videoSize = fse.statSync(videoPath).size;
     
 
@@ -572,15 +569,8 @@ const getVideofile = async(filename, req, res) => {
 
 
 const getAudiofile = async(filename, req, res) => {
-    // const filePath = path.join('public', 'audio', filename);
-    // const file = await fse.createReadStream(filePath);
-    // file.pipe(res)
-
     const range = req.headers.range;
-    // if (!range) {
-    //     res.status(400).send("Requires Range header");
-    // }
-    const videoPath = path.join('public', 'audios', filename);
+    const videoPath = path.join('public', 'files', 'audios', filename);
     const videoSize = fse.statSync(videoPath).size;
 
 
@@ -617,23 +607,23 @@ const deleteTaskById = async(taskId) => {
 
         const task = await getTaskById(taskId);
         task.audios.forEach((file) => {
-            fse.ensureDir(`./public/audios/${file}`)
-            .then(() => {  fse.unlinkSync(`./public/audios/${file}`); })
+            fse.ensureDir(`./public/files/audios/${file}`)
+            .then(() => {  fse.unlinkSync(`./public/files/audios/${file}`); })
         });
         
         task.videos.forEach((file) => {
-            fse.ensureDir(`./public/videos/${file}`)
-            .then(() => { fse.unlinkSync(`./public/videos/${file}`); });
+            fse.ensureDir(`./public/files/videos/${file}`)
+            .then(() => { fse.unlinkSync(`./public/files/videos/${file}`); });
         });
     
         task.images.forEach((file) => {
-            fse.ensureDir(`./public/images/${file}`)
-            .then(() => { fse.unlinkSync(`./public/images/${file}`); });
+            fse.ensureDir(`./public/files/images/${file}`)
+            .then(() => { fse.unlinkSync(`./public/files/images/${file}`); });
         });
     
         task.pdfs.forEach((file) => {
-            ifse.ensureDir(`./public/pdfs/${file}`)
-            .then(() => { fse.unlinkSync(`./public/pdfs/${file}`); });
+            ifse.ensureDir(`./public/files/pdfs/${file}`)
+            .then(() => { fse.unlinkSync(`./public/files/pdfs/${file}`); });
         });
     
         const result = await Task.deleteOne({ _id: taskId });

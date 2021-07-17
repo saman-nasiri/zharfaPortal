@@ -3,11 +3,11 @@ const { password, objectId } = require('./custom.validation');
 
 const createIntern = {
     body: Joi.object().keys({
-        firstName: Joi.string(),
-        lastName: Joi.string(),
-        password: Joi.string().custom(password),
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        password: Joi.string().custom(password).required(),
         email: Joi.string().required().email(),
-        phoneNumber: Joi.string()
+        phoneNumber: Joi.string().required()
     }),
 };
 

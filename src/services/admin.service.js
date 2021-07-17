@@ -78,6 +78,13 @@ const getAdminByEmail = async(email) => {
     return admin;
 };
 
+
+const getAdminByPhoneNumber = async(phoneNumber) => {
+    const admin = await Admin.findOne({ phoneNumber: phoneNumber });
+    return admin;
+};
+
+
 const changePassword = async(adminId, passwordBody) => {
     const admin = await Admin.findOne({ _id: adminId });
     const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
@@ -109,6 +116,7 @@ module.exports = {
     getAdminById,
     uploadAvatar,
     getAdminByEmail,
+    getAdminByPhoneNumber,
     changePassword,
     getAdmins,
 };

@@ -28,6 +28,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
+
 /**
  * Logout
  * @param {string} refreshToken
@@ -121,7 +122,7 @@ const updateUserById = async(id, newPassword) => {
   const supervisor = await Supervisor.updateOne({ _id: id }, { "$set": { password: newPassword }});
 };
 
-const getUserData = async(userRole, email, password) => {
+const getUserDataByEmail = async(userRole, email, password) => {
   switch(userRole) {
     case 'owner':
           user   = await loginWithEmailAndPassword(userRole, email, password);
@@ -186,6 +187,72 @@ const loginWithEmailAndPassword = async(role, email, password) => {
   }
 };
 
+
+const getUserDataByPhoneNumber = async(userRole, phoneNumber, password) => {
+  switch(userRole) {
+    case 'owner':
+          user   = await loginWithPhoneNumberAndPassword(userRole, phoneNumber, password);
+          tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
+    case 'admin':
+         user   = await loginWithPhoneNumberAndPassword(userRole, phoneNumber, password);
+         tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
+    
+    case 'mentor':
+         user   = await loginWithPhoneNumberAndPassword(userRole, phoneNumber, password);
+         tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
+
+    case 'intern':
+         user   = await loginWithPhoneNumberAndPassword(userRole, phoneNumber, password);
+         tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
+
+    case 'supervisor':
+         user   = await loginWithPhoneNumberAndPassword(userRole, phoneNumber, password);
+         tokens = await tokenService.generateAuthTokens(user);
+      return {user, tokens};
+
+
+    default:
+        
+        throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
+  }
+};
+
+const loginWithPhoneNumberAndPassword = async(role, phoneNumber, password) => {
+  
+  if(role === 'owner' || role === 'admin') {
+      const admin = await adminService.getAdminByPhoneNumber(phoneNumber);
+      if (!admin || !(await admin.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+      }
+      return admin;
+  }
+  if(role === 'mentor') {
+      const mentor = await mentorService.getMentorByPhoneNumber(phoneNumber);
+      if (!mentor || !(await mentor.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
+      }
+      return mentor;
+  }
+  if(role === 'intern') {
+      const intern = await internService.getInternByPhoneNumber(phoneNumber);
+      if (!intern || !(await intern.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password');
+      }
+      return intern;
+  }
+  if(role === 'supervisor') {
+      const supervisor = await supervisorService.getSupervisorByPhoneNumber(phoneNumber);
+      if (!supervisor || !(await supervisor.isPasswordMatch(password))) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+      }
+      return supervisor;
+  }
+};
+
 const changePassword = async(user, passwordBody) => {
   switch(user.role) {
     case 'owner':
@@ -229,9 +296,9 @@ const baseURL = async () => {
 
 const usernameTypeValidation = async(username) => {
   const isEmail = emailValidator.validate(username);
-  if(isEmail) { console.log('Is Email'); return 'email'}
+  if(isEmail) { return 'email'};
   const isPhoneNumber = validatePhoneNumber.validate(username);
-  if(isPhoneNumber) { console.log('Is Phone Number'); return 'phoneNumber' }
+  if(isPhoneNumber) { return 'phoneNumber' };
 };
 
 
@@ -244,7 +311,8 @@ module.exports = {
   userRoleValidationAMS,
   userRoleValidationInternByEmail,
   userRoleValidationInternByPhoneNumber,
-  getUserData,
+  getUserDataByEmail,
+  getUserDataByPhoneNumber,
   baseURL,
   findUserTypeById,
   usernameTypeValidation

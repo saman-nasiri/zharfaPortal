@@ -1,4 +1,4 @@
-
+// Sort Limit Skip Pgination function
 function slsp(options) {
     const sort = {};
     if (options.sortBy) {
