@@ -370,7 +370,10 @@ const doneTaskAction = async(action, task) => {
             doneTaskDuration: task.duration
         }});
 
-        return { message: 'Done Success'}
+        return { 
+                statusCode: 200,
+                message: 'Done Success'
+            }
     }
     else {
         await InternTaskAction.updateOne({ _id: action._id }, { "$set": { 
@@ -385,7 +388,10 @@ const doneTaskAction = async(action, task) => {
             doneTaskDuration: -task.duration
         }});
 
-        return { message: 'UnDone Success'}
+        return { 
+            statusCode: 200,
+            message: 'UnDone Success'
+        }
     }
 };
 
