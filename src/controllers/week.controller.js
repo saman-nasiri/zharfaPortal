@@ -78,9 +78,10 @@ const deleteWeekById = catchAsync(async(req, res) => {
 });
 
 const getWeekTasks = catchAsync(async(req, res) => {
+    const internId = req.user.id;
     const weekId = req.params.weekId;
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const tasks = await weekService.getWeekTasks(weekId, options);
+    const tasks = await weekService.getWeekTasks(weekId, internId, options);
     res.status(httpStatus.OK).send(tasks);
 });
 
