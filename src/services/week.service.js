@@ -134,9 +134,9 @@ const getWeekTasks = async(weekId, internId, options) => {
         tasks.map(async(task) => {
             console.log(task._id);
             const done = await InternTaskAction.findOne({ taskId: task._id, internId: internId });
+            console.log('done: ', done);
             if(done) { task["done"] = done.done; }
             return task;
-            
         })
     )
 
