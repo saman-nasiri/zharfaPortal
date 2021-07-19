@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Term, Intern, Mentor, Week, Task, Course, TutorialCategory } = require('../models');
+const { Term, Intern, SuperUser, Week, Task, Course, TutorialCategory } = require('../models');
 const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
@@ -38,24 +38,29 @@ const removeInternsFromTheTerm = async(term, internsList) => {
 };
 
 const addMentorToTheTerm = async(term, mentorsList) => {
-    const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$addToSet": {
+    const mentors = await SuperUser.updateMany({ _id: mentorsList }, { "$addToSet": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
         termsList: term._id
     }}, { "new": true, "upsert": true });
     
     const updateTerm = await Term.findById(term._id);
-    return updateTerm;
+    return {
+        statusCode: 200,
+        message: 'Success'
+    };
 };
 
 const removeMentorsFromTheTerm = async(term, mentorsList) => {
-    const mentors = await Mentor.updateMany({ _id: mentorsList }, { "$pull": {
+    const mentors = await SuperUser.updateMany({ _id: mentorsList }, { "$pull": {
         tutorialCategory: term.tutorialCategory,
         termCode: term.termCode,
         termsList: term._id
     }}, { "new": true, "upsert": true });
     
-    return  { status: 200, message: 'Success'};
+    return  { 
+        statusCode: 200,
+        message: 'Success'};
 };
 
 const addWeekToTheTerm = async(term, weeksList) => {
@@ -68,7 +73,10 @@ const addWeekToTheTerm = async(term, weeksList) => {
         "tutorialCategory": term.tutorialCategory,
     }}, { "new": true, "upsert": true });
 
-    return updateTerm;
+    return {
+        statusCode: 200,
+        message: 'Success'
+    };
 };
 
 const updateTerm = async(term, updateBody) => {
@@ -162,7 +170,7 @@ const getTermMentors = async(termId, options) => {
 
     const {sort, limit, skip, page} = slsp(options);
 
-    const mentors = await Mentor.find({ termsList: {  "$in": termId } }).lean()
+    const mentors = await SuperUser.find({ termsList: {  "$in": termId } }).lean()
     .select('_id firstName lastName email phoneNumber avatar')
     .sort(sort).skip(skip).limit(limit).exec()
 

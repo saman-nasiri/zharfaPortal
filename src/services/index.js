@@ -5,9 +5,8 @@ module.exports.userService     = require('./user.service');
 module.exports.termService     = require('./term.service');
 module.exports.weekService     = require('./week.service');
 module.exports.taskService     = require('./task.service');
-module.exports.adminService    = require('./admin.service');
 module.exports.internService   = require('./intern.service');
-module.exports.mentorService   = require('./mentor.service');
 module.exports.courseService   = require('./course.service');
 module.exports.tutorialService = require('./tutorialCategory.service');
-module.exports.supervisorService = require('./supervisor.service');
+module.exports.superUserService = require('./superUser.service');
+

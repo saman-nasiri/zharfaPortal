@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const fse = require('fs-extra');
 const path = require('path');
-const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizRoom, Intern, Mentor } = require('../models');
+const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizRoom, Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { data } = require('../config/logger');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');

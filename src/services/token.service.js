@@ -3,7 +3,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
-const { Token, Admin, Mentor, Intern } = require('../models');
+const { Token, SuperUser, Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -109,12 +109,10 @@ const generateResetPasswordToken = async (email) => {
 };
 
 const getUserTypeByEmail = async(email) => {
-  const admin  = await Admin.findOne({ email: email });
+  const superUser  = await SuperUser.findOne({ email: email });
   const intern = await Intern.findOne({ email: email });
-  const mentor = await Mentor.findOne({ email: email });
-  if(admin)   { return user = admin };
+  if(superUser)   { return user = superUser };
   if(intern)  { return user = intern };
-  if(mentor)  { return user = mentor };
 };
 
 module.exports = {
@@ -123,5 +121,4 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  // loginParameter
 };

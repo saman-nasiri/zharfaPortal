@@ -46,7 +46,6 @@ const removeMentorsFromTheTerm = catchAsync(async(req, res) => {
     const mentorsList = req.body.mentorsList;
     const term = await termService.getTermById(termId);
     if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
-    console.log(term);
     const result = await termService.removeMentorsFromTheTerm(term, mentorsList);
     res.status(httpStatus.OK).send(result);
 });

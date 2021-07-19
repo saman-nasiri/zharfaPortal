@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const { Intern, Admin } = require('../models');
+const { Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { toJSON, paginate } = require('../models/plugins/index');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');

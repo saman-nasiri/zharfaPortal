@@ -1,6 +1,6 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
-const { Admin, Mentor, Intern, Supervisor } = require('../models');
+const { Intern, SuperUser } = require('../models');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -20,14 +20,11 @@ const jwtVerify = async (payload, done) => {
 };
 
 const findUserTypeById = async(id) => {
-  const admin      = await Admin.findOne({ _id: id });
-  const mentor     = await Mentor.findOne({ _id: id });
-  const intern     = await Intern.findOne({ _id: id });
-  const supervisor = await Supervisor.findOne({ _id: id });
-  if(admin)        { return user = admin };
-  if(mentor)       { return user = mentor };
-  if(intern)       { return user = intern };
-  if(supervisor)   { return user = supervisor };
+  const intern      = await Intern.findOne({ _id: id });
+  const superUser   = await SuperUser.findOne({ _id: id });
+
+  if(intern)        { return user = intern };
+  if(superUser)     { return user = superUser };
 };
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);

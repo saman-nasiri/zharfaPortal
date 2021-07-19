@@ -12,7 +12,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
   if (requiredRights.length) {
     const userRights = roleRight(user.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.ownerId !== user.id && req.params.internId !== user.id && req.params.mentorId !== user.id && req.params.adminId !== user.id && req.params.supervisorId !== user.id) {
+    if (!hasRequiredRights && req.params.internId !== user.id &&  req.params.userId !== user.id) {
       return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
     }
   }
@@ -21,6 +21,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 };
 
 const auth = (...requiredRights) => async (req, res, next) => {
+
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
   })

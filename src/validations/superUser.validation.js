@@ -1,18 +1,30 @@
 const Joi = require('@hapi/joi');
 const { objectId } = require('./custom.validation');
 
-const createAdmin = {
+
+const createOwner =  {
     body: Joi.object().keys({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         password: Joi.string().required(),
-        email: Joi.string().required()
+        email: Joi.string().required(),
     }),
 };
 
-const updateAdminById = {
+
+const createSuperUser = {
+    body: Joi.object().keys({
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        password: Joi.string().required(),
+        email: Joi.string().required(),
+        role: Joi.string().required()
+    }),
+};
+
+const updateSuperUserById = {
     params: Joi.object().keys({
-        adminId: Joi.string().custom(objectId),
+        userId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
             firstName: Joi.string(),
@@ -21,15 +33,15 @@ const updateAdminById = {
         }).options({ stripUnknown: true }),
 };
 
-const deleteAdmin = {
+const deleteSuperUser = {
     params: Joi.object().keys({
-        adminId: Joi.string().custom(objectId)
+        userId: Joi.string().custom(objectId)
     })
 };
 
 const uploadAvatar = {
     params: Joi.object().keys({
-        adminId: Joi.string().custom(objectId)
+        userId: Joi.string().custom(objectId)
     })
 };
 
@@ -41,17 +53,17 @@ const changePassword = {
 };
 
 
-const getAdminById = {
+const getSuperUserById = {
     params: Joi.object().keys({
-        adminId: Joi.string().custom(objectId)
+        userId: Joi.string().custom(objectId)
     })
 }
 
 module.exports = {
-    createAdmin,
-    updateAdminById,
-    deleteAdmin,
+    createSuperUser,
+    updateSuperUserById,
+    deleteSuperUser,
     uploadAvatar,
     changePassword,
-    getAdminById
+    getSuperUserById
 };

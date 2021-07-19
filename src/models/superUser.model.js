@@ -5,19 +5,24 @@ const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
 
-const supervisorSchema = mongoose.Schema({
+const superUserSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     biography: String,
     avatar: String,
     tutorialCategory: Array,
-    termCode: Array,
     termsList:   [ { type: mongoose.SchemaTypes.ObjectId, ref: 'Term' } ],
 
 
     password: {
         type: String,
         trim:true,
+        minlength: 3,
+        validate(value) {
+            if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+            throw new Error('Password must contain at least one letter and one number');
+            }
+        },
         private: true,// used by the toJSON plugin
     },
 
@@ -36,15 +41,14 @@ const supervisorSchema = mongoose.Schema({
 
     role: {
         type: String,
-        enum: roles,
-        default: 'supervisor'
+        enum: ['owner', 'admin', 'mentor', 'supervisor']
     },
 });
 
 
 // add plugin that converts mongoose to json
-supervisorSchema.plugin(toJSON);
-supervisorSchema.plugin(paginate);
+superUserSchema.plugin(toJSON);
+superUserSchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -52,7 +56,7 @@ supervisorSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-supervisorSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+superUserSchema.statics.isEmailTaken = async function (email, excludeUserId) {
     const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
     return !!user;
   };
@@ -63,7 +67,7 @@ supervisorSchema.statics.isEmailTaken = async function (email, excludeUserId) {
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-supervisorSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
+superUserSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
     const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
     return !!user;
   };
@@ -73,12 +77,12 @@ supervisorSchema.statics.isPhoneNumberTaken = async function (phoneNumber, exclu
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-supervisorSchema.methods.isPasswordMatch = async function (password) {
+superUserSchema.methods.isPasswordMatch = async function (password) {
     const user = this;
     return bcrypt.compare(password, user.password);
 };
 
-supervisorSchema.pre('save', async function (next) {
+superUserSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
       user.password = await bcrypt.hash(user.password, 8);
@@ -86,6 +90,6 @@ supervisorSchema.pre('save', async function (next) {
     next();
 });
 
-const Supervisor = mongoose.model('supervisor', supervisorSchema);
+const superUser = mongoose.model('superUser', superUserSchema);
 
-module.exports = Supervisor;
+module.exports = superUser;

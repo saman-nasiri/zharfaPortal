@@ -1,37 +1,20 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService, adminService } = require('../services');
+const { authService, tokenService, emailService} = require('../services');
 
-const register = catchAsync(async (req, res) => {
-  const userExist = await authService.userRoleValidation(email);
-  if(userExist) { throw new ApiError(httpStatus.BAD_REQUEST, 'EmailIsExist') };
-  const user = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+// 
+
+const loginSuperUser = catchAsync(async(req, res) => {
+  const { username, password } = req.body;
+  const result = await authService.loginSuperUser(username, password);
+  res.status(httpStatus.OK).send(result);
 });
 
-// login function for admin & mentor & supervisor
-const loginAMS = catchAsync(async (req, res) => {
-  const { username, password } = req.body;
-  const userRole = await authService.userRoleValidationAMS(username);
-  const userData = await authService.getUserDataByEmail(userRole, username, password);
-  res.status(httpStatus.OK).send(userData);
-});
 
-const loginIntern = catchAsync(async (req, res) => {
+const loginIntern = catchAsync(async(req, res) => {
   const { username, password } = req.body;
-  const usernameType = await authService.usernameTypeValidation(req.body.username);
-  
-  if(usernameType === 'email') {
-    const userRole = await authService.userRoleValidationInternByEmail(username);
-    const userData = await authService.getUserDataByEmail(userRole, username, password);
-    res.status(httpStatus.OK).send(userData);
-  }
-  else if(usernameType === 'phoneNumber') {
-    const userRole = await authService.userRoleValidationInternByPhoneNumber(username);
-    const userData = await authService.getUserDataByPhoneNumber(userRole, username, password);
-    res.status(httpStatus.OK).send(userData);
-  }
+  const result = await authService.loginIntern(username, password);
+  res.status(httpStatus.OK).send(result);
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -71,8 +54,8 @@ const baseURL = catchAsync(async(req, res) => {
 
 
 module.exports = {
-  register,
-  loginAMS,
+
+  loginSuperUser,
   loginIntern,
   logout,
   refreshTokens,
@@ -81,3 +64,40 @@ module.exports = {
   changePassword,
   baseURL
 };
+
+
+// register,
+// loginAMS,
+
+// const register = catchAsync(async (req, res) => {
+//     const userExist = await authService.userRoleValidation(email);
+//     if(userExist) { throw new ApiError(httpStatus.BAD_REQUEST, 'EmailIsExist') };
+//     const user = await userService.createUser(req.body);
+//     const tokens = await tokenService.generateAuthTokens(user);
+//     res.status(httpStatus.CREATED).send({ user, tokens });
+//   });
+  
+// login function for admin & mentor & supervisor
+// const loginAMS = catchAsync(async (req, res) => {
+//   const { username, password } = req.body;
+//   const userRole = await authService.userRoleValidationAMS(username);
+//   const userData = await authService.getUserDataByEmail(userRole, username, password);
+//   res.status(httpStatus.OK).send(userData);
+// });
+
+
+// const loginIntern = catchAsync(async (req, res) => {
+//   const { username, password } = req.body;
+//   const usernameType = await authService.usernameTypeValidation(req.body.username);
+  
+//   if(usernameType === 'email') {
+//     const userRole = await authService.userRoleValidationInternByEmail(username);
+//     const userData = await authService.getUserDataByEmail(userRole, username, password);
+//     res.status(httpStatus.OK).send(userData);
+//   }
+//   else if(usernameType === 'phoneNumber') {
+//     const userRole = await authService.userRoleValidationInternByPhoneNumber(username);
+//     const userData = await authService.getUserDataByPhoneNumber(userRole, username, password);
+//     res.status(httpStatus.OK).send(userData);
+//   }
+// });
