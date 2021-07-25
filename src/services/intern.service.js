@@ -5,6 +5,7 @@ const ApiError = require('../utils/ApiError');
 const { toJSON, paginate } = require('../models/plugins/index');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
 const geoData = require('@nimahkh/iran_beauty');
+const { v4: uuidv4 } = require('uuid');
 
 
 const createIntern = async(internBody) => {
@@ -117,6 +118,20 @@ const getCities = async(provinceId) => {
     return cities;
 };
 
+const createGuestModel = async() => {
+    const randomName = uuidv4();
+    console.log(randomName);
+    const guestModel = {
+        firstName: 'Guest',
+        lastName: randomName,
+        email: `${randomName}@gmail.com`,
+        password: 'guest123',
+        phoneNumber: '+989121112233',
+    }
+
+    return guestModel;
+}
+
 module.exports = {
     createIntern,
     updateIntern,
@@ -129,5 +144,6 @@ module.exports = {
     queryInterns,
     getInternTerms,
     getProvince,
-    getCities
+    getCities,
+    createGuestModel
 };

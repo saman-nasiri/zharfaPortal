@@ -6,7 +6,7 @@ const createIntern = {
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         password: Joi.string().custom(password).required(),
-        email: Joi.string().required().email(),
+        email: Joi.string().email(),
         phoneNumber: Joi.string().required()
     }),
 };

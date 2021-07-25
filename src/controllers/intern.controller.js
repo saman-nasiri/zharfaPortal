@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { internService } = require('../services');
+const { internService, authService, termService } = require('../services');
 const upload = require('../middlewares/uploadFile');
 
 const createIntern = catchAsync(async(req, res) => {
@@ -75,6 +75,21 @@ const getCities =catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(cities);
 });
 
+
+const createGuestUser = catchAsync(async(req, res) => {
+    const guestBody = await internService.createGuestModel();
+    const guest = await internService.createIntern(guestBody);
+    const termId = "60d1839da0c5000e7d0a46f8";
+    const internsList = guest.id;
+    const term = await termService.getTermById(termId);
+    if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
+    await termService.addInternsToTheTerm(term, internsList);
+    const username = guestBody.email;
+    const password = guestBody.password;
+    const result = await authService.loginIntern(username, password);
+    res.status(httpStatus.OK).send(result);
+});
+
 module.exports = {
     createIntern,
     updateIntern,
@@ -85,5 +100,6 @@ module.exports = {
     getInternProfile,
     getInternTerms,
     getProvince,
-    getCities
+    getCities,
+    createGuestUser
 };

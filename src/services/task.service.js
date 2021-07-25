@@ -6,7 +6,6 @@ const ApiError = require('../utils/ApiError');
 const { data } = require('../config/logger');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
 
-
 /**
  * Create a user
  * @param {Object} taskBody
