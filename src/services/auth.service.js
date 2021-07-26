@@ -84,49 +84,74 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 
 
 const findUserTypeById = async(id) => {
-  const admin  = await Admin.findOne({ _id: id });
+  const superUser  = await SuperUser.findOne({ _id: id });
   const intern = await Intern.findOne({ _id: id });
-  const mentor = await Mentor.findOne({ _id: id });
-  const supervisor = await Supervisor.findOne({ _id: id });
-  if(admin)   { return user = admin };
+
+  if(superUser)   { return user = superUser };
   if(intern)  { return user = intern };
-  if(mentor)  { return user = mentor };
-  if(supervisor) { return user = supervisor };
 };
 
 const updateUserById = async(id, newPassword) => {
-  const admin  = await Admin.updateOne({ _id: id },  { "$set": { password: newPassword }});
-  const mentor = await Mentor.updateOne({ _id: id }, { "$set": { password: newPassword }});
+  const superUser  = await SuperUser.updateOne({ _id: id },  { "$set": { password: newPassword }});
   const intern = await Intern.updateOne({ _id: id }, { "$set": { password: newPassword }});
-  const supervisor = await Supervisor.updateOne({ _id: id }, { "$set": { password: newPassword }});
 };
 
 
+const changePasswordSuperuser = async(superUserId, passwordBody) => {
+  const superUser = await SuperUser.findOne({ _id: superUserId });
+  const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
 
-const changePassword = async(user, passwordBody) => {
-  switch(user.role) {
-    case 'owner':
-    case 'admin':
-         result = await adminService.changePassword(user._id, passwordBody)
-      return result;
+  if (!(await superUser.isPasswordMatch(passwordBody.currentPassword))) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
+  };
+
+  const updatePassword = await SuperUser.updateOne({ _id: superUserId }, { "$set": {
+      password: newPassword
+  }}, { "new": true, "upsert": true });
+
+  return updatePassword;
+};
+
+const changePasswordIntern = async(internId, passwordBody) => {
+  const intern = await Intern.findOne({ _id: internId });
+  const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
+
+  if (!(await intern.isPasswordMatch(passwordBody.currentPassword))) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
+  };
+
+  const updatePassword = await Intern.updateOne({ _id: internId }, { "$set": {
+      password: newPassword
+  }}, { "new": true, "upsert": true });
+
+  return updatePassword;
+};
+
+
+// const changePassword = async(user, passwordBody) => {
+//   switch(user.role) {
+//     case 'owner':
+//     case 'admin':
+//          result = await adminService.changePassword(user._id, passwordBody)
+//       return result;
     
-    case 'mentor':
-         result = await mentorService.changePassword(user._id, passwordBody)
-      return result;
+//     case 'mentor':
+//          result = await mentorService.changePassword(user._id, passwordBody)
+//       return result;
 
-    case 'intern':
-         result = await internService.changePassword(user._id, passwordBody)
-      return result;
+//     case 'intern':
+//          result = await internService.changePassword(user._id, passwordBody)
+//       return result;
 
-    case 'supervisor':
-         result = await supervisorService.changePassword(user._id, passwordBody)
-      return result;
+//     case 'supervisor':
+//          result = await supervisorService.changePassword(user._id, passwordBody)
+//       return result;
 
 
-    default:
-        throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
-  }
-};
+//     default:
+//         throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
+//   }
+// };
 
 const baseURL = async () => {
   const domain = `${config.baseURL.serverDomain}`;
@@ -152,7 +177,8 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
-  changePassword,
+  changePasswordSuperuser,
+  changePasswordIntern,
   baseURL,
   findUserTypeById,
 };

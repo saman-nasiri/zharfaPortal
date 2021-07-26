@@ -38,14 +38,22 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-const changePassword = catchAsync(async(req, res) => {
+const changePasswordSuperUser = catchAsync(async(req, res) => {
   const userId = req.user._id;
   const passwordBody = req.body;
   const user = await authService.findUserTypeById(userId);
-  const result = await authService.changePassword(user, passwordBody);
+  const result = await authService.changePasswordSuperUser(user, passwordBody);
   res.status(httpStatus.OK).send(result);
 });
 
+
+const changePasswordIntern = catchAsync(async(req, res) => {
+  const userId = req.user._id;
+  const passwordBody = req.body;
+  const user = await authService.findUserTypeById(userId);
+  const result = await authService.changePasswordIntern(user, passwordBody);
+  res.status(httpStatus.OK).send(result);
+});
 
 const baseURL = catchAsync(async(req, res) => {
   const baseURL = await authService.baseURL();
@@ -61,7 +69,8 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  changePassword,
+  changePasswordSuperUser,
+  changePasswordIntern,
   baseURL
 };
 
