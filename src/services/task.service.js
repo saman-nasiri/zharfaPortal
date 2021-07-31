@@ -111,7 +111,7 @@ const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
 };
 
 
-const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
+const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetail) => {
         
 
         const pdfModel = {

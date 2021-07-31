@@ -62,10 +62,10 @@ const uploadAudioForTask = catchAsync(async(req, res) => {
 const uploadPdfFileForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     await taskService.getTaskById(taskId)
-    await upload.uploadPdf(req, res);
-    const pdfDetails = req.files;
+    await upload.uploadSinglePdf(req, res);
+    const pdfDetail = req.file;
     const pdfBody = req.body;
-    const result = await taskService.uploadPdfFileForTask(taskId, pdfBody, pdfDetails);
+    const result = await taskService.uploadPdfFileForTask(taskId, pdfBody, pdfDetail);
 
     res.send(result)
 });

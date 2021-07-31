@@ -205,6 +205,29 @@ var uploadSingleVideoFile = multer({ storage: storageSingleVideo, limits: { file
 var uploadSingleVideo =  util.promisify(uploadSingleVideoFile);
 
 
+    // Upload Single Pdf File
+    var storageSinglePdf = multer.diskStorage({
+      destination: (req, file, callback) => {
+        callback(null, setFilePath(`./public/files/pdfs`));
+      },
+      filename: (req, file, callback) => {
+        const match = ["application/pdf"];
+    
+        if (match.indexOf(file.mimetype) === -1) {
+          var message = `${file.originalname} is invalid. Only accept pdf.`;
+          return callback(message, null);
+        }
+      
+        const fileExt = path.extname(file.originalname);
+        const filename = uuidv4() + fileExt;
+        callback(null, filename);
+      }
+    });
+  
+var uploadSinglePdfFile = multer({ storage: storageSinglePdf, limits: { fileSize: 1024 * 1024 * 60 }}).single("single-file");
+var uploadSinglePdf =  util.promisify(uploadSinglePdfFile);
+
+    
 module.exports = {
     uploadImage,
     uploadVideo,
@@ -213,5 +236,6 @@ module.exports = {
     uploadSingleAudio,
     uploadSingleImage,
     uploadSingleVideo,
+    uploadSinglePdf,
     file
 };
