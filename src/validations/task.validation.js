@@ -134,7 +134,7 @@ const removeTaskImagesByName = {
 
 const updateTaskImagesById = {
     params: Joi.object().keys({
-        imageId: Joi.string().custom(objectId),
+        taskId: Joi.string().custom(objectId),
     }),
 };
 
@@ -146,7 +146,7 @@ const removeTaskVideosByName= {
 
 const updateTaskVideosById = {
     params: Joi.object().keys({
-        videoId: Joi.string().custom(objectId),
+        taskId: Joi.string().custom(objectId),
     }),
 };
 

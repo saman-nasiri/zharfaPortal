@@ -20,8 +20,9 @@ const uploadImageForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     await taskService.getTaskById(taskId);
 
-    await upload.uploadImage(req, res);
-    const imageDetails = req.files;
+    await upload.uploadSingleImage(req, res);
+    const imageDetails = req.file;
+    console.log(imageDetails);
     const imageBody = req.body;
     
     const result = await taskService.uploadImageForTask(taskId, imageBody, imageDetails);
@@ -34,8 +35,8 @@ const uploadVideoForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     await taskService.getTaskById(taskId)
 
-    await upload.uploadVideo(req, res);
-    const videoDetails = req.files;
+    await upload.uploadSingleVideo(req, res);
+    const videoDetails = req.file;
     const videoBody = req.body;
     console.log('videoDetails:', videoDetails);
     
@@ -189,22 +190,22 @@ const updateTaskById = catchAsync(async(req, res) => {
 
 const removeTaskImagesByName = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    removeList = req.body.removeList;
-    const result = await taskService.removeTaskImagesByName(taskId, removeList);
+    filename = req.body.filename;
+    const result = await taskService.removeTaskImagesByName(taskId, filename);
     res.status(httpStatus.OK).send(result);
 });
 
-const updateTaskImagesById = catchAsync(async(req, res) => {
-    const imageId = req.params.imageId;
+const updateTaskImagesByTaskId = catchAsync(async(req, res) => {
+    const taskId = req.params.taskId;
     const imageBody = req.body;
-    const result = await taskService.updateTaskImagesById(imageId, imageBody);
+    const result = await taskService.updateTaskImagesByTaskId(taskId, imageBody);
     res.status(httpStatus.OK).send(result);
 });
 
 const removeTaskVideosByName = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    removeList = req.body.removeList;
-    const result = await taskService.removeTaskVideosByName(taskId, removeList);
+    filename = req.body.filename;
+    const result = await taskService.removeTaskVideosByName(taskId, filename);
     res.status(httpStatus.OK).send(result);
 });
 
@@ -330,7 +331,7 @@ module.exports = {
     getTaskById,
     updateTaskById,
     removeTaskImagesByName,
-    updateTaskImagesById,
+    updateTaskImagesByTaskId,
     removeTaskVideosByName,
     updateTaskVideosById,
     removeTaskAudiosByName,

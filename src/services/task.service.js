@@ -30,24 +30,32 @@ const createTask = async (taskBody, week, course) => {
     }
 };
 
-const uploadImageForTask = async(taskId, imageBody, imageDetails) => {
+const uploadImageForTask = async(taskId, imageBody, imageDetail) => {
     try {
-
-        const imageModel = imageDetails.map((imageDetail) => {
-
-            const image = {
-                title: imageBody.title,
-                description: imageBody.description,
-                filename: imageDetail.filename,
-                mimetype: imageDetail.mimetype,
-                size: imageDetail.size
-            };
-
-            return image;
-        });
         
-        const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "images": { "$each": imageModel }
+        // const imageModel = imageDetails.map((imageDetail) => {
+
+        //     const image = {
+        //         title: imageBody.title,
+        //         description: imageBody.description,
+        //         filename: imageDetail.filename,
+        //         mimetype: imageDetail.mimetype,
+        //         size: imageDetail.size
+        //     };
+
+        //     return image;
+        // });
+
+        const imageModel = {
+            title: imageBody.title,
+            description: imageBody.description,
+            filename: imageDetail.filename,
+            mimetype: imageDetail.mimetype,
+            size: imageDetail.size
+        };
+        
+        const updatedTask = await Task.updateOne({_id: taskId}, {"$set": {
+            "image": imageModel
         }}, { "new": true, "upsert": true });  
         
         return updatedTask;
@@ -59,68 +67,38 @@ const uploadImageForTask = async(taskId, imageBody, imageDetails) => {
       };
 };
 
-const uploadVideoForTask = async(taskId, videoBody, videoDetails) => {
-    if(videoDetails.length === 0) { 
-        try {
-            const videoDetail = [{
-                title: videoBody.title,
-                description: videoBody.description,
-            }];
-            const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-                "videos": { "$each": videoDetail }
-            }}, { "new": true, "upsert": true });  
-            
-            return updatedTask;
-        }
-        catch(err) {
-            console.log(err);
-        };
-    }
-    else {
-        try {
-            const videoModel = videoDetails.map((videoDetail) => {
-                const video = {
-                    title: videoBody.title,
-                    description: videoBody.description,
-                    filename: videoDetail.filename,
-                    mimetype: videoDetail.mimetype,
-                    size: videoDetail.size
-                };
+const uploadVideoForTask = async(taskId, videoBody, videoDetail) => {
+    const videoModel = {
+        title: videoBody.title,
+        description: videoBody.description,
+        filename: videoDetail.filename,
+        mimetype: videoDetail.mimetype,
+        size: videoDetail.size
+    };
     
-                return video;
-            });
-            
-            const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-                "videos": { "$each": videoModel }
-            }}, { "new": true, "upsert": true });  
-            
-            return updatedTask;
-        }
-        catch(err) {
-            console.log(err);
-        };
-    }
+    const updatedTask = await Task.updateOne({_id: taskId}, {"$set": {
+        "video": videoModel
+    }}, { "new": true, "upsert": true });  
+    
+    return updatedTask;
+    
 };
 
 
 const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
     try {
 
-        const audioModel = audioDetails.map((audioDetail) => {
+          
+        const audioModel = {
+            title: audioBody.title,
+            description: audioBody.description,
+            filename: audioDetail.filename,
+            mimetype: audioDetail.mimetype,
+            size: audioDetail.size
+        };
 
-            const audio = {
-                title: audioBody.title,
-                description: audioBody.description,
-                filename: audioDetail.filename,
-                mimetype: audioDetail.mimetype,
-                size: audioDetail.size
-            };
-
-            return audio;
-        });        
-        
-        const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "audios": { "$each": audioModel }
+        const updatedTask = await Task.updateOne({_id: taskId}, {"$set": {
+            "audio": audioModel 
         }}, { "new": true, "upsert": true });  
         
     return updatedTask;
@@ -134,22 +112,19 @@ const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
 
 
 const uploadPdfFileForTask = async(taskId, pdfBody, pdfDetails) => {
-        const pdfModel = pdfDetails.map((pdfDetail) => {
+        
 
-            const pdf = {
-                title: pdfBody.title,
-                description: pdfBody.description,
-                filename: pdfDetail.filename,
-                mimetype: pdfDetail.mimetype,
-                size: pdfDetail.size
-            }; 
-
-            return pdf;
-        });
+        const pdfModel = {
+            title: pdfBody.title,
+            description: pdfBody.description,
+            filename: pdfDetail.filename,
+            mimetype: pdfDetail.mimetype,
+            size: pdfDetail.size
+        }; 
 
 
-        const updatedTask = await Task.updateOne({_id: taskId}, {"$addToSet": {
-            "pdfs": { "$each": pdfModel }
+        const updatedTask = await Task.updateOne({_id: taskId}, {"$set": {
+            "pdf": pdfModel 
         }}, { "new": true, "upsert": true });  
         
         return updatedTask;
@@ -425,43 +400,61 @@ const updateTaskById = async(taskId, taskBody) => {
     return updateTask;
 };
 
-const removeTaskImagesByName = async(taskId, removeList) => {
-    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
-        "images": { filename: removeList },
+const removeTaskImagesByName = async(taskId, filename) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$unset": {
+        "image": { filename: filename },
     }}, { "new": true, "upsert": true });
 
-    removeList.forEach((file) => {
-        fse.unlinkSync(`./public/files/images/${file}`)    
-    });
+    fse.unlinkSync(`./public/files/images/${filename}`)    
+    
 
     return result;
 };
 
-const updateTaskImagesById = async(imageId, imageBody) => {
-    const result = await Task.updateOne({ "images._id": imageId }, { "$set": {
-        "images.$.title": imageBody.title,
-        "images.$.description": imageBody.description,
+// const updateTaskImagesById = async(imageId, imageBody) => {
+//     const result = await Task.updateOne({ "images._id": imageId }, { "$set": {
+//         "images.$.title": imageBody.title,
+//         "images.$.description": imageBody.description,
+//     }}, { "new": true, "upsert": true });
+
+//     return result;
+// };
+
+const updateTaskImagesByTaskId = async(taskId, imageBody) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$set": {
+        "image.title": imageBody.title,
+        "image.description": imageBody.description,
     }}, { "new": true, "upsert": true });
 
     return result;
 };
 
-const removeTaskVideosByName = async(taskId, removeList) => {
-    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
-        "videos": { filename: removeList },
-    }}, { "new": true, "upsert": true });
+// const removeTaskVideosByName = async(taskId, removeList) => {
+//     const result = await Task.updateOne({ _id: taskId }, { "$pull": {
+//         "videos": { filename: removeList },
+//     }}, { "new": true, "upsert": true });
 
-    removeList.forEach((file) => {
+//     removeList.forEach((file) => {
+//         fse.unlinkSync(`./public/files/videos/${file}`)    
+//     });
+
+//     return result;
+// };
+
+const removeTaskVideosByName = async(taskId, filename) => {
+        const result = await Task.updateOne({ _id: taskId }, { "$unset": {
+            "video": { filename: filename },
+        }}, { "new": true, "upsert": true });
+    
         fse.unlinkSync(`./public/files/videos/${file}`)    
-    });
+    
+        return result;
+    };
 
-    return result;
-};
-
-const updateTaskVideosById = async(videoId, videoBody) => {
-    const result = await Task.updateOne({ "videos._id": videoId }, { "$set": {
-        "videos.$.title": videoBody.title,
-        "videos.$.description": videoBody.description,
+const updateTaskVideosById = async(taskId, videoBody) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$set": {
+        "video.title": videoBody.title,
+        "video.description": videoBody.description,
     }}, { "new": true, "upsert": true });
 
     return result;
@@ -611,25 +604,43 @@ const deleteTaskById = async(taskId) => {
     try {
 
         const task = await getTaskById(taskId);
-        task.audios.forEach((file) => {
-            fse.ensureDir(`./public/files/audios/${file}`)
-            .then(() => {  fse.unlinkSync(`./public/files/audios/${file}`); })
-        });
+
+    //     if(task.image) {
+    //         fse.unlinkSync(`./public/files/audios/${task.audio.filename}`);
+    //     }
+
+    //     if(task.video) {
+    //         fse.unlinkSync(`./public/files/videos/${task.video.filename}`);
+    //     }
+
+    //     if(task.audio) {
+    //     fse.unlinkSync(`./public/files/images/${task.image.filename}`);
+    // }
+
+    //     if(task.pdf) {
+    //         fse.unlinkSync(`./public/files/pdfs/${task.pdf.filename}`);
+    //     }
         
-        task.videos.forEach((file) => {
-            fse.ensureDir(`./public/files/videos/${file}`)
-            .then(() => { fse.unlinkSync(`./public/files/videos/${file}`); });
-        });
+
+        // task.audios.forEach((file) => {
+        //     fse.ensureDir(`./public/files/audios/${file}`)
+        //     .then(() => {  fse.unlinkSync(`./public/files/audios/${file}`); })
+        // });
+        
+        // task.videos.forEach((file) => {
+        //     fse.ensureDir(`./public/files/videos/${file}`)
+        //     .then(() => { fse.unlinkSync(`./public/files/videos/${file}`); });
+        // });
     
-        task.images.forEach((file) => {
-            fse.ensureDir(`./public/files/images/${file}`)
-            .then(() => { fse.unlinkSync(`./public/files/images/${file}`); });
-        });
+        // task.images.forEach((file) => {
+        //     fse.ensureDir(`./public/files/images/${file}`)
+        //     .then(() => { fse.unlinkSync(`./public/files/images/${file}`); });
+        // });
     
-        task.pdfs.forEach((file) => {
-            ifse.ensureDir(`./public/files/pdfs/${file}`)
-            .then(() => { fse.unlinkSync(`./public/files/pdfs/${file}`); });
-        });
+        // task.pdfs.forEach((file) => {
+        //     ifse.ensureDir(`./public/files/pdfs/${file}`)
+        //     .then(() => { fse.unlinkSync(`./public/files/pdfs/${file}`); });
+        // });
     
         const result = await Task.deleteOne({ _id: taskId });
     
@@ -720,7 +731,7 @@ module.exports = {
     getTaskById,
     updateTaskById,
     removeTaskImagesByName,
-    updateTaskImagesById,
+    updateTaskImagesByTaskId,
     removeTaskVideosByName,
     updateTaskVideosById,
     removeTaskAudiosByName,

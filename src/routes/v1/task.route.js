@@ -12,7 +12,7 @@ const router = express.Router();
 
 router
     .route('/creat-task/:weekId')
-        .post(auth(scope.CREATE_TERM), taskController.creatTask);
+        .post(auth(scope.CREATE_TASK), taskController.creatTask);
 
 router
     .route('/:taskId')
@@ -108,15 +108,15 @@ router
         .delete(auth(scope.DELETE_TASK_IMAGE), validate(taskValidation.removeTaskImagesByName), taskController.removeTaskImagesByName)
 
 router
-    .route('/update-image/:imageId')
-        .put(auth(scope.UPDATE_TASK_IMAGE_PROPERTY), validate(taskValidation.updateTaskImagesById),  taskController.updateTaskImagesById)
+    .route('/update-image/:taskId')
+        .put(auth(scope.UPDATE_TASK_IMAGE_PROPERTY), validate(taskValidation.updateTaskImagesById),  taskController.updateTaskImagesByTaskId)
 
 router
     .route('/remove-video/:taskId')
         .delete(auth(scope.REMOVE_TASK_VIDEO), validate(taskValidation.removeTaskVideosByName),  taskController.removeTaskVideosByName)
 
 router
-    .route('/update-video/:videoId')
+    .route('/update-video/:taskId')
         .put(auth(scope.UPDATE_TASK_VIDEO_PROPERTY), validate(taskValidation.updateTaskVideosById),  taskController.updateTaskVideosById)
 
 router

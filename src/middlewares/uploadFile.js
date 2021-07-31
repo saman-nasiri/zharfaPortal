@@ -181,6 +181,30 @@ var uploadSingleAudio =  util.promisify(uploadSingleAudioFiles);
   var uploadSingleImage =  util.promisify(uploadSingleImageFiles);
   
   
+
+  // Upload Single Video Files
+var storageSingleVideo = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, setFilePath(`./public/files/videos`));
+  },
+  filename: (req, file, callback) => {
+    const match = ["video/mp4", "video/mkv"];
+
+    if (match.indexOf(file.mimetype) === -1) {
+      var message = `${file.originalname} is invalid. Only accept mkv/mp4.`;
+      return callback(message, null);
+    }
+  
+    const fileExt = path.extname(file.originalname);
+    const filename = uuidv4() + fileExt;
+    callback(null, filename);
+  }
+});
+
+var uploadSingleVideoFile = multer({ storage: storageSingleVideo, limits: { fileSize: 1024 * 1024 * 1000 }}).single("single-file");
+var uploadSingleVideo =  util.promisify(uploadSingleVideoFile);
+
+
 module.exports = {
     uploadImage,
     uploadVideo,
@@ -188,5 +212,6 @@ module.exports = {
     uploadPdf,
     uploadSingleAudio,
     uploadSingleImage,
+    uploadSingleVideo,
     file
 };

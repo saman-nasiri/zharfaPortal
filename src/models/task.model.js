@@ -20,34 +20,34 @@ const taskSchema = mongoose.Schema({
         trim: true,
         default: null
     },
-    images: [{
+    image: {
         title: String,
         description: String,
         filename: String,
         mimetype: String,
         size: String
-    }],
-    videos: [{
+    },
+    video: {
         title: String,
         description: String,
         filename: String,
         mimetype: String,
         size: String,
-    }],
-    audios:[{
+    },
+    audio:{
         title: String,
         description: String,
         filename: String,
         mimetype: String,
         size: String
-    }],
-    pdfs: [{
+    },
+    pdf: {
         title: String,
         description: String,
         filename: String,
         mimetype: String,
         size: String
-    }],
+    },
     testQuiz: {
         type: Boolean,
         default: false,
