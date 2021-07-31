@@ -89,6 +89,8 @@ const findUserTypeById = async(id) => {
 
   if(superUser)   { return user = superUser };
   if(intern)  { return user = intern };
+
+  if(superUser || intern) { throw new ApiError(httpStatus.NOT_FOUND, "User Not Found") };
 };
 
 const updateUserById = async(id, newPassword) => {
@@ -116,6 +118,10 @@ const changePasswordIntern = async(internId, passwordBody) => {
   const intern = await Intern.findOne({ _id: internId });
   const newPassword = await bcrypt.hash(passwordBody.newPassword, 8);
 
+  if (!intern) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'UserNotFound');
+  };
+
   if (!(await intern.isPasswordMatch(passwordBody.currentPassword))) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'IncorrectPassword');
   };
@@ -124,7 +130,10 @@ const changePasswordIntern = async(internId, passwordBody) => {
       password: newPassword
   }}, { "new": true, "upsert": true });
 
-  return updatePassword;
+  return {
+    statusCode: 200,
+    message: 'Success'
+};
 };
 
 
