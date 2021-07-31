@@ -18,6 +18,7 @@ const createIntern = async(internBody) => {
         email: internBody.email,
         password: internBody.password,
         phoneNumber: internBody.phoneNumber,
+        avatar: internBody.avatar
     });
 
     return intern;

@@ -55,4 +55,9 @@ router
         .post(createAccountLimiter, internController.createGuestUser)
 
 
+router
+    .route('/caitt/:termId')
+        .post(internController.caitt)
+
+
 module.exports = router;

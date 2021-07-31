@@ -13,7 +13,7 @@ const createHeadCourse = async(courseBody, tutorial) => {
         category: `/${courseBody.slug}`,
         parent: '/',
     });
-    
+
     return course;
 };
 
@@ -25,7 +25,7 @@ const createSubsetCourse = async(courseBody, headCourse) => {
         category: `${headCourse.category}/${courseBody.slug}`,
         parent: `${headCourse.category}`,
     });
-    
+
     return course;
 };
 
@@ -85,7 +85,7 @@ const courseSlugIsExist = async(slug) => {
 };
 
 const getTaskByCourseSlug = async(slug, options) => {
-    const course = await getCourseBySlug(slug);    
+    const course = await getCourseBySlug(slug);
     const {sort, limit, skip, page} = slsp(options);
 
 
@@ -99,7 +99,7 @@ const getTaskByCourseSlug = async(slug, options) => {
 
 
 const getQuizesByCourseSlug = async(slug, options) => {
-    const course = await getCourseBySlug(slug);    
+    const course = await getCourseBySlug(slug);
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ "$and": [{ course: course.category }, { "$or": [{discriptiveQuiz: true}, { testQuiz: true }] } ]})

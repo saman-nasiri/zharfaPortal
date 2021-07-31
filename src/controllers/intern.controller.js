@@ -90,6 +90,32 @@ const createGuestUser = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+
+const caitt = catchAsync(async(req, res) => { 
+
+    const termId = req.params.termId;
+    const term = await termService.getTermById(termId);
+    if(!term) { throw new ApiError(httpStatus.NOT_FOUND, 'TermNotFound'); };
+
+    const newBody = {
+      firstName: req.body.firstName, 
+      lastName: req.body.lastName,
+      email: `0${req.body.phoneNumber}@gmail.com`,
+      phoneNumber: `0${req.body.phoneNumber}`,
+      password: `0${req.body.phoneNumber}`,
+      avatar: "9900f1f5-aa91-4768-b1d0-564e0e0d5fab.jpeg"
+    }
+  
+    const intern = await internService.createIntern(newBody);
+
+    const internsList = [];
+    internsList.push(intern.id)
+    await termService.addInternsToTheTerm(term, internsList);
+    const newIntern = await internService.getInternById(intern.id)
+    res.status(httpStatus.OK).send(newIntern);
+  });
+
+  
 module.exports = {
     createIntern,
     updateIntern,
@@ -101,5 +127,6 @@ module.exports = {
     getInternTerms,
     getProvince,
     getCities,
-    createGuestUser
+    createGuestUser,
+    caitt
 };
