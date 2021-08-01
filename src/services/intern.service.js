@@ -45,10 +45,12 @@ const getInternById = async(internId) => {
 
 
 const uploadAvatar = async(internId, imageDetails) => {
-    const result = await Intern.updateOne({ _id: internId }, { "$set": {
+    console.log(imageDetails);
+    await Intern.updateOne({ _id: internId }, { "$set": {
         avatar: imageDetails.filename
     }}, { "new": true, "upsert": true });
 
+    const result = await Intern.findOne({ _id: internId });
     return result;
 };
 
