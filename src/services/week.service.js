@@ -179,6 +179,13 @@ const supervisorPrivateOpinionForWeek = async(weekId, superviserId, internId, au
     return updateWeek;
 }
 
+
+const editWeekById = async(weekId, newBody) => {
+    const newWeek = await Week.updateOne({ _id: weekId }, { "$set": newBody }, { "new": true, "upsert": true });
+    const week = await Week.findOne({ _id: weekId });
+    return week;
+}
+
 module.exports = {
     createWeek,
     updateWeekById,
@@ -193,5 +200,6 @@ module.exports = {
     getWeekTasks,
     deleteWeekById,
     supervisorPublicOpinionForWeek,
-    supervisorPrivateOpinionForWeek
+    supervisorPrivateOpinionForWeek,
+    editWeekById
 };

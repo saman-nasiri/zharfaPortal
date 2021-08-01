@@ -39,6 +39,7 @@ router
 router
     .route('/:weekId')
         .get(auth(scope.READ_WEEK_DETAILS), validate(weekValidation.getWeekById), weekController.getWeekById)
+        .put(weekController.editWeekById)
 
 router
     .route('/tasks/:weekId')

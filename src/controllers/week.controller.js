@@ -106,6 +106,14 @@ const supervisorPrivateOpinionForWeek = catchAsync(async(req, res) => {
 });
 
 
+const editWeekById = catchAsync(async(req, res) => {
+    const weekId = req.params.weekId;
+    const newBody = req.body;
+    const result = await weekService.editWeekById(weekId, newBody);
+    res.status(httpStatus.OK).send(result);
+});
+
+
 module.exports = {
     createWeek,
     updateWeekById,
@@ -118,5 +126,6 @@ module.exports = {
     deleteWeekById,
     getWeekTasks,
     supervisorPublicOpinionForWeek,
-    supervisorPrivateOpinionForWeek
+    supervisorPrivateOpinionForWeek,
+    editWeekById
 };
