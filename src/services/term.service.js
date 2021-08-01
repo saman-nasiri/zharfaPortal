@@ -186,17 +186,15 @@ const getTermVideos = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title videos course")
+    .select("title video course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
         // const course = await Course.findOne({ category: task.course });
-        if(task.videos.length > 0) {
-            // task.course = ["course.title"]
-            taskModel.push(task)
-        }
+        taskModel.push(task)
+
     })
 
     const result = arrayShow(taskModel, limit, page);
@@ -209,17 +207,14 @@ const getTermImages = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title images course")
+    .select("title image course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
         // const course = await Course.findOne({ category: task.course });
-        if(task.images.length > 0) {
-            // task.course = ["course.title"]
-            taskModel.push(task)
-        }
+        taskModel.push(task)
     })
 
     const result = arrayShow(taskModel, limit, page);
@@ -232,17 +227,15 @@ const getTermAudios = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title audios course")
+    .select("title audio course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
         // const course = await Course.findOne({ category: task.course });
-        if(task.audios.length > 0) {
-            // task.course = ["course.title"]
-            taskModel.push(task)
-        }
+        taskModel.push(task)
+        
     })
 
     const result = arrayShow(taskModel, limit, page);
@@ -255,17 +248,15 @@ const getTermPdfs = async(termId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
-    .select("title pdfs course")
+    .select("title pdf course")
     .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
         // const course = await Course.findOne({ category: task.course });
-        if(task.pdfs.length > 0) {
-            // task.course = ["course.title"]
-            taskModel.push(task)
-        }
+        taskModel.push(task)
+        
     })
 
     const result = arrayShow(taskModel, limit, page);

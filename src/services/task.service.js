@@ -85,7 +85,7 @@ const uploadVideoForTask = async(taskId, videoBody, videoDetail) => {
 };
 
 
-const uploadAudioForTask = async(taskId, audioBody, audioDetails) => {
+const uploadAudioForTask = async(taskId, audioBody, audioDetail) => {
     try {
 
           
@@ -461,8 +461,8 @@ const updateTaskVideosById = async(taskId, videoBody) => {
 };
 
 const removeTaskAudiosByName = async(taskId, removeList) => {
-    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
-        "audios": { filename: removeList },
+    const result = await Task.updateOne({ _id: taskId }, { "$unset": {
+        "audio": { filename: removeList },
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
@@ -472,20 +472,18 @@ const removeTaskAudiosByName = async(taskId, removeList) => {
     return result;
 };
 
-const updateTaskAudiosById = async(audioId, audioBody) => {
-    const audioFile = await Task.findOne({ "audios._id": audioId });
-    if(!audioFile) { throw new ApiError(httpStatus.NOT_FOUND, "AudioFileNotFound") };
-    const result = await Task.updateOne({ "audios._id": audioId }, { "$set": {
-        "audios.$.title": audioBody.title,
-        "audios.$.description": audioBody.description,
+const updateTaskAudiosById = async(taskId, audioBody) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$set": {
+        "audio.title": audioBody.title,
+        "audio.description": audioBody.description,
     }}, { "new": true, "upsert": true });
 
     return result;
 };
 
 const removeTaskPdfsByName = async(taskId, removeList) => {
-    const result = await Task.updateOne({ _id: taskId }, { "$pull": {
-        "pdfs": { filename: removeList },
+    const result = await Task.updateOne({ _id: taskId }, { "$unset": {
+        "pdf": { filename: removeList },
     }}, { "new": true, "upsert": true });
 
     removeList.forEach((file) => {
@@ -495,12 +493,10 @@ const removeTaskPdfsByName = async(taskId, removeList) => {
     return result;
 };
 
-const updateTaskPdfsById = async(pdfId, pdfBody) => {
-    const pdfFile = await Task.findOne({ "pdfs._id": pdfId });
-    if(!pdfFile) { throw new ApiError(httpStatus.NOT_FOUND, "PdfFileNotFound") };
-    const result = await Task.updateOne({ "pdfs._id": pdfId }, { "$set": {
-        "pdfs.$.title": pdfBody.title,
-        "pdfs.$.description": pdfBody.description,
+const updateTaskPdfsById = async(taskId, pdfBody) => {
+    const result = await Task.updateOne({ _id: taskId }, { "$set": {
+        "pdf.title": pdfBody.title,
+        "pdf.description": pdfBody.description,
     }}, { "new": true, "upsert": true });
 
     return result;
@@ -656,7 +652,7 @@ const getTaskVideos = async(taskId) => {
     await getTaskById(taskId);
 
     const tasks = await Task.findOne({ _id: taskId }).lean()
-    .select("title videos")
+    .select("title video")
 
     return tasks;
 };
@@ -666,7 +662,7 @@ const getTaskImages = async(taskId) => {
     await getTaskById(taskId);
 
     const images = await Task.findOne({ _id:  taskId }).lean()
-    .select("title images")
+    .select("title image")
 
 
     return images;
@@ -676,7 +672,7 @@ const getTaskAudios = async(taskId) => {
 
     await getTaskById(taskId);
     const tasks = await Task.findOne({ _id:  taskId }).lean()
-    .select("title audios")
+    .select("title audio")
 
     return tasks;
 };
