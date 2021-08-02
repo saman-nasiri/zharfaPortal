@@ -141,10 +141,11 @@ const getTermInterns = async(termId, options) => {
     const interns = await Intern.find({ termsList: {  "$in": termId } }).lean()
     .select('_id firstName lastName email phoneNumber avatar')
     .sort(sort).skip(skip).limit(limit).exec()
-
+    const totalResults = await Intern.count();
     const weeks = await Week.find({ termId: { "$in": termId } }).lean()
-    .sort(sort).skip(skip).limit(limit).exec()
+    
 
+    // 951506508
 
     const internsmodel = await Promise.all(
         interns.map(async(intern) => {
@@ -161,7 +162,7 @@ const getTermInterns = async(termId, options) => {
       })
     );
 
-    const result = arrayShow(internsmodel, limit, page);
+    const result = arrayShow(internsmodel, limit, page, totalResults);
 
     return result;
 };
