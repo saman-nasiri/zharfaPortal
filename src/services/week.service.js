@@ -128,7 +128,6 @@ const getWeekTasks = async(weekId, internId, options) => {
 
     const tasks = await Task.find({ weekId: { "$in": weekId } }).lean()
     .select(' title order duration done')
-    .sort(sort).skip(skip).limit(limit).exec()
 
     const taskModel = await Promise.all(
         tasks.map(async(task) => {
