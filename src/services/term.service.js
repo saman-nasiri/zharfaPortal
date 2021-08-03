@@ -140,12 +140,9 @@ const getTermInterns = async(termId, options) => {
 
     const interns = await Intern.find({ termsList: {  "$in": termId } }).lean()
     .select('_id firstName lastName email phoneNumber avatar')
-    .sort(sort).skip(skip).limit(limit).exec()
-    const totalResults = await Intern.count();
+
     const weeks = await Week.find({ termId: { "$in": termId } }).lean()
     
-
-    // 951506508
 
     const internsmodel = await Promise.all(
         interns.map(async(intern) => {
@@ -161,8 +158,8 @@ const getTermInterns = async(termId, options) => {
         return intern;
       })
     );
-
-    const result = arrayShow(internsmodel, limit, page, totalResults);
+    const sortArray = await internsmodel.sort(function(a, b) { return b.termProgresbar - a.termProgresbar })
+    const result = arrayShow(sortArray, limit, page);
 
     return result;
 };
@@ -173,7 +170,6 @@ const getTermMentors = async(termId, options) => {
 
     const mentors = await SuperUser.find({ termsList: {  "$in": termId } }).lean()
     .select('_id firstName lastName email phoneNumber avatar')
-    .sort(sort).skip(skip).limit(limit).exec()
 
 
     const result = arrayShow(mentors, limit, page);
@@ -188,14 +184,12 @@ const getTermVideos = async(termId, options) => {
 
     const tasks = await Task.find({ termId: { "$in": termId }}).lean()
     .select("title video course")
-    .sort(sort).skip(skip).limit(limit).exec()
+
 
     const taskModel = [];
 
     tasks.forEach(async(task) => {
-        // const course = await Course.findOne({ category: task.course });
         taskModel.push(task)
-
     })
 
     const result = arrayShow(taskModel, limit, page);

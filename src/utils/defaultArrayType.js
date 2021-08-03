@@ -12,7 +12,9 @@ function slsp(options) {
     return { sort, limit, skip, page }
 };
 
-function arrayShow(results, limit, page, totalResults) {
+function arrayShow(array, limit, page) {  // limit: page_size, page: page_number
+    const totalResults = array.length;
+    const results = array.slice((page - 1) * limit, page * limit);
     const totalPages = Math.ceil(totalResults / limit);
     const result = {
       results,
