@@ -137,9 +137,9 @@ const getWeekTasks = async(weekId, internId, options) => {
         })
     )
 
-    // const result = arrayShow(taskModel, limit, page);
-
-    return { results: taskModel, totalResults: taskModel.length };
+    const result = arrayShow(taskModel, limit, page);
+    return result;
+    // return { results: taskModel, totalResults: taskModel.length };
 };
 
 
