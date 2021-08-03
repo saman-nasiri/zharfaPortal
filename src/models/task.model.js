@@ -57,7 +57,7 @@ const taskSchema = mongoose.Schema({
         default: false,
     },
     quiz: {
-                description: String,
+                description: Object,
                 alternatives: [{
                     value: {
                         type: String,
