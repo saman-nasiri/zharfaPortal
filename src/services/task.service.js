@@ -166,12 +166,12 @@ const addDiscriptiveQuizToTask = async(taskId, question) => {
         description: question.description,
     };
 
-    const addQuiz = await Task.updateOne({ _id: taskId }, { "$set": {
+    const addQuiz = await Task.findOneAndUpdate({ _id: taskId }, { "$set": {
         "discriptiveQuiz": true,
         "quiz": questionModel
     }}, { "new": true, "upsert": true });
 
-    return { status: 200, message: 'Success'};
+    return { body: addQuiz, status: 200, message: 'Success'};
 };
 
 const responseDiscriptiveQuiz = async(taskId, internId, responseBody) => {
@@ -179,14 +179,13 @@ const responseDiscriptiveQuiz = async(taskId, internId, responseBody) => {
     if(!quizRoom) { quizRoom = await QuizRoom.create({ taskId: taskId, internId: internId }); };
     const intern = await Intern.findById(internId);
 
-    const responsed = await QuizRoom.updateOne({_id: quizRoom._id}, {"$set": {
+    const responsed = await QuizRoom.findOneAndUpdate({_id: quizRoom._id}, {"$set": {
         "discriptiveAnswer": responseBody,
         "internResponse": true,
         "mentorResponse": false,
     }}, { "new": true, "upsert": true });
 
-
-    return { status: 200, message: 'Success'};
+    return { body: responsed, status: 200, message: 'Success'};
 };
 
 const sendTextMessageInQuizRoom = async(quizRoomId, sender, text) => {
