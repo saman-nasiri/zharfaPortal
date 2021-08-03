@@ -11,7 +11,7 @@ const quizRoomSchema = mongoose.Schema({
         type:String,
         enum: ['A', 'B', 'C', 'D']
     },
-    discriptiveAnswer: String,
+    discriptiveAnswer: Object,
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
     mentorAnswer: {
