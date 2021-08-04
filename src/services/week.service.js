@@ -136,8 +136,9 @@ const getWeekTasks = async(weekId, internId, options) => {
             return task;
         })
     )
-
-    const result = arrayShow(taskModel, limit, page);
+    
+    const sortArray = await taskModel.sort(function(a, b) { return a.order - b.order })
+    const result = arrayShow(sortArray, limit, page);
     return result;
     // return { results: taskModel, totalResults: taskModel.length };
 };
