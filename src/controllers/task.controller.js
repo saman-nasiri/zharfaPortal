@@ -49,8 +49,8 @@ const uploadAudioForTask = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
     await taskService.getTaskById(taskId)
 
-    await upload.uploadAudio(req, res);
-    const audioDetails = req.files;
+    await upload.uploadSingleAudio(req, res);
+    const audioDetails = req.file;
     const audioBody = req.body;
     
     const result = await taskService.uploadAudioForTask(taskId, audioBody, audioDetails);
