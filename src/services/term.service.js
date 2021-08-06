@@ -154,7 +154,7 @@ const getTermInterns = async(termId, options) => {
             })
         )
         const totalTermProgressBar = termProgressBar.reduce((total, value) => { return total + value })
-        intern["termProgresbar"] = totalTermProgressBar;
+        intern["termProgresbar"] = totalTermProgressBar / weeks.length ;
         return intern;
       })
     );
