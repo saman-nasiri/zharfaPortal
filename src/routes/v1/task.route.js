@@ -86,7 +86,7 @@ router
         .post(auth(scope.CREATE_TICKET), taskController.createTicketRoom)
 
 router
-    .route('/ticket-room/send-message/:ticketRoomId')
+    .route('/ticket-room/send-message/:roomId')
         .post(auth(scope.SEND_TICKET_TEXT), taskController.sendTextMessageInTicketRoom)
 
 router

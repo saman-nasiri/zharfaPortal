@@ -303,7 +303,6 @@ const getInternTicketRoomList = async(internId, options) => {
 
     const ticketRooms = await TicketRoom.find({ internId: internId })
     .select("-ticketContent")
-    .sort(sort).skip(skip).limit(limit).exec()
 
     const result = arrayShow(ticketRooms, limit, page);
 

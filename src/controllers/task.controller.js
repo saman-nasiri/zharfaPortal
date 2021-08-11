@@ -156,7 +156,7 @@ const getInternTicketRoomList = catchAsync(async(req, res) => {
 
 const sendTextMessageInTicketRoom = catchAsync(async(req, res) => {
     const user = req.user;
-    const ticketRoomId = req.params.ticketRoomId;
+    const ticketRoomId = req.params.roomId;
     const text = req.body.text;
 
     const result = await taskService.sendTextMessageInTicketRoom(ticketRoomId, user, text);
