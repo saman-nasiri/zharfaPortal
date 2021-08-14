@@ -70,7 +70,7 @@ superUserSchema.statics.isEmailTaken = async function (email, excludeUserId) {
 superUserSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
     const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
     return !!user;
-  };
+};
 
   /**
  * Check if password matches the user's password

@@ -8,6 +8,7 @@ const createOwner =  {
         lastName: Joi.string().required(),
         password: Joi.string().required(),
         email: Joi.string().required(),
+        phoneNumber: Joi.string()
     }),
 };
 
@@ -18,7 +19,8 @@ const createSuperUser = {
         lastName: Joi.string().required(),
         password: Joi.string().required(),
         email: Joi.string().required(),
-        role: Joi.string().required()
+        role: Joi.string().required(),
+        phoneNumber: Joi.string()
     }),
 };
 

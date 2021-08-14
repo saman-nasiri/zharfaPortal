@@ -29,13 +29,17 @@ const createSuperUser = async(userBody) => {
     if (await SuperUser.isEmailTaken(userBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
     };
+    if (await SuperUser.isPhoneNumberTaken(userBody.phoneNumber)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumberAlreadyTaken');
+    };
    try {
     const superUser = await SuperUser.create({
         firstName: userBody.firstName,
         lastName: userBody.lastName,
         password: userBody.password,
+        role: userBody.role,
         email: userBody.email,
-        role: userBody.role
+        phoneNumber: userBody.phoneNumber
     });
 
     return superUser;

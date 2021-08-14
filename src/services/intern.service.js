@@ -12,6 +12,10 @@ const createIntern = async(internBody) => {
     if (await Intern.isEmailTaken(internBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'EmailAlreadyTaken');
     };
+
+    if (await Intern.isPhoneNumberTaken(internBody.phoneNumber)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumberAlreadyTaken');
+    };
     const intern = await Intern.create({
         firstName: internBody.firstName,
         lastName: internBody.lastName,
