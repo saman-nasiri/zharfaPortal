@@ -13,6 +13,10 @@ const ticketRoomSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Intern"
     },
+    week: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Week"
+    },
     internResponse:{ type: Boolean, default: false },
     mentorResponse:{ type: Boolean, default: false },
     ticketContent: [{

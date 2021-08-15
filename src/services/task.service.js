@@ -252,8 +252,7 @@ const createTicketRoom = async(taskId, sender, text) => {
     const task = await Task.findOne({ _id: taskId });
     if(!task) { throw new ApiError(httpStatus.NOT_FOUND, "TaskNotFound") };
     let ticketRoom = await TicketRoom.findOne({ taskId: taskId, internId: sender.id });
-    if(!ticketRoom) { ticketRoom = await TicketRoom.create({ title: task.title, taskId: taskId, internId: sender.id })};
-    // await Task.updateOne({ _id: taskId }, { "$set": { "haveTicket": true }}, { "new": true, "upsert": true });
+    if(!ticketRoom) { ticketRoom = await TicketRoom.create({ title: task.title, taskId: taskId, internId: sender.id, week: task.weekId })};
 
     sendTextMessageInTicketRoom(ticketRoom.id, sender, text);
 
@@ -302,9 +301,11 @@ const getInternTicketRoomList = async(internId, options) => {
     const {sort, limit, skip, page} = slsp(options);
 
     const ticketRooms = await TicketRoom.find({ internId: internId })
+    .populate({ path: 'week', select: 'title order' })
     .select("-ticketContent")
 
-    const result = arrayShow(ticketRooms, limit, page);
+    const sortArray = await ticketRooms.sort(function(a, b) { return a.week.order - b.week.order })
+    const result = arrayShow(sortArray, limit, page);
 
     return result;
 };
