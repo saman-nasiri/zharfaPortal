@@ -80,7 +80,7 @@ const addWeekToTheTerm = async(term, weeksList) => {
 };
 
 const updateTerm = async(term, updateBody) => {
-    const result  = await Term.updateOne({ _id: term._id }, { "$set": updateBody }, { "new": true, "upsert": true }); ;
+    const result  = await Term.findOneAndUpdate({ _id: term._id }, { "$set": updateBody }, { "new": true, "upsert": true }); ;
     
     return result;
 };
