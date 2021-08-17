@@ -73,7 +73,7 @@ const deleteWeekById = catchAsync(async(req, res) => {
     const weekId = req.params.weekId;
     const week = await weekService.getWeekById(weekId);
     if(!week) { throw new ApiError(httpStatus.NOT_FOUND, 'WeekNotFound') };
-    const result = await weekService.deleteWeekById(weekId);
+    const result = await weekService.deleteWeekById(week);
     res.status(httpStatus.OK).send(result);
 });
 

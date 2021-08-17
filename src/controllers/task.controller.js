@@ -12,7 +12,6 @@ const creatTask = catchAsync(async(req, res) => {
     const course = await courseService.getCourseBySlug(req.body.course)
     const week = await weekService.getWeekById(weekId);
     const task = await taskService.createTask(taskBody, week, course);
-    await weekService.updateWeekDuration(weekId, task);
     res.status(httpStatus.CREATED).send(task);
 });
 
@@ -281,7 +280,8 @@ const getAudiofile = catchAsync(async(req, res) => {
 
 const deleteTaskById = catchAsync(async(req, res) => {
     const taskId = req.params.taskId;
-    const result = await taskService.deleteTaskById(taskId);
+    const task = await taskService.getTaskById(taskId);
+    const result = await taskService.deleteTaskById(task);
     res.status(httpStatus.OK).send(result); 
 });
 

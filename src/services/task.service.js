@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const fse = require('fs-extra');
 const path = require('path');
-const { Task, TicketRoom, InternTaskAction, InternWeekAction, QuizRoom, Intern } = require('../models');
+const { Task, Week, TicketRoom, InternTaskAction, InternWeekAction, QuizRoom, Intern } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { data } = require('../config/logger');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
@@ -12,7 +12,7 @@ const { slsp, arrayShow } = require('../utils/defaultArrayType');
  * @returns {Promise<Task>}
  */
 const createTask = async (taskBody, week, course) => {
-    try {
+
         const task = await Task.create({
             title: taskBody.title,
             course: course.category,
@@ -23,11 +23,13 @@ const createTask = async (taskBody, week, course) => {
             weekId: week._id,
             termId: week.termId
         });
-    
+
+        await Week.updateOne({ _id: task.weekId }, { "$inc": {
+            duration: task.duration
+        }}, { "new": true, "upsert": true });
+
         return task;
-    } catch (error) {
-        console.log(error);
-    }
+
 };
 
 const uploadImageForTask = async(taskId, imageBody, imageDetail) => {
@@ -594,55 +596,31 @@ const getAudiofile = async(filename, req, res) => {
 };
 
 
-const deleteTaskById = async(taskId) => {
-    await getTaskById(taskId);
-    try {
+const deleteTaskById = async(task) => {
 
-        const task = await getTaskById(taskId);
 
-    //     if(task.image) {
-    //         fse.unlinkSync(`./public/files/audios/${task.audio.filename}`);
-    //     }
+        if(task.audio) {
+            fse.removeSync(`./public/files/audios/${task.audio.filename}`);
+        }
 
-    //     if(task.video) {
-    //         fse.unlinkSync(`./public/files/videos/${task.video.filename}`);
-    //     }
+        if(task.video) {
+            fse.removeSync(`./public/files/videos/${task.video.filename}`);
+        }
 
-    //     if(task.audio) {
-    //     fse.unlinkSync(`./public/files/images/${task.image.filename}`);
-    // }
+        if(task.image) {
+            fse.removeSync(`./public/files/images/${task.image.filename}`);
+        }
 
-    //     if(task.pdf) {
-    //         fse.unlinkSync(`./public/files/pdfs/${task.pdf.filename}`);
-    //     }
+        if(task.pdf) {
+            fse.removeSync(`./public/files/pdfs/${task.pdf.filename}`);
+        }
         
-
-        // task.audios.forEach((file) => {
-        //     fse.ensureDir(`./public/files/audios/${file}`)
-        //     .then(() => {  fse.unlinkSync(`./public/files/audios/${file}`); })
-        // });
-        
-        // task.videos.forEach((file) => {
-        //     fse.ensureDir(`./public/files/videos/${file}`)
-        //     .then(() => { fse.unlinkSync(`./public/files/videos/${file}`); });
-        // });
+        await Week.updateOne({ _id: task.weekId }, { "$inc": {
+            duration: -task.duration
+        }}, { "new": true, "upsert": true })
     
-        // task.images.forEach((file) => {
-        //     fse.ensureDir(`./public/files/images/${file}`)
-        //     .then(() => { fse.unlinkSync(`./public/files/images/${file}`); });
-        // });
-    
-        // task.pdfs.forEach((file) => {
-        //     ifse.ensureDir(`./public/files/pdfs/${file}`)
-        //     .then(() => { fse.unlinkSync(`./public/files/pdfs/${file}`); });
-        // });
-    
-        const result = await Task.deleteOne({ _id: taskId });
-    
+        const result = await Task.deleteOne({ _id: task._id }); 
         return result;
-    } catch (error) {
-        console.log(error);
-    }
 };
 
 

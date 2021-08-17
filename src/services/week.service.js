@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { Week, InternWeekAction, Task, InternTaskAction } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
+const taskService = require('./task.service');
 
 
 const createWeek = async(weekBody, term) => {
@@ -81,9 +82,17 @@ const recordWeekViewCount = async(action) => {
     }
 };
 
-const updateWeekDuration = async(weekId, task) => {
+const increaseWeekDuration = async(weekId, task) => {
     const week = await Week.updateOne({ _id: weekId }, { "$inc": {
         duration: task.duration
+    }}, { "new": true, "upsert": true })
+
+    return week
+};
+
+const decreaseWeekDuration = async(weekId, task) => {
+    const week = await Week.updateOne({ _id: weekId }, { "$inc": {
+        duration: -task.duration
     }}, { "new": true, "upsert": true })
 
     return week
@@ -144,10 +153,12 @@ const getWeekTasks = async(weekId, internId, options) => {
 };
 
 
-const deleteWeekById = async(weekId) => {
-
-    await Task.deleteMany({ weekId: { "$in": weekId } });
-    const result = await Week.deleteOne({ _id: weekId });
+const deleteWeekById = async(week) => {
+    const tasks = await Task.find({ weekId: { "$in": week._id } });
+    tasks.forEach(async(task) => {
+        await taskService.deleteTaskById(task);
+    });
+    const result = await Week.deleteOne({ _id: week._id });
     return result;
 };
 
@@ -192,7 +203,8 @@ module.exports = {
     getInternWeekAction,
     recordWeekScore,
     recordWeekViewCount,
-    updateWeekDuration,
+    increaseWeekDuration,
+    decreaseWeekDuration,
     weekProgressbar,
     deleteWeekProgressbar,
     getWeeks,

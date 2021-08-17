@@ -13,7 +13,7 @@ router
     .route('/create')
         .post(auth(scope.CREATE_TERM), validate(termValidation.createTerm), termController.createTerm)
 router
-    .route('/update/:termId')
+    .route('/edit/:termId')
         .put(auth(scope.UPDATE_TERM), validate(termValidation.updateTerm), termController.updateTerm)
 router
     .route('/:termId')
@@ -21,6 +21,11 @@ router
 router
     .route('/')
         .get(auth(scope.READ_TERMS), termController.getTerms)
+
+router
+    .route('/delete/:termId')
+        .delete(auth(scope.DELETE_TERM), termController.deleteTermById)
+
 
         
 

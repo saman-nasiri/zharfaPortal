@@ -3,7 +3,7 @@ const { Term, Intern, SuperUser, Week, Task, Course, TutorialCategory } = requir
 const { weekProgressbar } = require('../services/week.service');
 const ApiError = require('../utils/ApiError');
 const { slsp, arrayShow } = require('../utils/defaultArrayType');
-
+const taskService = require('./task.service');
 
 const createTerm = async(termBody, tutorialCategory) => {
     
@@ -100,6 +100,11 @@ const getTermById = async(termId) => {
 };
 
 const deleteTermById = async(termId) => {
+    const tasks = await Task.find({ termId: { "$in": termId } });
+    tasks.forEach(async(task) => {
+        await taskService.deleteTaskById(task);
+    });
+    await Week.deleteMany({ termId: { "$in": termId } });
     const result = await Term.deleteOne({ _id: termId})
     return result;
 };
