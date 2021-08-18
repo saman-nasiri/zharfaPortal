@@ -61,6 +61,12 @@ const getSuperUserById = {
     })
 }
 
+const getSuperUserByRole = {
+    params: Joi.object().keys({
+        role: Joi.string().custom(objectId)
+    })
+}
+
 module.exports = {
     createSuperUser,
     updateSuperUserById,

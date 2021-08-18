@@ -113,6 +113,12 @@ const getSuperUsers = async(filter, options) => {
     return superUser;
 };
 
+const getSuperUseByRole = async(role) => {
+    const superusers = await SuperUser.find({ role: role });
+    if(!superusers) { throw new ApiError(httpStatus.NOT_FOUND, 'SuperUsersNotFound')};
+    return superusers;
+};
+
 
 module.exports = {
     createOwner,
@@ -124,5 +130,6 @@ module.exports = {
     getSuperUserById,
     deleteSuperUser,
     updateSuperUser,
-    getSuperUsers
+    getSuperUsers,
+    getSuperUseByRole
 };

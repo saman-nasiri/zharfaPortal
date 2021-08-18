@@ -53,7 +53,7 @@ const changePassword = catchAsync(async(req, res) => {
 const getSuperUsers = catchAsync(async(req, res) => {
     const filter = pick(req.query, ['name', 'role']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const superUsers = await superUserService.getSuperUser(filter, options);
+    const superUsers = await superUserService.getSuperUsers(filter, options);
     res.status(httpStatus.OK).send(superUsers);
 });
 
@@ -63,6 +63,14 @@ const getSuperUserById = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(superUser);
 });
 
+
+const getSuperUseByRole = catchAsync(async(req, res) => {
+    const role = req.params.role;
+    const superusers = await superUserService.getSuperUseByRole(role);
+    res.status(httpStatus.OK).send(superusers);
+});
+
+
 module.exports = {
     createOwner,
     createSuperUser,
@@ -71,5 +79,6 @@ module.exports = {
     uploadAvatar,
     changePassword,
     getSuperUsers,
-    getSuperUserById
+    getSuperUserById,
+    getSuperUseByRole
 };

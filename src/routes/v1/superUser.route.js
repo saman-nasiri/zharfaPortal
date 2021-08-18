@@ -39,4 +39,9 @@ router
     .route('/profile/:userId')
         .get(auth(scope.READ_SUPERUSER_DETAILS), validate(superUserValidation.getSuperUserById), superUserController.getSuperUserById);
 
+
+router
+    .route('/role/:role')
+        .get(auth(scope.READ_SUPERUSERS), validate(superUserValidation.getSuperUserByRole), superUserController.getSuperUseByRole);
+
 module.exports = router;
