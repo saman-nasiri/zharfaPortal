@@ -31,6 +31,18 @@ const updateSuperUserById = {
     body: Joi.object().keys({
             firstName: Joi.string(),
             lastName: Joi.string(),
+            email: Joi.string(),
+            role: Joi.string()
+        }).options({ stripUnknown: true }),
+};
+
+const updateSuperUserProfile = {
+    params: Joi.object().keys({
+        userId: Joi.string().custom(objectId),
+    }),
+    body: Joi.object().keys({
+            firstName: Joi.string(),
+            lastName: Joi.string(),
             email: Joi.string()
         }).options({ stripUnknown: true }),
 };
@@ -70,6 +82,7 @@ const getSuperUserByRole = {
 module.exports = {
     createSuperUser,
     updateSuperUserById,
+    updateSuperUserProfile,
     deleteSuperUser,
     uploadAvatar,
     changePassword,

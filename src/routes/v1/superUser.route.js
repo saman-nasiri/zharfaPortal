@@ -37,8 +37,8 @@ router
 
 router
     .route('/profile/:userId')
-        .get(auth(scope.READ_SUPERUSER_DETAILS), validate(superUserValidation.getSuperUserById), superUserController.getSuperUserById);
-
+        .get(auth(scope.READ_SUPERUSER_DETAILS), validate(superUserValidation.getSuperUserById), superUserController.getSuperUserById)
+        .put(auth(scope.UPDATE_SUPERUSER_PROFILE), validate(superUserValidation.updateSuperUserProfile), superUserController.updateSuperUserProfile)
 
 router
     .route('/role/:role')

@@ -28,6 +28,17 @@ const updateSuperUser = catchAsync(async(req, res) => {
     res.status(httpStatus.OK).send(result);
 });
 
+
+const updateSuperUserProfile = catchAsync(async(req, res) => {
+    const userId = req.params.userId;
+    const updateBody = req.body;
+    const superUser = await superUserService.getSuperUserById(userId)
+    if(!superUser) { throw new ApiError(httpStatus.NOT_FOUND, 'SuperUserNotFound'); };
+
+    const result = await superUserService.updateSuperUser(superUser, updateBody);
+    res.status(httpStatus.OK).send(result);
+});
+
 const deleteSuperUser = catchAsync(async(req, res) => {
     const userId = req.params.userId;
     const result = await superUserService.deleteSuperUser(userId);
@@ -75,6 +86,7 @@ module.exports = {
     createOwner,
     createSuperUser,
     updateSuperUser,
+    updateSuperUserProfile,
     deleteSuperUser,
     uploadAvatar,
     changePassword,

@@ -58,6 +58,13 @@ const updateSuperUser= async(user, updateBody) => {
     return result;
 };
 
+const updateSuperUserProfile = async(user, updateBody) => {
+
+    if(updateBody.password) { delete updateBody["password"] };
+    const result = await SuperUser.updateOne({ _id: user._id }, {"$set": updateBody }, { "new": true, "upsert": true });  
+    return result;
+};
+
 const deleteSuperUser = async(userId) => {
     const result = await SuperUser.deleteOne({_id: userId});
     return result;
@@ -130,6 +137,7 @@ module.exports = {
     getSuperUserById,
     deleteSuperUser,
     updateSuperUser,
+    updateSuperUserProfile,
     getSuperUsers,
     getSuperUseByRole
 };
