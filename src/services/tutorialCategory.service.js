@@ -37,7 +37,7 @@ const getMainTutorial = async() => {
 
 const getSubTutorial = async(mainSlug) => {
     const tutorial = await TutorialCategory.findOne({ slug: mainSlug });
-    const subTutorial = await TutorialCategory.find({ parent: { $in: [new RegExp('^' + tutorial.parent)] } });
+    const subTutorial = await TutorialCategory.find({ parent: { $in: [new RegExp('^' + tutorial.category)] } });
     return subTutorial;
 };
 
