@@ -107,7 +107,7 @@ const weekProgressbar = async(week, internId) => {
         return result;
     }
     else {
-        const progressbar = Math.ceil(parseInt(internWeekAction.doneTaskDuration) / parseInt(week.duration) * 100)
+        const progressbar = Math.floor(parseInt(internWeekAction.doneTaskDuration) / parseInt(week.duration) * 100)
         const result = { progressbar : progressbar };
 
         return result;
